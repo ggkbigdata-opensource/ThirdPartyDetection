@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv = "X-UA-Compatible" content ="IE=edge,chrome=1" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="renderer" content="webkit"/>
+<title>天河区开展第三方机构消防安全风险评估报告</title>
+<link href="css/base.css" rel="stylesheet" type="text/css" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery/jquery.min.js"></script>
+
+</head>
+<body>
+<article class="article">
+    <section class="codeBox">
+        <form>
+            <div class="code-group">
+                <div class="tit">报告提取码：</div>
+                <div class="input-control">
+                    <input id="extracteCode" type="text" value="" placeholder="检测报告提取码"/>
+                </div>
+            </div>
+            <div class="code-group">
+                <div class="tit">报告责任人：</div>
+                <div class="input-control">
+                    <input id="dutyPerson" type="text" value="" placeholder="报告责任人姓名"/>
+                </div>
+            </div>
+            <div class="code-group">
+                <div class="tit">责任人手机：</div>
+                <div class="input-control">
+                    <input id="dutyTel" type="text" value="" placeholder="报告责任人手机号码"/>
+                </div>
+            </div>
+            <div class="code-group tc">
+                <a class="btn-submit" style='display: inline-block; line-height: 40px;' onclick="submitInfoData()">提交</a>
+                <!-- <a id="submitInfo" class="btn-submit" style='display: inline-block; line-height: 40px;'>提交</a> -->
+            </div>
+            <div class="tips">
+                <span class="tit">温馨提示：</span>
+                <span>请正确输入您的风险评估报告提取码！</span>
+            </div>
+        </form>
+    </section>
+</article>
+<script src="js/report/getReportPage.js"></script>
+</body>
+</html>

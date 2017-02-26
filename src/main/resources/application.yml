@@ -1,0 +1,19 @@
+
+spring:
+  profiles:
+    active:
+      - desklocal
+  thymeleaf:
+    mode: LEGACYHTML5
+
+  http:
+    multipart:
+      max-file-size: 100MB
+fire:
+  detection:
+    levelA: 9
+    levelB: 5
+    levelC: 1
+
+uploadPath: src/main/resources/static/reportUploads/
+downloadPath: reportUploads/

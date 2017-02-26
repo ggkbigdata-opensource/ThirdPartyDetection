@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge, chorme=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>消防火情</title>
+<link rel="icon" type="image/x-icon" href="imgs/favicon.ico" />
+<link rel="shortcut icon" type="image/x-icon" href="imgs/favicon.ico" />
+<link rel="bookmark" type="image/x-icon" href="imgs/favicon.ico" />
+
+<!-- Bootstrap 3.3.7 -->
+<link href="common/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<!-- iconfont -->
+<link href="common/iconfont/iconfont.css" rel="stylesheet" type="text/css" /> 
+<!-- mCustomScrollbar -->
+<link href="common/mCustomScrollbar/css/jquery.mCustomScrollbar.custom.css" rel="stylesheet" type="text/css" />
+<!-- animate css -->
+<link href="css/animate.css" rel="stylesheet" type="text/css" />
+<!-- base css -->
+<link href="css/base.css" rel="stylesheet" type="text/css" />
+<!-- master css -->
+<link href="css/layout.css" rel="stylesheet" type="text/css" />
+<!-- custom css-->
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<!-- dialog custom css -->
+<link href="css/dialog/dialog.custom.css" rel="stylesheet" type="text/css" />
+
+<!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body class="fixed-sidebar">
+<div class="wrapper">
+
+	<!--Right Content Start -->
+	<div class="content-wrapper">
+		<nav class="navbar navbar-static-top" role="navigation">
+			<div class="navbar-logo">
+		    <img src="css/imgs/top-logo.png" width="299" height="36"></div>
+			<ul class="nav navbar-top-links navbar-right">
+				<li>
+					<div class="userPhoto">
+						<img src="imgs/userphoto.png" />
+					</div>
+				</li>
+				<li><span>欢迎你!</span></li>
+				<li><a class="username font-red fb" href="javascript:;">ADMIN</a></li>
+				<li><a class="iconfont icon-signout" title="退出" href="login/login.html"></a></li>
+			</ul>
+		</nav>
+		<ol class="breadcrumb">
+			<li><i class="iconfont icon-map mr10 fl"></i>当前位置：<a href="javascript:;">首页</a></li>
+			<li class="active">检测报告主页面</li>
+		</ol>
+		<section class="main-content animated fadeInRight">
+			<div class="content">
+			<!-- Content Start-->
+				<div class="section">
+					<div class="title">
+						<h1>检测报告筛选/查询</h1>
+					</div>
+					<div class="sectionMain">
+						<div class="filterBox searchBox">
+							<form method="post">
+								<div class="right-filter fr ml10">
+									<button class="btn btn-danger" type="submit">查询</button>
+								</div>
+								<div class="left-filter oh">
+									<div class="row row-sm-margin">
+										
+										<div class="col-xs-fifth">
+											<div class="filterTit fl">项目名称：</div>
+											<div class="filterType form-group oh">
+												<input class="form-control" type="text" />
+											</div>
+										</div>
+										<div class="col-xs-fifth">
+											<div class="filterTit fl">报告编码：</div>
+											<div class="filterType form-group oh">
+												<input class="form-control" type="text" />
+											</div>
+										</div>
+                                        <div class="col-xs-fifth">
+											<div class="filterTit fl">项目地址：</div>
+											<div class="filterType form-group oh">
+												<input class="form-control" type="text" />
+											</div>
+										</div>
+										
+										
+										<div class="col-xs-fifth">
+											<div class="filterTit fl">风险等级：</div>
+											<div class="filterType form-group oh">
+												<select class="form-control">
+													<option value="全部">全部</option>
+												</select>
+											</div>
+										</div>
+                                        
+                                        <div class="col-xs-fifth">
+											<div class="filterTit fl">检测单位：</div>
+											<div class="filterType form-group oh">
+												<select class="form-control">
+													<option value="全部">全部</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div> 
+				</div><!--/section -->
+				<div class="spaceline20"></div>
+				<div class="section">
+					<div class="title">
+						<h1>检测报告</h1>
+						<div class="toolbar fr">
+							<a class="btn btn-default btn-batchdelete" href="javascript:;"><i class="iconfont icon-trash fl mr5"></i>批量删除</a>
+							<a class="btn btn-default btn-export" href="javascript:;"><i class="iconfont icon-export fl mr5"></i>导出报告</a>
+							<a class="btn btn-default btn-import" href="javascript:;"><i class="iconfont icon-import fl mr5"></i>导入</a>
+						</div>
+					</div>
+					<div class="sectionMain">
+						<table class="table table-hover table-striped table-bordered">
+							<thead>
+								<tr>
+									<th width="45">序号</th>
+									<th width="50" class="tc">选择</th>
+									<th><p>报告名称</p></th>
+									<th width="150"  class="tc"><p>报告编码</p></th>
+									<th><p>项目地址</p></th>
+									<th width="130" class="tc"><p>风险等级</p></th>
+                                    <th ><p>检测单位</p></th>
+									<th width="120" class="tc"><p>报告日期</p></th>
+									<th width="200" class="tc"><p>操作</p></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="tc"><p>1</p></td>
+									<td class="tc"><input type="checkbox" /></td>
+									<td><p>广州瑞堡物业管理有限公司</p></td>
+									<td width="150" class="tc"><p>17GJB370</p></td>
+									<td><p>体育西路54号</p></td>
+									<td width="130" class="tc"><p>严重</p></td>
+                                    <td ><p>广东建筑消防设施检测中心有限公司</p></td>
+									<td width="120" class="tc"><p>2017-01-01</p></td>
+									<td>
+										<div class="table-toolbar tc">
+                                            <a class="btn-fireCheck" target="_blank"  href="report/index.html">评估报告</a>
+											<a class="btn-fireCheck" href="#">检测报告</a>
+											<a class="btn-delete" href="javascript:;">删除</a>
+										</div>
+									</td>
+								</tr>
+                                <tr>
+									<td class="tc"><p>2</p></td>
+									<td class="tc"><input type="checkbox" /></td>
+									<td><p>广州瑞堡物业管理有限公司</p></td>
+									<td width="150" class="tc"><p>17GJB370</p></td>
+									<td><p>体育西路54号</p></td>
+									<td width="130" class="tc"><p>严重</p></td>
+                                    <td ><p>广东建筑消防设施检测中心有限公司</p></td>
+									<td width="120" class="tc"><p>2017-01-01</p></td>
+									<td>
+										<div class="table-toolbar tc">
+                                            <a class="btn-fireCheck" target="_blank"  href="report/index.html">评估报告</a>
+											<a class="btn-fireCheck" href="javascript:;">检测报告</a>
+											<a class="btn-delete" href="javascript:;">删除</a>
+										</div>
+									</td>
+								</tr>
+                                <tr>
+									<td class="tc"><p>3</p></td>
+									<td class="tc"><input type="checkbox" /></td>
+									<td><p>广州瑞堡物业管理有限公司</p></td>
+									<td width="150" class="tc"><p>17GJB370</p></td>
+									<td><p>体育西路54号</p></td>
+									<td width="130" class="tc"><p>严重</p></td>
+                                    <td ><p>广东建筑消防设施检测中心有限公司</p></td>
+									<td width="120" class="tc"><p>2017-01-01</p></td>
+									<td>
+										<div class="table-toolbar tc">
+                                            <a href="report/index.html" target="_blank" class="btn-fireCheck">评估报告</a>
+											<a class="btn-fireCheck" href="javascript:;">检测报告</a>
+											<a class="btn-delete" href="javascript:;">删除</a>
+										</div>
+									</td>
+								</tr>
+                                <tr>
+									<td class="tc"><p>4</p></td>
+									<td class="tc"><input type="checkbox" /></td>
+									<td><p>广州瑞堡物业管理有限公司</p></td>
+									<td width="150" class="tc"><p>17GJB370</p></td>
+									<td><p>体育西路54号</p></td>
+									<td width="130" class="tc"><p>严重</p></td>
+                                    <td ><p>广东建筑消防设施检测中心有限公司</p></td>
+									<td width="120" class="tc"><p>2017-01-01</p></td>
+									<td>
+										<div class="table-toolbar tc">
+                                            <a class="btn-fireCheck" href="javascript:;">评估报告</a>
+											<a class="btn-fireCheck" href="javascript:;">检测报告</a>
+											<a class="btn-delete" href="javascript:;">删除</a>
+										</div>
+									</td>
+								</tr>
+                                <tr>
+									<td class="tc"><p>5</p></td>
+									<td class="tc"><input type="checkbox" /></td>
+									<td><p>广州瑞堡物业管理有限公司</p></td>
+									<td width="150" class="tc"><p>17GJB370</p></td>
+									<td><p>体育西路54号</p></td>
+									<td width="130" class="tc"><p>严重</p></td>
+                                    <td ><p>广东建筑消防设施检测中心有限公司</p></td>
+									<td width="120" class="tc"><p>2017-01-01</p></td>
+									<td>
+										<div class="table-toolbar tc">
+                                            <a class="btn-fireCheck" href="javascript:;">评估报告</a>
+											<a class="btn-fireCheck" href="javascript:;">检测报告</a>
+											<a class="btn-delete" href="javascript:;">删除</a>
+										</div>
+									</td>
+								</tr>
+                                <tr>
+									<td class="tc"><p>6</p></td>
+									<td class="tc"><input type="checkbox" /></td>
+									<td><p>广州瑞堡物业管理有限公司</p></td>
+									<td width="150" class="tc"><p>17GJB370</p></td>
+									<td><p>体育西路54号</p></td>
+									<td width="130" class="tc"><p>严重</p></td>
+                                    <td ><p>广东建筑消防设施检测中心有限公司</p></td>
+									<td width="120" class="tc"><p>2017-01-01</p></td>
+									<td>
+										<div class="table-toolbar tc">
+                                            <a class="btn-fireCheck" href="javascript:;">评估报告</a>
+											<a class="btn-fireCheck" href="javascript:;">检测报告</a>
+											<a class="btn-delete" href="javascript:;">删除</a>
+										</div>
+									</td>
+								</tr>
+                                <tr>
+									<td class="tc"><p>7</p></td>
+									<td class="tc"><input type="checkbox" /></td>
+									<td><p>广州瑞堡物业管理有限公司</p></td>
+									<td width="150" class="tc"><p>17GJB370</p></td>
+									<td><p>体育西路54号</p></td>
+									<td width="130" class="tc"><p>严重</p></td>
+                                    <td ><p>广东建筑消防设施检测中心有限公司</p></td>
+									<td width="120" class="tc"><p>2017-01-01</p></td>
+									<td>
+										<div class="table-toolbar tc">
+                                            <a class="btn-fireCheck" href="javascript:;">评估报告</a>
+											<a class="btn-fireCheck" href="javascript:;">检测报告</a>
+											<a class="btn-delete" href="javascript:;">删除</a>
+										</div>
+									</td>
+								</tr>
+                                <tr>
+									<td class="tc"><p>8</p></td>
+									<td class="tc"><input type="checkbox" /></td>
+									<td><p>广州瑞堡物业管理有限公司</p></td>
+									<td width="150" class="tc"><p>17GJB370</p></td>
+									<td><p>体育西路54号</p></td>
+									<td width="130" class="tc"><p>严重</p></td>
+                                    <td ><p>广东建筑消防设施检测中心有限公司</p></td>
+									<td width="120" class="tc"><p>2017-01-01</p></td>
+									<td>
+										<div class="table-toolbar tc">
+                                            <a class="btn-fireCheck" href="javascript:;">评估报告</a>
+											<a class="btn-fireCheck" href="javascript:;">检测报告</a>
+											<a class="btn-delete" href="javascript:;">删除</a>
+										</div>
+									</td>
+								</tr>
+                                <tr>
+									<td class="tc"><p>9</p></td>
+									<td class="tc"><input type="checkbox" /></td>
+									<td><p>广州瑞堡物业管理有限公司</p></td>
+									<td width="150" class="tc"><p>17GJB370</p></td>
+									<td><p>体育西路54号</p></td>
+									<td width="130" class="tc"><p>严重</p></td>
+                                    <td ><p>广东建筑消防设施检测中心有限公司</p></td>
+									<td width="120" class="tc"><p>2017-01-01</p></td>
+									<td>
+										<div class="table-toolbar tc">
+                                            <a class="btn-fireCheck" href="javascript:;">评估报告</a>
+											<a class="btn-fireCheck" href="javascript:;">检测报告</a>
+											<a class="btn-delete" href="javascript:;">删除</a>
+										</div>
+									</td>
+								</tr>
+                                <tr>
+									<td class="tc"><p>10</p></td>
+									<td class="tc"><input type="checkbox" /></td>
+									<td><p>广州瑞堡物业管理有限公司</p></td>
+									<td width="150" class="tc"><p>17GJB370</p></td>
+									<td><p>体育西路54号</p></td>
+									<td width="130" class="tc"><p>严重</p></td>
+                                    <td ><p>广东建筑消防设施检测中心有限公司</p></td>
+									<td width="120" class="tc"><p>2017-01-01</p></td>
+									<td>
+										<div class="table-toolbar tc">
+                                            <a class="btn-fireCheck" href="javascript:;">评估报告</a>
+											<a class="btn-fireCheck" href="javascript:;">检测报告</a>
+											<a class="btn-delete" href="javascript:;">删除</a>
+										</div>
+									</td>
+								</tr>
+								
+							</tbody>
+						</table>
+						<div class="spaceline15"></div>
+						<div class="pageToolbar oh">
+							<ul class="total fl">
+								<li>共<em>5</em>条记录，每页显示</li>
+								<li>
+									<select>
+										<option>5</option>
+										<option>10</option>
+										<option>15</option>
+									</select>
+								</li>
+								<li>条</li>
+							</ul>
+							<ul class="form fr">
+								<li>跳转到</li>
+								<li>
+									<input type="text" />
+								</li>
+								<li>页</li>
+								<li><button class="btn btn-primary btn-xs" type="button">GO</button></li>
+							</ul>
+							<div class="pagination-tc tc oh">
+								<ul class="pagination">
+								    <li class="disabled"><a href="javascript:;"><i class="iconfont icon-angle-left"></i></a></li>
+								    <li class="active"><a href="javascript:;">1</a></li>
+								    <li><a href="javascript:;">2</a></li>
+								    <li><a href="javascript:;">3</a></li>
+								    <li><a href="javascript:;"><i class="iconfont icon-angle-right"></i></a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div><!--/section -->
+			<!-- Content End -->
+			</div>
+		</section>
+		<footer class="footer">
+			<p class="tr">版权和数据权归属：天河消防安全委员会　　　技术支持：广东广业开元科技有限公司</p>
+		</footer>
+	</div>
+	<!--Right Content End -->
+</div>
+
+<!--dialog -->
+
+<!-- 导入数据 dialog-->
+
+<form id="import-dialog" enctype="multipart/form-data" action="uploadReport" method="post" >
+	<div class="form-group">
+		<label for="inputfile">导入文件</label>
+		<input type="file" id="inputfile" name="file">
+	</div>
+</form>
+<!-- /导入数据 dialog-->
+
+
+<!-- 
+
+	<table class="table table-nobordered">
+		<colgroup>
+			<col class="shortbox" />
+			<col />
+		</colgroup>
+		<tbody>
+			
+			<tr>
+				<td class="tr">选择文件：</td>
+				<td>
+					<div id="file-pretty" class="form-group">
+						<input class="form-control filestyle" type="file" data-icon="false" data-buttonText="选择文件" />
+                    </div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+ -->
+
+
+
+<!-- JQuery 1.11.3 -->
+<script src="common/jquery/jquery-1.11.3.min.js"></script>
+<!--[if lt IE 9]>
+<script src="common/jquery/jquery.pseudo.js"></script>
+<![endif]-->
+<!-- Bootstrap 3.3.7 -->
+<script src="common/bootstrap/js/bootstrap.js"></script>
+<!-- mCustomScrollbar -->
+<script src="common/mCustomScrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<!-- My97DatePicker -->
+<script src="common/My97DatePicker/WdatePicker.js"></script>
+<!-- layer v2.0 -->
+<script src="common/layer/layer.js"></script> 
+<!-- bootstrap file style -->
+<script src="common/bootstrap-filestyle/bootstrap-filestyle.js"></script> 
+<!-- 表单验证 validate -->
+<script src="common/validate/jquery.validate.min.js"></script>
+<script src="common/validate/messages_cn.js"></script>
+<!-- dialog -->
+<script src="js/dialog.js"></script> 
+<!-- custom -->
+<script src="js/normal.custom.js"></script>
+<script type="text/javascript">	
+	$(document).ready(function() {
+		//文件上传
+		$(":file").filestyle({
+			icon: false,
+			buttonText: "选择文件"
+		});
+
+		//导入数据 
+		$('.btn-import').on('click', function(){
+			layer.open({
+				type: 1,
+				title: '导入检测报告',
+				area: '650px',
+				btn: ['导入','关闭'],
+				yes: function(index, layero){
+				     layer.msg("正在导入检测报告，请稍候...");
+					$("#import-dialog").submit();
+				},
+				btn2: function(index, layero){
+
+				  },
+				shadeClose: true,
+				content: $('#import-dialog')
+			});
+		});
+		//批量删除
+		$('.btn-batchdelete').on('click', function(){
+			layer.confirm('是否批量删除选中数据记录?', {icon: 0,title: '批量删除'}, {
+				btn: ['确认','取消']
+			});
+		});
+		//提示信息
+		//删除
+		$('.btn-delete').on('click', function(){
+			layer.confirm('是否删除本条数据记录?', {icon: 0,title: '删除数据'}, {
+				btn: ['确认','取消']
+			});
+		});
+		//提示信息
+		$('.btn-export').on('click', function(){
+			layer.confirm('是否导出评估报告?', {icon: 0,title: '导出报告'}, {
+				btn: ['确认','取消']
+			});
+		});
+		
+		
+	});	
+</script>
+</body>
+</html>
