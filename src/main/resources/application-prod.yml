@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/fire
+    url: jdbc:mysql://localhost:3306/fire?useUnicode=true&characterEncoding=utf8s
     username: root
     password: Fire@gyky408..
   jpa:
