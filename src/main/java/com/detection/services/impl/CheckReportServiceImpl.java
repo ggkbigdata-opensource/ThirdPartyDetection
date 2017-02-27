@@ -57,11 +57,11 @@ public class CheckReportServiceImpl implements CheckReportService{
     private PDFParserService pdfParser;
     
     
-	@Value("${uploadPath}")
-	private String uploadPath;
+    @Value("${uploadPath}")
+    private String uploadPath;
     
-	@Value("${downloadPath}")
-	private String downloadPath;
+    @Value("${downloadPath}")
+    private String downloadPath;
     
     @Override
     public String saveCheckReportInfo(JSONObject info) {
@@ -148,113 +148,113 @@ public class CheckReportServiceImpl implements CheckReportService{
     
     @Override
     public boolean uploadAndSaveReport(String fileName, MultipartFile file) throws IOException{
-    	boolean result = false;
-    	String upFilePath = uploadPath +fileName;
-    	String downFilePath = downloadPath + fileName;
-    	
-		BufferedOutputStream out = new BufferedOutputStream(
-				new FileOutputStream(new File(upFilePath)));
-		
-		out.write(file.getBytes());
-		out.flush();
-		out.close();
-		parseAndSaveReportToDB(upFilePath,downFilePath);
-		result = true;
-    	
-    	return result;
+        boolean result = false;
+        String upFilePath = uploadPath +fileName;
+        String downFilePath = downloadPath + fileName;
+        
+        BufferedOutputStream out = new BufferedOutputStream(
+                new FileOutputStream(new File(upFilePath)));
+        
+        out.write(file.getBytes());
+        out.flush();
+        out.close();
+        parseAndSaveReportToDB(upFilePath,downFilePath);
+        result = true;
+        
+        return result;
     }
     
     @Override
     public boolean parseAndSaveReportToDB(String upFilePath, String downloadPath) throws IOException{
-		
-    	boolean result = false;
-		// 解析报告并入库
-		PDFParserResult parseResult = pdfParser.parse(new File(upFilePath));
-		Cover reportCover = parseResult.getCover();
-		List<Result> firstPart = parseResult.getFirstPart();
-		//String reportConclusion = parseResult.getSecondPart();
-		List<Result> thirdPart = parseResult.getThirdPart();
-		List<ListResult> forthPart = parseResult.getForthPart();
-		
-		//保存report对象
-		CheckReport checkReport = new CheckReport();
-		List<CheckReportResultStat> checkReportStatList = new ArrayList<CheckReportResultStat>();
-		List<CheckItemDetail> checkItemDetailList = new ArrayList<CheckItemDetail>();
-		
-		//process on cover
-		checkReport.setAgentName(reportCover.getAgentName());
-		checkReport.setContactFax(reportCover.getContactFax());
-		checkReport.setContactPostCode(reportCover.getContactPostcode());getClass();
-		checkReport.setContactTel(reportCover.getContactTel());
-		checkReport.setCreateDate(new Date());
-		checkReport.setModifyDate(new Date());
-		checkReport.setProjectAddress(reportCover.getProjectAddress());
-		checkReport.setProjectName(reportCover.getProjectName());
-		checkReport.setQaAddress(reportCover.getQaAddress());
-		checkReport.setQaName(reportCover.getQaName());
-		checkReport.setReportConclusion(reportCover.getReportConclusion());
-		checkReport.setReportNum(reportCover.getReportNum());
-		checkReport.setFilePath(downloadPath);
-		//process on first part
-		Iterator<Result> it1 = firstPart.iterator();
-		while(it1.hasNext()){
-			CheckReportResultStat element = new CheckReportResultStat();
-			Result nextItem = it1.next();
-			element.setCheckLevel(nextItem.getLevel());
-			if(!nextItem.getValue1().equals(""))
-				element.setCheckNum(Integer.parseInt(nextItem.getValue1()));
-			element.setItemCode(nextItem.getLabel());
-			element.setItemName(nextItem.getName());
-			if(!nextItem.getValue1().equals(""))
-				element.setUnqualifiedNum(Integer.parseInt(nextItem.getValue2()));
-			checkReportStatList.add(element);
-		}
-		
-		//process on third part
-		Iterator<Result> it2 = thirdPart.iterator();
-		while(it2.hasNext()){
-			CheckItemDetail element = new CheckItemDetail();
-			Result nextItem = it2.next();
-			element.setCheckLevel(nextItem.getLevel());
-			if(!nextItem.getValue1().equals(""))
-				element.setCheckNum(Integer.parseInt(nextItem.getValue1()));
-			element.setItemCode(nextItem.getLabel());
-			element.setItemName(nextItem.getName());
-			if(!nextItem.getValue1().equals(""))
-				element.setUnqualifiedNum(Integer.parseInt(nextItem.getValue2()));
-			checkItemDetailList.add(element);
-		}
-		
-		checkReport.setCheckItemDetail(checkItemDetailList);
-		checkReport.setCheckReportResultStat(checkReportStatList);
-		//TODO 第四第五部分保存内容
-		
-		
-		checkReportRepo.saveAndFlush(checkReport);
-		result = true;
-		
-		return result;
+        
+        boolean result = false;
+        // 解析报告并入库
+        PDFParserResult parseResult = pdfParser.parse(new File(upFilePath));
+        Cover reportCover = parseResult.getCover();
+        List<Result> firstPart = parseResult.getFirstPart();
+        //String reportConclusion = parseResult.getSecondPart();
+        List<Result> thirdPart = parseResult.getThirdPart();
+        List<ListResult> forthPart = parseResult.getForthPart();
+        
+        //保存report对象
+        CheckReport checkReport = new CheckReport();
+        List<CheckReportResultStat> checkReportStatList = new ArrayList<CheckReportResultStat>();
+        List<CheckItemDetail> checkItemDetailList = new ArrayList<CheckItemDetail>();
+        
+        //process on cover
+        checkReport.setAgentName(reportCover.getAgentName());
+        checkReport.setContactFax(reportCover.getContactFax());
+        checkReport.setContactPostCode(reportCover.getContactPostcode());getClass();
+        checkReport.setContactTel(reportCover.getContactTel());
+        checkReport.setCreateDate(new Date());
+        checkReport.setModifyDate(new Date());
+        checkReport.setProjectAddress(reportCover.getProjectAddress());
+        checkReport.setProjectName(reportCover.getProjectName());
+        checkReport.setQaAddress(reportCover.getQaAddress());
+        checkReport.setQaName(reportCover.getQaName());
+        checkReport.setReportConclusion(reportCover.getReportConclusion());
+        checkReport.setReportNum(reportCover.getReportNum());
+        checkReport.setFilePath(downloadPath);
+        //process on first part
+        Iterator<Result> it1 = firstPart.iterator();
+        while(it1.hasNext()){
+            CheckReportResultStat element = new CheckReportResultStat();
+            Result nextItem = it1.next();
+            element.setCheckLevel(nextItem.getLevel());
+            if(!nextItem.getValue1().equals(""))
+                element.setCheckNum(Integer.parseInt(nextItem.getValue1()));
+            element.setItemCode(nextItem.getLabel());
+            element.setItemName(nextItem.getName());
+            if(!nextItem.getValue1().equals(""))
+                element.setUnqualifiedNum(Integer.parseInt(nextItem.getValue2()));
+            checkReportStatList.add(element);
+        }
+        
+        //process on third part
+        Iterator<Result> it2 = thirdPart.iterator();
+        while(it2.hasNext()){
+            CheckItemDetail element = new CheckItemDetail();
+            Result nextItem = it2.next();
+            element.setCheckLevel(nextItem.getLevel());
+            if(!nextItem.getValue1().equals(""))
+                element.setCheckNum(Integer.parseInt(nextItem.getValue1()));
+            element.setItemCode(nextItem.getLabel());
+            element.setItemName(nextItem.getName());
+            if(!nextItem.getValue1().equals(""))
+                element.setUnqualifiedNum(Integer.parseInt(nextItem.getValue2()));
+            checkItemDetailList.add(element);
+        }
+        
+        checkReport.setCheckItemDetail(checkItemDetailList);
+        checkReport.setCheckReportResultStat(checkReportStatList);
+        //TODO 第四第五部分保存内容
+        
+        
+        checkReportRepo.saveAndFlush(checkReport);
+        result = true;
+        
+        return result;
     }
 
-	@Override
-	public void deleteReportByReportNum(String reportNum) {
-		
-		if(checkReportRepo.findOne(reportNum)!=null)
-			checkReportRepo.delete(reportNum);
-		
-	}
+    @Override
+    public void deleteReportByReportNum(String reportNum) {
+        
+        if(checkReportRepo.findOne(reportNum)!=null)
+            checkReportRepo.delete(reportNum);
+        
+    }
 
-	@Override
-	public CheckReport getReportByReportNum(String reportNum) {
-		
-		return checkReportRepo.findOne(reportNum);
-	}
+    @Override
+    public CheckReport getReportByReportNum(String reportNum) {
+        
+        return checkReportRepo.findOne(reportNum);
+    }
 
-	@Override
-	public List<CheckReport> getAllReports() {
-		
-		return checkReportRepo.findAll();
-	}
+    @Override
+    public List<CheckReport> getAllReports() {
+        
+        return checkReportRepo.findAll();
+    }
     
     
 

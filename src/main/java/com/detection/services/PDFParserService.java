@@ -10,8 +10,6 @@ package com.detection.services;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Matcher;
-
 import com.detection.model.pdfparse.Cover;
 import com.detection.model.pdfparse.ListResult;
 import com.detection.model.pdfparse.PDFParserResult;
