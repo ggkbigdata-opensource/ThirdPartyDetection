@@ -5,3 +5,5 @@
 .project
 .settings/
 src/main/resources/static/reportUploads/
+/bin/
+/src/main/resources/*.yml
