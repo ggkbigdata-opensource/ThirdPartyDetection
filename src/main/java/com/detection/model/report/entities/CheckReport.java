@@ -29,14 +29,16 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class CheckReport {
-    
+
     @Id
     private String reportNum;
-    
+
+    private int riskLevel;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "reportNum")
     private CheckReportInfo checkReportInfo;
-    
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "reportNum")
     private List<CheckReportResultStat> checkReportResultStat = new ArrayList<CheckReportResultStat>();
@@ -53,19 +55,19 @@ public class CheckReport {
     private Date modifyDate;
     private String creatorName;
     private String modifierName;
-    
+
     public CheckReport() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-	public String getReportNum() {
-		return reportNum;
-	}
+    public String getReportNum() {
+        return reportNum;
+    }
 
-	public void setReportNum(String reportNum) {
-		this.reportNum = reportNum;
-	}
+    public void setReportNum(String reportNum) {
+        this.reportNum = reportNum;
+    }
 
     public CheckReportInfo getCheckReportInfo() {
         return checkReportInfo;
@@ -75,57 +77,57 @@ public class CheckReport {
         this.checkReportInfo = checkReportInfo;
     }
 
-	public List<CheckReportResultStat> getCheckReportResultStat() {
-		return checkReportResultStat;
-	}
+    public List<CheckReportResultStat> getCheckReportResultStat() {
+        return checkReportResultStat;
+    }
 
-	public void setCheckReportResultStat(List<CheckReportResultStat> checkReportResultStat) {
-		this.checkReportResultStat = checkReportResultStat;
-	}
+    public void setCheckReportResultStat(List<CheckReportResultStat> checkReportResultStat) {
+        this.checkReportResultStat = checkReportResultStat;
+    }
 
-	public List<CheckItemDetail> getCheckItemDetail() {
-		return checkItemDetail;
-	}
+    public List<CheckItemDetail> getCheckItemDetail() {
+        return checkItemDetail;
+    }
 
-	public void setCheckItemDetail(List<CheckItemDetail> checkItemDetail) {
-		this.checkItemDetail = checkItemDetail;
-	}
+    public void setCheckItemDetail(List<CheckItemDetail> checkItemDetail) {
+        this.checkItemDetail = checkItemDetail;
+    }
 
-	public List<CheckReportUnqualifiedItemDetail> getUnqualifiedItemDetail() {
-		return unqualifiedItemDetail;
-	}
+    public List<CheckReportUnqualifiedItemDetail> getUnqualifiedItemDetail() {
+        return unqualifiedItemDetail;
+    }
 
-	public void setUnqualifiedItemDetail(List<CheckReportUnqualifiedItemDetail> unqualifiedItemDetail) {
-		this.unqualifiedItemDetail = unqualifiedItemDetail;
-	}
+    public void setUnqualifiedItemDetail(List<CheckReportUnqualifiedItemDetail> unqualifiedItemDetail) {
+        this.unqualifiedItemDetail = unqualifiedItemDetail;
+    }
 
-	public Date getCreateDate() {
-		return createDate;
-	}
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-	public Date getModifyDate() {
-		return modifyDate;
-	}
+    public Date getModifyDate() {
+        return modifyDate;
+    }
 
-	public void setModifyDate(Date modifyDate) {
-		this.modifyDate = modifyDate;
-	}
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate;
+    }
 
-	public String getCreatorName() {
-		return creatorName;
-	}
+    public String getCreatorName() {
+        return creatorName;
+    }
 
-	public void setCreatorName(String creatorName) {
-		this.creatorName = creatorName;
-	}
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
 
-	public String getModifierName() {
-		return modifierName;
-	}
+    public String getModifierName() {
+        return modifierName;
+    }
 
     public void setModifierName(String modifierName) {
         this.modifierName = modifierName;

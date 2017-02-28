@@ -195,6 +195,7 @@ public class CheckReportServiceImpl implements CheckReportService{
         checkReport.setModifyDate(new Date());
         
         //process on report cover info
+        checkReportInfo.setReportNum(reportCover.getReportNum());
         checkReportInfo.setAgentName(reportCover.getAgentName());
         checkReportInfo.setContactFax(reportCover.getContactFax());
         checkReportInfo.setContactPostCode(reportCover.getContactPostcode());
@@ -271,6 +272,18 @@ public class CheckReportServiceImpl implements CheckReportService{
     public List<CheckReport> getAllReports() {
         
         return checkReportRepo.findAll();
+    }
+
+    @Override
+    public List<CheckReport> getReportByCondition(String projectName, String reportNum, 
+            String riskLevel, String qaName) {
+        // TODO Auto-generated method stub
+        if( reportNum!=null && !reportNum.equals("")){
+            CheckReport result = checkReportRepo.findOne(reportNum);
+        }
+        
+        
+        return null;
     }
     
     

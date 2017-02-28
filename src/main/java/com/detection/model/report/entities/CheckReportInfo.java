@@ -16,8 +16,7 @@ import javax.persistence.Id;
 @Entity
 public class CheckReportInfo {
     @Id
-    @GeneratedValue
-    private int id;
+    private String reportNum;
     private String projectName;
     private String projectAddress;
     private String agentName;
@@ -35,16 +34,16 @@ public class CheckReportInfo {
         
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getProjectName() {
         return projectName;
+    }
+
+    public String getReportNum() {
+        return reportNum;
+    }
+
+    public void setReportNum(String reportNum) {
+        this.reportNum = reportNum;
     }
 
     public void setProjectName(String projectName) {

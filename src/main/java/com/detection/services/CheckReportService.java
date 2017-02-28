@@ -82,5 +82,13 @@ public interface CheckReportService {
      * @function 查找所有报告
      */
     public List<CheckReport> getAllReports();
+    
+    /**
+     * @author csk
+     * @version 1.0
+     * @throws IOException 
+     * @function 按条件查找报告
+     */
+    public List<CheckReport> getReportByCondition(String projectName, String reportNum, String riskLevel, String qaName);
 }
 
