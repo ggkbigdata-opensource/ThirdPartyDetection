@@ -35,55 +35,55 @@ import com.detection.services.impl.CheckReportServiceImpl;
  */
 @Controller
 public class ReportViewController {
-	
-	@Autowired
-	private CheckReportService checkReportService;
-	
-    @RequestMapping({"/","/login"})
-    public String index(){
+
+    @Autowired
+    private CheckReportService checkReportService;
+
+    @RequestMapping({ "/", "/login" })
+    public String index() {
         return "/login";
     }
-    
-    @RequestMapping({"/main"})
-    public String main(){
+
+    @RequestMapping({ "/main" })
+    public String main() {
         return "/report/main";
     }
 
-	@PostMapping("/uploadReport")
-	public String uploadReport(@RequestParam("file") MultipartFile file) throws IOException {
-		if (!file.isEmpty()) {			
-			checkReportService.uploadAndSaveReport(file.getOriginalFilename(), file);
-		}
-		return "redirect:main";
-	}
-    
+    @PostMapping("/uploadReport")
+    public String uploadReport(@RequestParam("file") MultipartFile file) throws IOException {
+        if (!file.isEmpty()) {
+            checkReportService.uploadAndSaveReport(file.getOriginalFilename(), file);
+        }
+        return "redirect:main";
+    }
+
     @RequestMapping("/getReportPage")
     public String getReport() {
         return "/report/getReportPage";
     }
-    
+
     @RequestMapping("/showAbstractReportPage")
     public String reportAbstract() {
         return "/report/showAbstractReportPage";
     }
-    
+
     @RequestMapping("/showDetailReportPage")
     public String frequentBusines() {
         return "/report/showDetailReportPage";
     }
-    
+
     @RequestMapping("/404")
     public String pageNotFound() {
         return "/errors/404";
     }
-    
+
     @RequestMapping("/505")
     public String visitError() {
         return "/errors/505";
     }
+
     @RequestMapping("/nopermissions")
     public String NoPermisssions() {
         return "/errors/nopermissions";
     }
 }
-
