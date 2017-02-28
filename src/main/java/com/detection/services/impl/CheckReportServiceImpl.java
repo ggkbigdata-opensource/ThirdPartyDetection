@@ -29,6 +29,7 @@ import com.detection.model.pdfparse.PDFParserResult;
 import com.detection.model.pdfparse.Result;
 import com.detection.model.report.entities.CheckItemDetail;
 import com.detection.model.report.entities.CheckReport;
+import com.detection.model.report.entities.CheckReportInfo;
 import com.detection.model.report.entities.CheckReportResultStat;
 import com.detection.model.report.repositories.CheckItemDetailRepository;
 import com.detection.model.report.repositories.CheckReportRepository;
@@ -62,11 +63,11 @@ public class CheckReportServiceImpl implements CheckReportService{
     
     @Value("${downloadPath}")
     private String downloadPath;
-    
+
     @Override
     public String saveCheckReportInfo(JSONObject info) {
 
-        CheckReport checkInfo = new CheckReport();
+/*        CheckReport checkInfo = new CheckReport();
         checkInfo.setAgentName(info.getString("agentName") != null ? 
                 info.getString("agentName").trim() : null);
         checkInfo.setContactFax(info.getString("contactFax") != null ? 
@@ -89,7 +90,7 @@ public class CheckReportServiceImpl implements CheckReportService{
                 info.getString("reportNum").trim() : null);
         checkInfo.setReportConclusion(info.getString("reportConclusion") != null ? 
                 info.getString("reportConclusion").trim() : null);
-        checkReportRepo.save(checkInfo);
+        checkReportRepo.save(checkInfo);*/
         return "success";
     }
 
@@ -170,43 +171,55 @@ public class CheckReportServiceImpl implements CheckReportService{
         boolean result = false;
         // 解析报告并入库
         PDFParserResult parseResult = pdfParser.parse(new File(upFilePath));
+        
+
         Cover reportCover = parseResult.getCover();
         List<Result> firstPart = parseResult.getFirstPart();
         //String reportConclusion = parseResult.getSecondPart();
         List<Result> thirdPart = parseResult.getThirdPart();
         List<ListResult> forthPart = parseResult.getForthPart();
+        //TODO delete old report
+        if(reportCover.getReportNum() != null){
+            deleteReportByReportNum(reportCover.getReportNum());
+        }
         
         //保存report对象
         CheckReport checkReport = new CheckReport();
+        CheckReportInfo checkReportInfo = new CheckReportInfo();
         List<CheckReportResultStat> checkReportStatList = new ArrayList<CheckReportResultStat>();
         List<CheckItemDetail> checkItemDetailList = new ArrayList<CheckItemDetail>();
         
-        //process on cover
-        checkReport.setAgentName(reportCover.getAgentName());
-        checkReport.setContactFax(reportCover.getContactFax());
-        checkReport.setContactPostCode(reportCover.getContactPostcode());getClass();
-        checkReport.setContactTel(reportCover.getContactTel());
+        //report basic info
+        checkReport.setReportNum(reportCover.getReportNum());
         checkReport.setCreateDate(new Date());
         checkReport.setModifyDate(new Date());
-        checkReport.setProjectAddress(reportCover.getProjectAddress());
-        checkReport.setProjectName(reportCover.getProjectName());
-        checkReport.setQaAddress(reportCover.getQaAddress());
-        checkReport.setQaName(reportCover.getQaName());
-        checkReport.setReportConclusion(reportCover.getReportConclusion());
-        checkReport.setReportNum(reportCover.getReportNum());
-        checkReport.setFilePath(downloadPath);
+        
+        //process on report cover info
+        checkReportInfo.setAgentName(reportCover.getAgentName());
+        checkReportInfo.setContactFax(reportCover.getContactFax());
+        checkReportInfo.setContactPostCode(reportCover.getContactPostcode());
+        checkReportInfo.setContactTel(reportCover.getContactTel());
+        checkReportInfo.setProjectAddress(reportCover.getProjectAddress());
+        checkReportInfo.setProjectName(reportCover.getProjectName());
+        checkReportInfo.setQaAddress(reportCover.getQaAddress());
+        checkReportInfo.setQaName(reportCover.getQaName());
+        checkReportInfo.setReportConclusion(reportCover.getReportConclusion());
+        checkReportInfo.setFilePath(downloadPath);
+        
         //process on first part
         Iterator<Result> it1 = firstPart.iterator();
         while(it1.hasNext()){
             CheckReportResultStat element = new CheckReportResultStat();
             Result nextItem = it1.next();
             element.setCheckLevel(nextItem.getLevel());
-            if(!nextItem.getValue1().equals(""))
+            if(nextItem.getValue1()!=null && !nextItem.getValue1().equals("")){
                 element.setCheckNum(Integer.parseInt(nextItem.getValue1()));
+            }
             element.setItemCode(nextItem.getLabel());
             element.setItemName(nextItem.getName());
-            if(!nextItem.getValue1().equals(""))
+            if(nextItem.getValue1()!=null && !nextItem.getValue1().equals("")){
                 element.setUnqualifiedNum(Integer.parseInt(nextItem.getValue2()));
+            }
             checkReportStatList.add(element);
         }
         
@@ -216,15 +229,19 @@ public class CheckReportServiceImpl implements CheckReportService{
             CheckItemDetail element = new CheckItemDetail();
             Result nextItem = it2.next();
             element.setCheckLevel(nextItem.getLevel());
-            if(!nextItem.getValue1().equals(""))
+            if(nextItem.getValue1()!=null && !nextItem.getValue1().equals("")){
                 element.setCheckNum(Integer.parseInt(nextItem.getValue1()));
+            }
             element.setItemCode(nextItem.getLabel());
             element.setItemName(nextItem.getName());
-            if(!nextItem.getValue1().equals(""))
+            if(nextItem.getValue1()!=null && !nextItem.getValue1().equals("")){
                 element.setUnqualifiedNum(Integer.parseInt(nextItem.getValue2()));
+            }
             checkItemDetailList.add(element);
         }
         
+        
+        checkReport.setCheckReportInfo(checkReportInfo);
         checkReport.setCheckItemDetail(checkItemDetailList);
         checkReport.setCheckReportResultStat(checkReportStatList);
         //TODO 第四第五部分保存内容
@@ -239,9 +256,9 @@ public class CheckReportServiceImpl implements CheckReportService{
     @Override
     public void deleteReportByReportNum(String reportNum) {
         
-        if(checkReportRepo.findOne(reportNum)!=null)
+        if(checkReportRepo.findOne(reportNum)!=null){
             checkReportRepo.delete(reportNum);
-        
+        }
     }
 
     @Override

@@ -22,6 +22,7 @@ public class DepartmentController {
     static String regex = "";
     @Autowired
     private OwnerUnitRepository ownerUnitRepository;
+    
     @GetMapping(value = "/registration/addOwnerUnit")
     public String addOwnerUnit(@RequestParam(name = "ownerName") String ownerName,
             @RequestParam(name = "email") String email) throws AddressException, MessagingException {
@@ -58,41 +59,5 @@ public class DepartmentController {
         
         return "finish";
     }
-    /*
-     * @GetMapping(value = "getOwnerUnitList") public List<OwnerUnit>
-     * getOwnerUnitList(){
-     * 
-     * return ownerUnitRepository.findAll(); }
-     * 
-     * @GetMapping(value = "getOwnerUnitById") public OwnerUnit
-     * getOwnerUnitById(@RequestParam("id") Integer id){
-     * 
-     * return ownerUnitRepository.findOne(id); }
-     * 
-     * @GetMapping(value = "getOwnerUnitByOwnerName") public List<OwnerUnit>
-     * getOwnerUnitByOwnerName(@RequestParam("ownerName") String ownerName){
-     * return ownerUnitRepository.findByOwnerName(ownerName); }
-     * 
-     * @GetMapping(value = "getOwnerUnitByEmail") public List<OwnerUnit>
-     * getOwnerUnitByEmail(@RequestParam("email") String email){ return
-     * ownerUnitRepository.findByEmail(email); }
-     */
 
-    /*
-     * @PutMapping(value="updateOwnerUnitById") public OwnerUnit
-     * updateOwnerUnitById(@RequestParam("id") Integer id,
-     * 
-     * @RequestParam("ownerName") String ownerName,
-     * 
-     * @RequestParam("email") String email){ OwnerUnit ownerUnit =
-     * ownerUnitRepository.findOne(id); if(!email.equals("")){
-     * ownerUnit.setEmail(email); } if(!ownerName.equals("")){
-     * ownerUnit.setOwnerName(ownerName); } return
-     * ownerUnitRepository.save(ownerUnit); }
-     */
-    /*
-     * @DeleteMapping(value = "deleteOwnerUnitById") public void
-     * deleteOwnerUnitById(@RequestParam("id") Integer id){
-     * ownerUnitRepository.delete(id); }
-     */
 }

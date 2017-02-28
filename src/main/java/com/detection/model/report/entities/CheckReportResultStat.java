@@ -7,6 +7,8 @@
  */
 package com.detection.model.report.entities;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -27,62 +29,70 @@ public class CheckReportResultStat {
     //private String reportNum;
     private String itemCode;
     private String itemName;
-    private Integer checkNum;
+    private int checkNum;
     private String checkLevel;
-    private Integer unqualifiedNum;
+    private int unqualifiedNum;
+    private Date optTime;
     
     public CheckReportResultStat(){
-    	
+    
     }
-    
-    
+
     public int getId() {
-		return id;
-	}
-
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-
-/*	public String getReportNum() {
-        return reportNum;
+        return id;
     }
-    public void setReportNum(String reportNum) {
-        this.reportNum = reportNum;
-    }*/
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getItemCode() {
         return itemCode;
     }
+
     public void setItemCode(String itemCode) {
         this.itemCode = itemCode;
     }
+
     public String getItemName() {
         return itemName;
     }
+
     public void setItemName(String itemName) {
         this.itemName = itemName;
     }
-    public Integer getCheckNum() {
+
+    public int getCheckNum() {
         return checkNum;
     }
-    public void setCheckNum(Integer checkNum) {
+
+    public void setCheckNum(int checkNum) {
         this.checkNum = checkNum;
     }
-    public Integer getUnqualifiedNum() {
-        return unqualifiedNum;
-    }
-    public void setUnqualifiedNum(Integer unqualifiedNum) {
-        this.unqualifiedNum = unqualifiedNum;
-    }
+
     public String getCheckLevel() {
         return checkLevel;
     }
+
     public void setCheckLevel(String checkLevel) {
         this.checkLevel = checkLevel;
     }
 
+    public int getUnqualifiedNum() {
+        return unqualifiedNum;
+    }
+
+    public void setUnqualifiedNum(int unqualifiedNum) {
+        this.unqualifiedNum = unqualifiedNum;
+    }
+
+    public Date getOptTime() {
+        return optTime;
+    }
+
+    public void setOptTime(Date optTime) {
+        this.optTime = optTime;
+    }
     
 }
 
