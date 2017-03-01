@@ -34,8 +34,8 @@ public class CheckItemDetail {
     private String importantGrade;
     private String itemName;
 
-    private Integer checkNum;
-    private Integer unqualifiedNum;
+    private int checkNum;
+    private int unqualifiedNum;
 
     private String regular;
 
@@ -75,19 +75,19 @@ public class CheckItemDetail {
         this.itemName = itemName;
     }
 
-    public Integer getCheckNum() {
+    public int getCheckNum() {
         return checkNum;
     }
 
-    public void setCheckNum(Integer checkNum) {
+    public void setCheckNum(int checkNum) {
         this.checkNum = checkNum;
     }
 
-    public Integer getUnqualifiedNum() {
+    public int getUnqualifiedNum() {
         return unqualifiedNum;
     }
 
-    public void setUnqualifiedNum(Integer unqualifiedNum) {
+    public void setUnqualifiedNum(int unqualifiedNum) {
         this.unqualifiedNum = unqualifiedNum;
     }
 
@@ -98,5 +98,6 @@ public class CheckItemDetail {
     public void setRegular(String regular) {
         this.regular = regular;
     }
+
 
 }
