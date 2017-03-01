@@ -153,6 +153,7 @@ fieldset[disabled] .form-control {
 /*Frame*/
 .wrapper {
     width: 100%;
+    opacity:0;
 }
 .row-sm-margin {
     margin-left: -10px;
