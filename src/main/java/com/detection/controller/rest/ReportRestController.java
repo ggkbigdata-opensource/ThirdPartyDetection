@@ -56,8 +56,8 @@ public class ReportRestController {
         int code = 200;
         String message = "sucess";
         
-        //List<CheckReport> reportlist = service.getAllReports();
-        List<CheckReport> reportlist = service.getReportByCondition(projectName,reportNum,riskLevel,qaName);
+        List<CheckReport> reportlist = service.getAllReports();
+        //List<CheckReport> reportlist = service.getReportByCondition(projectName,reportNum,riskLevel,qaName);
         List<CheckReportInfo> dataList = new ArrayList<CheckReportInfo>();
         Iterator<CheckReport>it = reportlist.iterator();
         while(it.hasNext()){
