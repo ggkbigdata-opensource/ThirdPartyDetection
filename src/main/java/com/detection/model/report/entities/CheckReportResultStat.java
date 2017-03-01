@@ -30,33 +30,34 @@ public class CheckReportResultStat {
     private String itemCode;
     private String itemName;
     private int checkNum;
-    private String checkLevel;
+    private String importantGrade;
     private int unqualifiedNum;
     private Date optTime;
     
     public CheckReportResultStat(){
     	
     }
-    
-    
+
     public int getId() {
-		return id;
-	}
+        return id;
+    }
 
-
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getItemCode() {
         return itemCode;
     }
+
     public void setItemCode(String itemCode) {
         this.itemCode = itemCode;
     }
+
     public String getItemName() {
         return itemName;
     }
+
     public void setItemName(String itemName) {
         this.itemName = itemName;
     }
@@ -69,12 +70,12 @@ public class CheckReportResultStat {
         this.checkNum = checkNum;
     }
 
-    public String getCheckLevel() {
-        return checkLevel;
+    public String getImportantGrade() {
+        return importantGrade;
     }
 
-    public void setCheckLevel(String checkLevel) {
-        this.checkLevel = checkLevel;
+    public void setImportantGrade(String importantGrade) {
+        this.importantGrade = importantGrade;
     }
 
     public int getUnqualifiedNum() {
@@ -93,5 +94,7 @@ public class CheckReportResultStat {
         this.optTime = optTime;
     }
     
+    
+
 }
 
