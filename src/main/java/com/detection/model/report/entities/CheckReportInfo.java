@@ -28,6 +28,7 @@ public class CheckReportInfo {
     private String message;
     @Column(length = 2048)
     private String reportConclusion;
+    private int riskLevel;
     private String filePath;
     
     public CheckReportInfo(){
@@ -120,6 +121,15 @@ public class CheckReportInfo {
 
     public void setReportConclusion(String reportConclusion) {
         this.reportConclusion = reportConclusion;
+    }
+    
+
+    public int getRiskLevel() {
+        return riskLevel;
+    }
+
+    public void setRiskLevel(int riskLevel) {
+        this.riskLevel = riskLevel;
     }
 
     public String getFilePath() {

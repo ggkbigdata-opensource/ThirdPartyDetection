@@ -31,11 +31,14 @@ import com.detection.model.report.entities.CheckItemDetail;
 import com.detection.model.report.entities.CheckReport;
 import com.detection.model.report.entities.CheckReportInfo;
 import com.detection.model.report.entities.CheckReportResultStat;
+import com.detection.model.report.entities.CheckReportUnqualifiedItemDetail;
 import com.detection.model.report.repositories.CheckItemDetailRepository;
 import com.detection.model.report.repositories.CheckReportRepository;
 import com.detection.model.report.repositories.CheckReportResultStatRepository;
 import com.detection.services.CheckReportService;
 import com.detection.services.PDFParserService;
+
+import scala.annotation.meta.setter;
 
 /**
  *
@@ -112,7 +115,7 @@ public class CheckReportServiceImpl implements CheckReportService{
             stat.setItemName(obj.getString("name") != null ?
                     obj.getString("name") : null);
             //stat.setReportNum(reportNum);
-            stat.setCheckLevel(obj.getString("level") != null ?
+            stat.setImportantGrade(obj.getString("level") != null ?
                     obj.getString("level") : null);
             stat.setUnqualifiedNum(obj.getString("value2") != null ?
                     Integer.parseInt(obj.getString("value2")) : 0);
@@ -129,7 +132,7 @@ public class CheckReportServiceImpl implements CheckReportService{
         for(int index = 0; index < size; index++) {
             JSONObject obj = resultDetailObj.getJSONObject(index);
             CheckItemDetail detail = new CheckItemDetail();
-            detail.setCheckLevel(obj.getString("level") != null ?
+            detail.setImportantGrade(obj.getString("level") != null ?
                     obj.getString("level").trim() : null);
             detail.setCheckNum((obj.getString("value1") != null 
                     && !"".equals(obj.getString("value1").trim())) ?
@@ -153,6 +156,10 @@ public class CheckReportServiceImpl implements CheckReportService{
         String upFilePath = uploadPath +fileName;
         String downFilePath = downloadPath + fileName;
         
+        File outPath = new File(uploadPath);
+        if(!outPath.exists()){
+            outPath.mkdirs();
+        }
         BufferedOutputStream out = new BufferedOutputStream(
                 new FileOutputStream(new File(upFilePath)));
         
@@ -188,7 +195,7 @@ public class CheckReportServiceImpl implements CheckReportService{
         CheckReportInfo checkReportInfo = new CheckReportInfo();
         List<CheckReportResultStat> checkReportStatList = new ArrayList<CheckReportResultStat>();
         List<CheckItemDetail> checkItemDetailList = new ArrayList<CheckItemDetail>();
-        
+        List<CheckReportUnqualifiedItemDetail> checkReportUnqualifiedItemList = new ArrayList<CheckReportUnqualifiedItemDetail>();
         //report basic info
         checkReport.setReportNum(reportCover.getReportNum());
         checkReport.setCreateDate(new Date());
@@ -212,7 +219,7 @@ public class CheckReportServiceImpl implements CheckReportService{
         while(it1.hasNext()){
             CheckReportResultStat element = new CheckReportResultStat();
             Result nextItem = it1.next();
-            element.setCheckLevel(nextItem.getLevel());
+            element.setImportantGrade(nextItem.getLevel());
             if(nextItem.getValue1()!=null && !nextItem.getValue1().equals("")){
                 element.setCheckNum(Integer.parseInt(nextItem.getValue1()));
             }
@@ -229,7 +236,7 @@ public class CheckReportServiceImpl implements CheckReportService{
         while(it2.hasNext()){
             CheckItemDetail element = new CheckItemDetail();
             Result nextItem = it2.next();
-            element.setCheckLevel(nextItem.getLevel());
+            element.setImportantGrade(nextItem.getLevel());
             if(nextItem.getValue1()!=null && !nextItem.getValue1().equals("")){
                 element.setCheckNum(Integer.parseInt(nextItem.getValue1()));
             }
@@ -240,13 +247,23 @@ public class CheckReportServiceImpl implements CheckReportService{
             }
             checkItemDetailList.add(element);
         }
-        
+        //TODO 第四第五部分保存内容
+        //process on fourth part
+        Iterator<ListResult> it3 = forthPart.iterator();
+        while(it3.hasNext()){
+            CheckReportUnqualifiedItemDetail element = new CheckReportUnqualifiedItemDetail();
+            ListResult nextItem = it3.next();
+            element.setImportantGrade(nextItem.getImportantGrade());
+            element.setRequirements(nextItem.getRequirements());
+            element.setTestItem(nextItem.getTestItem());
+            element.setUnqualifiedCheckPointByStringList(nextItem.getNonstandardItems());
+            checkReportUnqualifiedItemList.add(element);
+        }
         
         checkReport.setCheckReportInfo(checkReportInfo);
         checkReport.setCheckItemDetail(checkItemDetailList);
         checkReport.setCheckReportResultStat(checkReportStatList);
-        //TODO 第四第五部分保存内容
-        
+        checkReport.setUnqualifiedItemDetail(checkReportUnqualifiedItemList);
         
         checkReportRepo.save(checkReport);
         result = true;
@@ -281,8 +298,7 @@ public class CheckReportServiceImpl implements CheckReportService{
         if( reportNum!=null && !reportNum.equals("")){
             CheckReport result = checkReportRepo.findOne(reportNum);
         }
-        
-        
+
         return null;
     }
     

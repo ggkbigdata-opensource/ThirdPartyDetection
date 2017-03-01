@@ -33,8 +33,6 @@ public class CheckReport {
     @Id
     private String reportNum;
 
-    private int riskLevel;
-
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "reportNum")
     private CheckReportInfo checkReportInfo;
@@ -64,7 +62,7 @@ public class CheckReport {
     public String getReportNum() {
         return reportNum;
     }
-
+    
     public void setReportNum(String reportNum) {
         this.reportNum = reportNum;
     }
