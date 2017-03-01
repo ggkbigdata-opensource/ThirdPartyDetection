@@ -38,8 +38,6 @@ import com.detection.model.report.repositories.CheckReportResultStatRepository;
 import com.detection.services.CheckReportService;
 import com.detection.services.PDFParserService;
 
-import scala.annotation.meta.setter;
-
 /**
  *
  * @author lcc (lincc@ggkbigdata.com)
