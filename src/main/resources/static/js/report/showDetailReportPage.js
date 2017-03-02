@@ -51,18 +51,18 @@ function watermark(settings) {
     }
     
     if (defaultSettings.watermark_rows == 0 || 
-    		(parseInt(
-    				defaultSettings.watermark_y 
-    				+ defaultSettings.watermark_height * defaultSettings.watermark_rows 
-    				+ defaultSettings.watermark_y_space * 
-    				(defaultSettings.watermark_rows - 1)) > page_height)) {
+            (parseInt(
+                    defaultSettings.watermark_y 
+                    + defaultSettings.watermark_height * defaultSettings.watermark_rows 
+                    + defaultSettings.watermark_y_space * 
+                    (defaultSettings.watermark_rows - 1)) > page_height)) {
         defaultSettings.watermark_rows = parseInt(
-        		(defaultSettings.watermark_y_space + page_height - defaultSettings.watermark_y) / 
-        		(defaultSettings.watermark_height + defaultSettings.watermark_y_space));
+                (defaultSettings.watermark_y_space + page_height - defaultSettings.watermark_y) / 
+                (defaultSettings.watermark_height + defaultSettings.watermark_y_space));
         defaultSettings.watermark_y_space = parseInt(
-        		(page_height - defaultSettings.watermark_y 
-        		- defaultSettings.watermark_height * defaultSettings.watermark_rows) / 
-        		(defaultSettings.watermark_rows - 1));
+                (page_height - defaultSettings.watermark_y 
+                - defaultSettings.watermark_height * defaultSettings.watermark_rows) / 
+                (defaultSettings.watermark_rows - 1));
     }
     var x;
     var y;
@@ -106,8 +106,11 @@ $(function() {
             'verifyToken' : verifyToken
         }
         $.getJSON(proxy, params, function(result) {
-            if(result != null && result.flag == true) {
-                $('#reportNum').html(result.reportNum);
+            if(null == result || 200 != result.code) {
+                alert("无权限访问！！！");
+                self.location = '505';
+            } else {
+                $('#reportNum').html('天消 ' + result.reportNum);
                 $('#reportLevel').html(result.reportLevel);
                 $('#reportDate').html(result.reportDate);
                 $('#company').html(result.company);
@@ -116,15 +119,13 @@ $(function() {
                 $('#disqualification').html("<p>" + result.disqualification + "</p>");
                 sessionStorage.setItem('watermark', result.dutyPerson + "\t" + result.dutyTel);
                 watermark({ watermark_txt: result.dutyPerson + "\t" + result.dutyTel });
-            } else {
-                window.location.href ="505";
             }
         });
     }
     showDetailReportInfo();
     
     window.onresize = function () {
-    	$('div[id^=mask_div]').remove();
+        $('div[id^=mask_div]').remove();
         watermark({ watermark_txt: sessionStorage.getItem('watermark')});
     };
 });

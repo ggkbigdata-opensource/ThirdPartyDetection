@@ -25,7 +25,7 @@ $(function() {
                     item[3] = '一级风险';      //风险等级
                     item[4] = result.data[d].qaName;         //检测单位
                     item[5] = result.data[d].contactTel;     //联系电话
-                    item[6] = '<a class="evaluateReport" style="cursor:pointer" reportNum="' + result.data[d].reportNum + '">评估报告</a>&nbsp;'
+                    item[6] = '<a class="evaluateReport" style="cursor:pointer" href="showAbstractReportPage?reportNum=' + result.data[d].reportNum + '">评估报告</a>&nbsp;'
                             + '<a class="detectionReport" style="cursor:pointer" href="' + result.data[d].filePath + '">检测报告</a>&nbsp;'
                             + '<a class="deleteReport" style="cursor:pointer" reportNum="' + result.data[d].reportNum + '">删除</a>';      //
                     data[index++] = item;
