@@ -22,27 +22,7 @@ import com.detection.model.report.entities.CheckReport;
  * @version 1.0, 2017年2月21日 下午4:37:13
  */
 public interface CheckReportService {
-    
-    /**
-     * @author lcc
-     * @version 1.0
-     * @function 保存检测报告的meta信息(检测报告的封面基础信息)
-     */
-    public String saveCheckReportInfo(JSONObject info);
-    /**
-     * @author lcc
-     * @version 1.0
-     * @function 批量保存单项评定结果
-     */
-    public void saveCheckReportResultStat(JSONArray resultStatObj, String reportNum);
-    
-    /**
-     * @author lcc
-     * @version 1.0
-     * @function 批量保存检测情况统计表
-     */
-    public void saveCheckItemDetail(JSONArray resultStatObj, String reportNum);
-    
+
     /**
      * @author csk
      * @version 1.0
@@ -71,17 +51,9 @@ public interface CheckReportService {
      * @author csk
      * @version 1.0
      * @throws IOException 
-     * @function 按报告编号查找一份报告
-     */
-    public CheckReport getReportByReportNum(String reportNum);
-    
-    /**
-     * @author csk
-     * @version 1.0
-     * @throws IOException 
      * @function 查找所有报告
      */
-    public List<CheckReport> getAllReports();
+    public JSONObject getAllReports();
     
     /**
      * @author csk
@@ -89,6 +61,6 @@ public interface CheckReportService {
      * @throws IOException 
      * @function 按条件查找报告
      */
-    public List<CheckReport> getReportByCondition(String projectName, String reportNum, String riskLevel, String qaName);
+    public JSONObject getReportByCondition(String projectName, String reportNum, String riskLevel, String qaName);
 }
 

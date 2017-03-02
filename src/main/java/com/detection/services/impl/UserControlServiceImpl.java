@@ -39,7 +39,7 @@ public class UserControlServiceImpl implements UserControlService {
         int role = 0;
         String userName = null;
         String message = "Fail.User Not Found.";
-        List<User> userList = userRepository.findByToken(token);
+        List<User> userList = userRepository.findByToken(token.toUpperCase());
         if (userList != null && userList.size() != 0) {
             if (userList.size() == 1) {
                 User user = userList.get(0);
@@ -122,9 +122,9 @@ public class UserControlServiceImpl implements UserControlService {
         String token = null;
         int code = 201;
         int role = 0;
-
+        
         User currentUser = userRepository.findOne(loginName);
-        if (currentUser != null && currentUser.getUserPassword().equals(userPassword)) {
+        if (currentUser != null && currentUser.getUserPassword().equalsIgnoreCase(userPassword)) {
             code = 200;
             role = currentUser.getRole();
             token = EncryptionHelper.getUserToken(loginName, loginTime);
