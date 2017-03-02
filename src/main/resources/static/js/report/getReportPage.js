@@ -17,8 +17,9 @@ function submitInfoData() {
          'dutyTel' : dutyTel
     }
     $.getJSON(proxy, params, function(result){
-        if(result.flag == false) {
+        if(result == null || 200 != result.code) {
             alert("输入信息有误！");
+            self.location = '505';
         } else {
             sessionStorage.setItem('verifyToken', result.verifyToken);
             window.location.href ="showDetailReportPage";

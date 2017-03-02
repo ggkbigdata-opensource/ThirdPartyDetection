@@ -6,4 +6,4 @@
 .settings/
 src/main/resources/static/reportUploads/
 /bin/
-/src/main/resources/*
+/src/main/resources/*.yml

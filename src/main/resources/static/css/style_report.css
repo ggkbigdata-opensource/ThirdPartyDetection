@@ -1,0 +1,168 @@
+@charset "utf-8";
+.tc {
+	text-align: center;
+}
+.tr {
+	text-align: right;
+}
+.article {
+	position: relative;
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 15px 20px;
+	font-size: 16px;
+	color: #333333;
+	z-index: 10;
+}
+.number {
+	line-height: 30px;
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+.number span {
+	display: inline-block;
+	line-height: 30px;
+	border-bottom: 1px solid #000;
+}
+.article h1 {
+	font-size: 30px;
+	text-align: center;
+	line-height: 40px;
+}
+.article .small {
+	margin: 5px 0 15px;
+	font-size: 14px;
+	text-align: center;
+	font-weight: bold;
+	color: #666;
+}
+.article .content section + section {
+	margin: 10px 0;
+}
+.article .content h2,
+.article .content h3 {
+	font-size: 18px;
+	line-height: 40px;
+}
+.article .content p {
+	text-indent: 2em;
+	line-height: 2;
+}
+.article .content p.indent0 {
+	text-indent: 0;
+}
+.grade {
+	padding-left: 2em;
+	margin: 10px 0;
+}
+.grade label {
+	display: block;
+	padding: 5px 0;
+}
+.grade label input[type='checkbox'] {
+	margin-right: 5px;
+}
+.bottom {
+	padding-top: 20px;
+	overflow: hidden;
+	font-weight: bold;
+}
+.bottom .QRcode {
+	overflow: hidden;
+}
+.bottom .QRcode img {
+	width: 30%;
+}
+.bottom div.signature {
+	overflow: hidden;
+	float: right;
+}
+.watermark {
+	top: 0;
+	left: 0;
+	width: 100%;
+	min-height: 100%;
+	background-image:url(../img/watermark.jpg);
+	z-index:999;
+	position:fixed;
+	filter:alpha(opacity=8);  /*支持 IE 浏览器*/
+	-moz-opacity:0.08; /*支持 FireFox 浏览器*/
+	opacity:0.08;  /*支持 Chrome, Opera, Safari 等浏览器*/
+ }
+
+.code-group {
+	padding: 20px 25% 0;
+	overflow: hidden;
+}
+.code-group .tit {
+	float: left;
+	font-weight: bold;
+	line-height: 40px;
+}
+.input-control {
+	overflow: hidden;
+}
+.input-control input {
+	width: 100%;
+	height: 40px;
+	padding: 10px;
+	line-height: 18px;
+	color: #0b7da9;
+	font-weight: bold;
+	border-radius: 5px;
+	border: 1px solid #ddd;
+	box-shadow: none;
+}
+.btn-submit {
+	width: 100px;
+	height: 40px;
+	color: #fff;
+	font-size: 18px;
+	border: 0;
+	border-radius: 5px;
+	background-color: #57b6f7;
+	margin-bottom: 20px;
+}
+.tips {
+	font-size: 16px;
+	font-weight: bold;
+	overflow: hidden;
+	text-align: center;
+}
+.tips span {
+	display: inline-block;
+	overflow: hidden;
+	line-height: 30px;
+}
+.tips .tit {
+	color: #ff0000;
+}
+@media (max-width: 767px) {
+	.article h1 {
+		font-size: 22px;
+		line-height: 30px;
+	}
+	.bottom div.signature {
+		float: inherit;
+	}
+	.bottom .QRcode {
+		margin-top: 10px;
+		text-align: center;
+	}
+	.bottom .QRcode img {
+		width: 60%;
+	}
+	.code-group {
+		padding: 20px 20px 0;
+	}
+	.tips {
+		text-align: left;
+	}
+	.tips .tit {
+		float: left;
+	}
+	.tips span {
+		display: block;
+	}
+}
