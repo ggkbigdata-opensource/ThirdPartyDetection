@@ -35,39 +35,10 @@ public class ReportRestController {
     @Autowired
     private CheckReportService service;
     
-/*    @RequestMapping(value = {"/getReportByReportNum" }, method = RequestMethod.GET)
-    public JSONObject getReportByReportNum(@RequestParam String reportNum) {
-        return service.getReportItemByReportNum(reportNum);
-    }
-    
-    @RequestMapping(value = {"/getReportLevelByReportNum" }, method = RequestMethod.GET)
-    public JSONObject getReportLevelByReportNum(@RequestParam String reportNum) {
-        return service.getReportLevelByReportNum(reportNum);
-    }*/
-    
     @RequestMapping(value = {"/getReportList"} , method = RequestMethod.GET)
-    public JSONObject getReportList(@RequestParam(name = "projectName") String projectName,
-                                    @RequestParam(name = "reportNum") String reportNum,
-                                    //@RequestParam(name = "projectAddress") String projectAddress,
-                                    @RequestParam(name = "riskLevel") String riskLevel,
-                                    @RequestParam(name = "qaName") String qaName,
-                                    @RequestParam(name = "token") String token){
-        JSONObject result = new JSONObject();
-        int code = 200;
-        String message = "sucess";
+    public JSONObject getReportList(@RequestParam(name = "token") String token){
         
-        List<CheckReport> reportlist = service.getAllReports();
-        //List<CheckReport> reportlist = service.getReportByCondition(projectName,reportNum,riskLevel,qaName);
-        List<CheckReportInfo> dataList = new ArrayList<CheckReportInfo>();
-        Iterator<CheckReport>it = reportlist.iterator();
-        while(it.hasNext()){
-            dataList.add(it.next().getCheckReportInfo());
-        }
-        result.put("code", code);
-        result.put("message", message);
-        result.put("data", dataList);
-        
-        return result;
+        return service.getAllReports();
     }
 
 }
