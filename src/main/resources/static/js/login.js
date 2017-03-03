@@ -11,7 +11,10 @@ $(function(){
         }
         $.getJSON(proxy, params, function(result) {
             if(null == result || 200 != result.code) {
-                self.location = '505';
+                //self.location = '505';
+                alert('账号密码错误');
+                $('#loginName').val('');
+                $('#userPassword').val('');
             } else {
                 sessionStorage.setItem('token', result.token);
                 self.location = 'main';

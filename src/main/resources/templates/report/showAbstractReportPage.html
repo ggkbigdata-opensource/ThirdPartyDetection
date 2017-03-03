@@ -7,12 +7,11 @@
 <meta name="renderer" content="webkit"/>
 <title>天河区第三方机构消防安全风险评估报告</title>
 
+<!-- iconfont -->
+<link href="css/iconfont/iconfont.css" rel="stylesheet" type="text/css" />
 <!-- base css -->
-<link href="css/base.css" rel="stylesheet" type="text/css" />
-<!-- master css -->
-<link href="css/layout.css" rel="stylesheet" type="text/css" />
-<!-- report css-->
-<link href="css/report.css" rel="stylesheet" type="text/css" />
+<link href="css/base_report.css" rel="stylesheet" type="text/css" />
+<link href="css/style_report.css" rel="stylesheet" type="text/css" />
 <!-- JQuery 1.11.3 -->
 <script src="common/jquery/jquery-1.11.3.min.js"></script>
 </head>
@@ -24,14 +23,26 @@
     <p class="small">ANALYSIS REPORT</p>
     <section class="content">
         <span class="indent0" id="projectName"></span></p>
-        <p>兹有我办委托第三方技术机构于<span id="detectDate"></span>对贵单位进行消防设施安全检查及评估，感谢贵单位对天河区消防安全工作的支持与配合！经现场专业化信息采集及后期严谨评估，贵司消防安全危险可靠等级评估结果为：</p>
+        <p>兹有我办委托第三方技术服务机构于<span id="detectDate"></span>对贵单位开展火灾隐患排查及危险源分析，感谢贵单位对天河区消防安全工作的支持与配合！经现场专业化信息采集及后期严谨分析，贵单位消防安全危险等级分析结果为：</p>
         <div class="grade">
-            <li><input type="checkbox" id="checkbox_a4" class="chk_1"  disabled/><label for="checkbox_a1"></label><span>极高水平</span></li>
-            <li><input type="checkbox" id="checkbox_a3" class="chk_1"  disabled/><label for="checkbox_a1"></label><span>高水平</span></li>
-            <li><input type="checkbox" id="checkbox_a3" class="chk_1"  disabled/><label for="checkbox_a1"></label><span>中等水平</span></li>
-            <li><input type="checkbox" id="checkbox_a1" class="chk_1" disabled/><label for="checkbox_a1"></label><span>低水平</span></li>
+            <div class="checkbox">
+                <input type="checkbox" id="checkbox_a4" class="chk_1"  disabled/>
+                <label for="checkbox_a4">极高水平</label>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" id="checkbox_a3" class="chk_1"  disabled/>
+                <label for="checkbox_a3">高水平</label>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" id="checkbox_a3" class="chk_1"  disabled/>
+                <label for="checkbox_a2">中等水平</label>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" id="checkbox_a1" class="chk_1"  disabled/>
+                <label for="checkbox_a1">低水平</label>
+            </div>
         </div>
-        <p>详情请关注微信公众号“天河防火墙GZ”，或扫下方二维码，获取更多信息。回复"风险评估报告"，输入"<span class="reportNum"></span>"查看消防安全风险等级评估报告。</p>
+        <p>详情请关注微信公众号“天河防火墙GZ”，或扫下方二维码，获取更多信息。回复“危险等级分析”，输入“<span class="reportNum"></span>”查看消防设施检测危险源分析报告。</p>
         <div class="bottom">
             <div class="signature">
                 <p class="tr">天河区消防安全委员会</p>

@@ -122,7 +122,7 @@ $(function() {
             }
         });
     }
-    showDetailReportInfo();
+    //showDetailReportInfo();
     
     window.onresize = function () {
         $('div[id^=mask_div]').remove();
