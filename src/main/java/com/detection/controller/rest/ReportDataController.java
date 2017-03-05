@@ -7,12 +7,14 @@
  */
 package com.detection.controller.rest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.detection.services.CheckReportService;
 
 /**
  *
@@ -23,39 +25,27 @@ import com.alibaba.fastjson.JSONObject;
 @RestController
 public class ReportDataController {
     
+    @Autowired
+    private CheckReportService checkReportService;
+    
     /**
      * @author lcc
      * @version 1.0
+     * @throws Exception 
      * @function 处理风险评估报告责任提取码验证
      * 校验reportNum、责任人dutyPerson和责任人电话dutyTel
      * 返回校验token
      */
     @RequestMapping(value = {"/report/submitExtractCode" }, method = RequestMethod.GET)
     public JSONObject submitExtractCode(@RequestParam String reportNum, 
-            @RequestParam String dutyPerson, @RequestParam String dutyTel) {
-        JSONObject obj = new JSONObject();
-        obj.put("code", 200);
-        obj.put("message", "success");
-        obj.put("verifyToken", "fcea920f7412b5da7be0cf42b8c93759");
-        return obj;
+            @RequestParam String dutyPerson, @RequestParam String dutyTel) throws Exception {
+        return checkReportService.submitExtractCode(reportNum, dutyPerson, dutyTel);
     }
     
     @RequestMapping(value = {"/report/getDetailReportInfo" }, method = RequestMethod.GET)
     public JSONObject getDetailReportInfo(@RequestParam String verifyToken) {
-        JSONObject obj = new JSONObject();
-        obj.put("code", 200);
-        obj.put("message", "success");
-        obj.put("reportNum", "16GJA153");
-        obj.put("reportLevel", "高水平");
-        obj.put("reportDate", "2017年1月20日");
-        obj.put("reportConclusion", "检测结论");
-        obj.put("rectifyComments", "暂无");
-        obj.put("disqualification", "消防设施检测不合格项");
-        obj.put("projectName", "广东广业开元科技有限公司");
-        obj.put("verifyToken", "fcea920f7412b5da7be0cf42b8c93759");
-        obj.put("dutyTel", "13450255760");
-        obj.put("dutyPerson","蔡禹");
-        return obj;
+
+        return checkReportService.getDetailReportInfo(verifyToken);
     }
     
     /**
@@ -70,14 +60,8 @@ public class ReportDataController {
      */
     @RequestMapping(value = {"/report/getAbstractReportInfo" }, method = RequestMethod.GET)
     public JSONObject getAbstractReportInfo(@RequestParam String reportNum){
-        JSONObject obj = new JSONObject();
-        obj.put("code", 200);   //
-        obj.put("message", "success");
-        obj.put("reportNum", "17GJB370");
-        obj.put("reportDate", "2017-03-01");
-        obj.put("projectName", "广州市国会饮食娱乐有限公司");
-        obj.put("riskLevel", 4);
-        return obj;
+
+        return checkReportService.getAbstractReportInfo(reportNum);
     }
 }
 

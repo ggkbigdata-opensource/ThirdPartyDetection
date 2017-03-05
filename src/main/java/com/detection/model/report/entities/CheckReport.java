@@ -53,6 +53,9 @@ public class CheckReport {
     private Date modifyDate;
     private String creatorName;
     private String modifierName;
+    
+    private String verifyToken;
+    private String fetchCode;
 
     public CheckReport() {
         super();
@@ -130,4 +133,22 @@ public class CheckReport {
     public void setModifierName(String modifierName) {
         this.modifierName = modifierName;
     }
+
+    public String getVerifyToken() {
+        return verifyToken;
+    }
+
+    public void setVerifyToken(String verifyToken) {
+        this.verifyToken = verifyToken;
+    }
+
+    public String getFetchCode() {
+        return fetchCode;
+    }
+
+    public void setFetchCode(String fetchCode) {
+        this.fetchCode = fetchCode;
+    }
+    
+    
 }

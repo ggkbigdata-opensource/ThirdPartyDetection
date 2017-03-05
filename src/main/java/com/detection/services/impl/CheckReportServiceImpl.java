@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.detection.model.owner.OwnerUnit;
+import com.detection.model.owner.OwnerUnitRepository;
 import com.detection.model.pdfparse.Cover;
 import com.detection.model.pdfparse.ListResult;
 import com.detection.model.pdfparse.PDFParserResult;
@@ -37,12 +39,10 @@ import com.detection.model.report.repositories.CheckReportRepository;
 import com.detection.model.report.repositories.CheckReportResultStatRepository;
 import com.detection.services.CheckReportService;
 import com.detection.services.PDFParserService;
+import com.detection.util.DateUtil;
+import com.detection.util.EncryptionHelper;
 
-/**
- *
- * @author lcc (lincc@ggkbigdata.com)
- * @version 1.0, 2017年2月21日 下午4:37:46
- */
+
 @Service
 public class CheckReportServiceImpl implements CheckReportService {
     // @Autowired
@@ -51,9 +51,7 @@ public class CheckReportServiceImpl implements CheckReportService {
     @Autowired
     private CheckReportRepository checkReportRepo;
     @Autowired
-    private CheckReportResultStatRepository checkReportResultStatRepo;
-    @Autowired
-    private CheckItemDetailRepository checkItemDetailRepo;
+    private OwnerUnitRepository ownerUnitRepo;
 
     @Autowired
     private PDFParserService pdfParser;
@@ -216,6 +214,129 @@ public class CheckReportServiceImpl implements CheckReportService {
             CheckReport result = checkReportRepo.findOne(reportNum);
         }
         return null;
+    }
+
+    @Override
+    public JSONObject getAbstractReportInfo(String reportNum) {
+        // TODO Auto-generated method stub
+        JSONObject result = new JSONObject();
+        int code = 201;
+        String message = "Fail.Report Not Found.";
+        String reportDate = null;
+        String projectName = null;
+        int riskLevel = 0;
+        
+        CheckReport report = checkReportRepo.findOne(reportNum);
+        if(report != null){
+            code = 200;
+            message = "success";
+            reportDate = DateUtil.getYearMonthDateByHyphen(report.getCreateDate());
+            projectName = report.getCheckReportInfo().getProjectName();
+            riskLevel = report.getCheckReportInfo().getRiskLevel();
+        }
+        result.put("code", code);
+        result.put("message", message);
+        result.put("reportNum", reportNum);
+        result.put("reportDate", reportDate);
+        result.put("projectName", projectName);
+        result.put("riskLevel", riskLevel);
+
+        return result;
+    }
+
+    @Override
+    public JSONObject getDetailReportInfo(String verifyToken) {
+        // TODO Auto-generated method stub
+        JSONObject result = new JSONObject();
+        int code = 201;
+        String message = "Fail";
+        String reportNum = null;
+        //int riskLevel = 0;
+        String riskLevel = "危险等级";
+        String reportDate = null;
+        String reportConclusion = null;
+        String rectifyComments = null;
+        List<CheckReportUnqualifiedItemDetail> unqualifiedItemList = new ArrayList<CheckReportUnqualifiedItemDetail>();
+        String projectName = null;
+        String dutyTel = null;
+        String dutyPerson = null;
+        
+        List<OwnerUnit> ownerUnits = ownerUnitRepo.findByToken(verifyToken);
+        if(ownerUnits!=null && ownerUnits.size()==1){
+            OwnerUnit ownerUnit = ownerUnits.get(0);
+            CheckReport report = checkReportRepo.findOne(ownerUnit.getAuthorizedReportNum());
+            if(report != null){
+                CheckReportInfo reportInfo = report.getCheckReportInfo();
+                code = 200;
+                message = "success";
+                reportNum = report.getReportNum();
+                riskLevel = riskLevel+ String.valueOf(reportInfo.getRiskLevel());
+                reportDate = DateUtil.getYearMonthDateByChinese(report.getCreateDate());
+                reportConclusion =reportInfo.getReportConclusion();
+                rectifyComments = "暂无";
+                unqualifiedItemList = report.getUnqualifiedItemDetail();
+                projectName = reportInfo.getProjectName();
+                dutyTel = ownerUnit.getDutyTel();
+                dutyPerson = ownerUnit.getDutyPerson();
+                ownerUnit.setTokenTime(new Date());
+            }
+        }
+        
+        result.put("code", code);
+        result.put("message", message);
+        result.put("reportNum", reportNum);
+        result.put("riskLevel", riskLevel);
+        result.put("reportDate", reportDate);
+        result.put("reportConclusion", reportConclusion);
+        result.put("rectifyComments", rectifyComments);
+        result.put("unqualifiedItemList", unqualifiedItemList);
+        result.put("projectName", projectName);
+        result.put("verifyToken", verifyToken);
+        result.put("dutyTel", dutyTel);
+        result.put("dutyPerson",dutyPerson);
+        
+        return result;
+    }
+
+    @Override
+    public JSONObject submitExtractCode(String reportNum, String dutyPerson, String dutyTel) throws Exception {
+        // TODO Auto-generated method stub
+        JSONObject result = new JSONObject();
+        int code = 201;
+        String message = "Fail. Unkonwn Owner Unit.";
+        String token = null;
+        OwnerUnit ownerUnit = ownerUnitRepo.findOne(dutyTel);
+        if(ownerUnit != null ){
+            if(ownerUnit.getDutyPerson().equals(dutyPerson) && ownerUnit.hasRecord(reportNum)){
+                Date date = new Date();
+                token = EncryptionHelper.encryptStringByMD5(dutyTel + date.getTime());
+                ownerUnit.setToken(token);
+                ownerUnit.setLoginTime(date);
+                ownerUnit.setTokenTime(date);
+                ownerUnit.setAuthorizedReportNum(reportNum);
+                ownerUnitRepo.save(ownerUnit);
+                code = 200;
+                message = "success";
+            }
+            else{
+                message = "Fail.Validation Fail.";
+            }
+        }
+        result.put("code", code);
+        result.put("message", message);
+        result.put("verifyToken", token);
+        
+        return result;
+    }
+
+    @Override
+    public JSONObject getReportPath(String fetchCode) {
+
+        // TODO Auto-generated method stub
+        JSONObject result = new JSONObject();
+        List<CheckReport> reportList = checkReportRepo.findByFetchCode(fetchCode);
+        
+        return result;
     }
 
 }
