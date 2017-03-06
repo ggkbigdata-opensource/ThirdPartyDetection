@@ -519,9 +519,9 @@ public class PDFParserServiceImpl implements PDFParserService {
     @Override
     public String processOnSecondParagraph(String paragraph) {
         paragraph = paragraph.trim().replace(" ", "");
-        int lastIndex = paragraph.lastIndexOf("\n");
+        //int lastIndex = paragraph.lastIndexOf("\n");
+        int lastIndex = paragraph.indexOf("****");
         if(lastIndex<1) return "";
-        
         return paragraph.substring(0, lastIndex);
     }
 
