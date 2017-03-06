@@ -22,7 +22,7 @@ function submitInfoData() {
             self.location = '505';
         } else {
             sessionStorage.setItem('verifyToken', result.verifyToken);
-            window.location.href ="showDetailReportPage";
+            window.location.href ="showDetailReportPage?verifyToken=" + result.verifyToken;
         }
     })
 }

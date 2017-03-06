@@ -8,7 +8,7 @@ function watermark(settings) {
         watermark_txt:"text",
         watermark_x:20,
         watermark_y:20,
-        watermark_rows:20,
+        watermark_rows:0,
         watermark_cols:20,
         watermark_x_space:100,
         watermark_y_space:50,
@@ -124,8 +124,26 @@ $(function() {
     }
     //showDetailReportInfo();
     
+    function showWaterMark() {
+        var proxy = 'report/getWatermark';
+        var params = {
+            'verifyToken' :  sessionStorage.getItem('verifyToken')
+        };
+        
+        $.getJSON(proxy, params, function(result){
+            if(null == result || 200 != result.code) {
+                return;
+            } else {
+                $('div[id^=mask_div]').remove();
+                watermark({ watermark_txt: result.watermark});
+            }
+        });
+    }
+    
+    showWaterMark();
+        
     window.onresize = function () {
         $('div[id^=mask_div]').remove();
-        watermark({ watermark_txt: sessionStorage.getItem('watermark')});
+        showWaterMark();
     };
 });

@@ -63,5 +63,20 @@ public class ReportDataController {
 
         return checkReportService.getAbstractReportInfo(reportNum);
     }
+    
+    /**
+     * @author lcc
+     * @version 1.0
+     * @function 根据token请求水印数据
+     * @param verifyToken  
+     */
+    @RequestMapping(value = {"/report/getWatermark"}, method = RequestMethod.GET)
+    public JSONObject getWatermark(@RequestParam String verifyToken) {
+        JSONObject obj = new JSONObject();
+        obj.put("code", 200);   //false == 201
+        obj.put("message", "succes");
+        obj.put("watermark", "蔡禹13450255760");
+        return obj;
+    }
 }
 

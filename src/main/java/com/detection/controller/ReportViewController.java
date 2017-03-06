@@ -85,7 +85,7 @@ public class ReportViewController {
 
     @RequestMapping("/showDetailReportPage")
     public ModelAndView frequentBusines(@RequestParam String verifyToken) {
-        ModelAndView mv = new ModelAndView("/report/showAbstractReportPage");
+        ModelAndView mv = new ModelAndView("/report/showDetailReportPage");
         JSONObject result = checkReportService.getDetailReportInfo(verifyToken);
         mv.addObject("result", result);
         return mv;

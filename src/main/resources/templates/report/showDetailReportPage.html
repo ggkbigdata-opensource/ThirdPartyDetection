@@ -14,8 +14,7 @@
 
 <body>
     <article class="article">
-        <p class="number tr">
-            报告编号:<span id="reportNum"></span>
+        <p class="number tr">报告编号:<span th:text="${result.reportNum}"></span>
         </p>
         <h1>
             <span id="company"></span>--消防安全风险等级评估报告
@@ -50,7 +49,7 @@
                         <div class="projectType mt5">
                             <div class="tit">以下是不符合规范要求的检测点：</div>
                             <ul class="point" th:each="subItem,subStat : ${item.unqualifiedCheckPoint}">
-                                <li><span th:text="${subItem.checkPoint}"></span></li>
+                                <li th:text="${subItem.checkPoint}"></li>
                             </ul>
                         </div>
                     </div>
@@ -58,13 +57,13 @@
             </section>
             <section>
                 <h3>整改意见：</h3>
-                <p th:text="${result.reportDate}"></p>
+                <p th:text="${result.rectifyComments}"></p>
             </section>
             <div class="bottom">
             <div class="signature">
                 <p class="tr">天河区消防安全委员会</p>
                 <p class="tr">广州市公安局天河区分局</p>
-                <p class="tr" th:text="${result.rectifyComments}">2017年1月20日</p>
+                <p class="tr" th:text="${result.reportDate}">2017年1月20日</p>
             </div>
         </div>
     </article>
