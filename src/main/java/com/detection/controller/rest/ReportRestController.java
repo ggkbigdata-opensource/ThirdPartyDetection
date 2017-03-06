@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,9 +39,27 @@ public class ReportRestController {
     private CheckReportService service;
     
     @RequestMapping(value = {"/getReportList"} , method = RequestMethod.GET)
-    public JSONObject getReportList(@RequestParam(name = "token") String token){
-        
+    public JSONObject getReportList(@RequestParam(name = "token") String token, HttpServletRequest request){
         return service.getAllReports();
+    }
+    
+    @RequestMapping(value = {"/testSession"} , method = RequestMethod.GET)
+    public JSONObject testSession( HttpServletRequest request ){
+        HttpSession session = request.getSession();
+        JSONObject result = new JSONObject();
+        result.put("id:", session.getId());
+        result.put("testattr", session.getAttribute("test"));
+        return result;
+    }
+    
+    @RequestMapping(value = {"/modifySession"} , method = RequestMethod.GET)
+    public JSONObject modifySession( HttpServletRequest request ){
+        HttpSession session = request.getSession(); 
+        session.setAttribute("test", "测试一");
+        JSONObject result = new JSONObject();
+        result.put("id:", session.getId());
+        result.put("testattr", session.getAttribute("test"));
+        return result;
     }
 
 }

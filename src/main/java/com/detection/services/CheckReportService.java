@@ -10,6 +10,7 @@ package com.detection.services;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
@@ -62,5 +63,41 @@ public interface CheckReportService {
      * @function 按条件查找报告
      */
     public JSONObject getReportByCondition(String projectName, String reportNum, String riskLevel, String qaName);
+    
+    /**
+     * @author csk
+     * @version 1.0
+     * @function 获取评估项目概况表的摘要信息，包括：
+     * reportNum ： 项目号
+     * reportDate : 评估日期
+     * projectName : 被评估单位名称
+     * riskLevel : 极高水平（4）、高水平（3）、中等水平（2）、低水平（1） 
+     * code : 200 success, 201 failure
+     */
+    public JSONObject getAbstractReportInfo(String reportNum);
+    
+    /**
+     * @author csk
+     * @version 1.0
+     * @function 获取报告详情列表
+     */
+    public JSONObject getDetailReportInfo(String verifyToken);
+    
+    /**
+     * @author csk
+     * @version 1.0
+     * @throws Exception 
+     * @function 处理风险评估报告责任提取码验证
+     * 校验reportNum、责任人dutyPerson和责任人电话dutyTel
+     * 返回校验token
+     */
+    public JSONObject submitExtractCode(String reportNum, String dutyPerson, String dutyTel) throws Exception;
+    
+    /**
+     * @author csk
+     * @version 1.0
+     * @function 获取文件路径
+     */
+    public JSONObject getReportPath(String fetchCode);
 }
 

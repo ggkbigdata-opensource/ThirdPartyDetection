@@ -27,7 +27,22 @@ public class EncryptionHelper {
             e.printStackTrace();
             throw e;
         }
+        return out;
+    }
+    
+    public static String encryptBytesByMD5(String strToEncrypt) throws Exception {
 
+        MessageDigest md = null;
+        String out = null;
+
+        try {
+            md = MessageDigest.getInstance("MD5");
+            byte[] digest = md.digest(strToEncrypt.getBytes());
+            out = byte2hex(digest);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            throw e;
+        }
         return out;
     }
     
