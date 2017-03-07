@@ -17,6 +17,8 @@ import java.io.FileOutputStream;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -43,7 +45,7 @@ public class ReportViewController {
     @Autowired
     private CheckReportService checkReportService;
 
-    @RequestMapping({ "/", "/login" })
+    @RequestMapping({ "/" })
     public String index() {
         return "/login";
     }
@@ -82,7 +84,13 @@ public class ReportViewController {
     public String reportAbstract() {
         return "/report/showAbstractReportPage";
     }
-
+    
+    @RequestMapping(value = {"/deleteReportByReportNum"} , method = RequestMethod.GET)
+    public String deleteReportByReportNum(@RequestParam String reportNum, HttpServletRequest request){
+        request.getAttribute("token");
+        return "redirect:main";
+    }
+    
     @RequestMapping("/showDetailReportPage")
     public ModelAndView frequentBusines(@RequestParam String verifyToken) {
         ModelAndView mv = new ModelAndView("/report/showDetailReportPage");
@@ -100,7 +108,7 @@ public class ReportViewController {
         return mv;
     }
 
-    @RequestMapping("/404")
+    @RequestMapping({"/404"})
     public String pageNotFound() {
         return "/errors/404";
     }
