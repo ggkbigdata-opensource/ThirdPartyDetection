@@ -99,5 +99,9 @@ public interface CheckReportService {
      * @function 获取文件路径
      */
     public JSONObject getReportPath(String fetchCode);
+    
+    public boolean updateRiskLevel(String reportNum);
+    
+    public void updateAllRiskLevel();
 }
 
