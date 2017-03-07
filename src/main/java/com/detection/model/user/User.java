@@ -11,15 +11,15 @@ import javax.persistence.Id;
 public class User {
 
     @Id
-    @GeneratedValue
-    private int id;
     private String userName;
-    private String passWord;
+    @Column(length = 32)
+    private String userPassword;
     @Column(length = 32)
     private String token;
+    private Date tokenUpdateTime;
     private Date lastLogin;
     private Date loginTime;
-    private String roleName;
+    private int role;
 
     public User() {
 
@@ -27,16 +27,7 @@ public class User {
 
     public User(User user) {
         this.userName = user.getUserName();
-        this.passWord = user.getPassWord();
-        this.id = user.getId();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.userPassword = user.getUserPassword();
     }
 
     public String getUserName() {
@@ -47,12 +38,12 @@ public class User {
         this.userName = userName;
     }
 
-    public String getPassWord() {
-        return passWord;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
     public String getToken() {
@@ -61,6 +52,14 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Date getTokenUpdateTime() {
+        return tokenUpdateTime;
+    }
+
+    public void setTokenUpdateTime(Date tokenUpdateTime) {
+        this.tokenUpdateTime = tokenUpdateTime;
     }
 
     public Date getLastLogin() {
@@ -79,12 +78,12 @@ public class User {
         this.loginTime = loginTime;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public int getRole() {
+        return role;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setRole(int role) {
+        this.role = role;
     }
 
 }

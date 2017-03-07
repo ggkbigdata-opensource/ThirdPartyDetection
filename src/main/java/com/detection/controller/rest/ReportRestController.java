@@ -7,6 +7,9 @@
  */
 package com.detection.controller.rest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.detection.services.ReportService;
+import com.detection.services.CheckReportService;
 
 /**
  *
@@ -26,26 +29,30 @@ import com.detection.services.ReportService;
 public class ReportRestController {
 
     @Autowired
-    private ReportService service;
+    private CheckReportService service;
     
-    @RequestMapping(value = {"/getReportByReportNum" }, method = RequestMethod.GET)
-    public JSONObject getReportByReportNum(@RequestParam String reportNum) {
-        return service.getReportItemByReportNum(reportNum);
+    @RequestMapping(value = {"/getReportList"} , method = RequestMethod.GET)
+    public JSONObject getReportList(@RequestParam(name = "token") String token, HttpServletRequest request){
+        return service.getAllReports();
     }
     
-    @RequestMapping(value = {"/getReportLevelByReportNum" }, method = RequestMethod.GET)
-    public JSONObject getReportLevelByReportNum(@RequestParam String reportNum) {
-        return service.getReportLevelByReportNum(reportNum);
+    @RequestMapping(value = {"/testSession"} , method = RequestMethod.GET)
+    public JSONObject testSession( HttpServletRequest request ){
+        HttpSession session = request.getSession();
+        JSONObject result = new JSONObject();
+        result.put("id:", session.getId());
+        result.put("testattr", session.getAttribute("test"));
+        return result;
     }
     
-    @RequestMapping(value = {"/saveReportResult" }, method = RequestMethod.GET)
-    public String saveReportResult(@RequestParam String reportNum) {
-        return service.saveReportResult(reportNum);
-    }
-    
-    @RequestMapping(value = {"/bulkSaveReportResult" }, method = RequestMethod.GET)
-    public String bulkSaveReportResult() {
-        return service.bulkSaveReportResult();
+    @RequestMapping(value = {"/modifySession"} , method = RequestMethod.GET)
+    public JSONObject modifySession( HttpServletRequest request ){
+        HttpSession session = request.getSession(); 
+        session.setAttribute("test", "测试一");
+        JSONObject result = new JSONObject();
+        result.put("id:", session.getId());
+        result.put("testattr", session.getAttribute("test"));
+        return result;
     }
 
 }

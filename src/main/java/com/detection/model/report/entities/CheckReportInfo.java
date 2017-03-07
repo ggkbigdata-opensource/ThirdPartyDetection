@@ -16,8 +16,7 @@ import javax.persistence.Id;
 @Entity
 public class CheckReportInfo {
     @Id
-    @GeneratedValue
-    private int id;
+    private String reportNum;
     private String projectName;
     private String projectAddress;
     private String agentName;
@@ -29,22 +28,23 @@ public class CheckReportInfo {
     private String message;
     @Column(length = 2048)
     private String reportConclusion;
+    private int riskLevel;
     private String filePath;
     
     public CheckReportInfo(){
         
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getProjectName() {
         return projectName;
+    }
+
+    public String getReportNum() {
+        return reportNum;
+    }
+
+    public void setReportNum(String reportNum) {
+        this.reportNum = reportNum;
     }
 
     public void setProjectName(String projectName) {
@@ -121,6 +121,15 @@ public class CheckReportInfo {
 
     public void setReportConclusion(String reportConclusion) {
         this.reportConclusion = reportConclusion;
+    }
+    
+
+    public int getRiskLevel() {
+        return riskLevel;
+    }
+
+    public void setRiskLevel(int riskLevel) {
+        this.riskLevel = riskLevel;
     }
 
     public String getFilePath() {

@@ -1,171 +1,35 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=Edge, chorme=1">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>消防火情</title>
-<link rel="icon" type="image/x-icon" href="imgs/favicon.ico" />
-<link rel="shortcut icon" type="image/x-icon" href="imgs/favicon.ico" />
-<link rel="bookmark" type="image/x-icon" href="imgs/favicon.ico" />
-
-<!-- Bootstrap 3.3.7 -->
-<link href="common/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<!-- iconfont -->
-<link href="common/iconfont/iconfont.css" rel="stylesheet" type="text/css" /> 
-<!-- mCustomScrollbar -->
-<link href="common/mCustomScrollbar/css/jquery.mCustomScrollbar.custom.css" rel="stylesheet" type="text/css" />
-<!-- animate css -->
-<link href="css/animate.css" rel="stylesheet" type="text/css" />
-<!-- base css -->
-<link href="css/base.css" rel="stylesheet" type="text/css" />
-<!-- master css -->
-<link href="css/layout.css" rel="stylesheet" type="text/css" />
-<!-- custom css-->
-<link href="css/style.css" rel="stylesheet" type="text/css" />
-<!-- dialog custom css -->
-<link href="css/dialog/dialog.custom.css" rel="stylesheet" type="text/css" />
-
-<!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
-<!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
+<html>
+<head lang="en">
+<!--/*/ <th:block th:include="template/exceptiontemplate :: head"></th:block> /*/-->
+<title>权限不足</title>
 
 </head>
-<body class="fixed-sidebar">
-<div class="wrapper">
+<body>
 
-	<!--Right Content Start -->
-	<div class="content-wrapper">
-		<nav class="navbar navbar-static-top" role="navigation">
-			<div class="navbar-logo">
-		    <img src="css/imgs/top-logo.png" width="299" height="36"></div>
-			<ul class="nav navbar-top-links navbar-right">
-				<li>
-					<div class="userPhoto">
-						<img src="imgs/userphoto.png" />
-					</div>
-				</li>
-				<li><span>欢迎你!</span></li>
-				<li><a class="username font-red fb" href="javascript:;">ADMIN</a></li>
-				<li><a class="iconfont icon-signout" title="退出" href="login/login.html"></a></li>
-			</ul>
-		</nav>
-		<ol class="breadcrumb">
-			<li><i class="iconfont icon-map mr10 fl"></i>当前位置：<a href="javascript:;">首页</a></li>
-			<li class="active">检测报告主页面</li>
-		</ol>
-		<section class="main-content animated fadeInRight">
-			<div class="content">
-			<!-- Content Start-->
-				<div class="error_page">
+    <div id="wrapper fixed-sidebar">
+        <!--/*/ <th:block th:include="template/exceptiontemplate :: bodypart"></th:block> /*/-->
+        <div class="content-wrapper">
+            <ol class="breadcrumb">
+                <li><i class="iconfont icon-map mr10 fl"></i>当前位置：<a href="main">首页</a></li>
+                <li class="active">权限不足</li>
+            </ol>
+            <section class="main-content animated fadeInRight">
+            <div class="content">
+            <!-- Content Start-->
+                <div class="error_page">
                  <div class="error_main">
                   <div class="error_main_img fl"><img src="imgs/404.png" width="85" height="144"></div>
                  <div class="error_main_tx fr"><h1>无权限访问</h1>
-                 <p>页面请求连接超时！！</p>
-                 请尝试刷新或报告管理员！
+                 <p>页面请求连接超时！！</p> 请尝试刷新或报告管理员！
                 </div>
                  </div>
               </div>
-			<!-- Content End -->
-			</div>
-		</section>
-		<footer class="footer">
-			<p class="tr">版权和数据权归属：天河消防安全委员会　　　技术支持：广东广业开元科技有限公司</p>
-		</footer>
-	</div>
-	<!--Right Content End -->
-</div>
-
-<!--dialog -->
-
-<!-- 导入数据 dialog-->
-<div id="import-dialog" class="dialog">
-	<table class="table table-nobordered">
-		<colgroup>
-			<col class="shortbox" />
-			<col />
-		</colgroup>
-		<tbody>
-			
-			<tr>
-				<td class="tr">选择文件：</td>
-				<td>
-					<div id="file-pretty" class="form-group">
-						<input class="form-control filestyle" type="file" data-icon="false" data-buttonText="选择文件" />
-                    </div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</div><!-- /导入数据 dialog-->
-
-
-
-<!-- JQuery 1.11.3 -->
-<script src="common/jquery/jquery-1.11.3.min.js"></script>
-<!--[if lt IE 9]>
-<script src="common/jquery/jquery.pseudo.js"></script>
-<![endif]-->
-<!-- Bootstrap 3.3.7 -->
-<script src="common/bootstrap/js/bootstrap.js"></script>
-<!-- mCustomScrollbar -->
-<script src="common/mCustomScrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<!-- My97DatePicker -->
-<script src="common/My97DatePicker/WdatePicker.js"></script>
-<!-- layer v2.0 -->
-<script src="common/layer/layer.js"></script> 
-<!-- bootstrap file style -->
-<script src="common/bootstrap-filestyle/bootstrap-filestyle.js"></script> 
-<!-- 表单验证 validate -->
-<script src="common/validate/jquery.validate.min.js"></script>
-<script src="common/validate/messages_cn.js"></script>
-<!-- dialog -->
-<script src="js/dialog.js"></script> 
-<!-- custom -->
-<script src="js/normal.custom.js"></script>
-<script type="text/javascript">	
-	$(document).ready(function() {
-		//文件上传
-		$(":file").filestyle({
-			icon: false,
-			buttonText: "选择文件"
-		});
-
-		//导入数据 
-		$('.btn-import').on('click', function(){
-			layer.open({
-				type: 1,
-				title: '导入检测报告',
-				area: '650px',
-				btn: ['导入','关闭'],
-				shadeClose: true,
-				content: $('#import-dialog')
-			});
-		});
-		//批量删除
-		$('.btn-batchdelete').on('click', function(){
-			layer.confirm('是否批量删除选中数据记录?', {icon: 0,title: '批量删除'}, {
-				btn: ['确认','取消']
-			});
-		});
-		//提示信息
-		//删除
-		$('.btn-delete').on('click', function(){
-			layer.confirm('是否删除本条数据记录?', {icon: 0,title: '删除数据'}, {
-				btn: ['确认','取消']
-			});
-		});
-		//提示信息
-		$('.btn-export').on('click', function(){
-			layer.confirm('是否导出评估报告?', {icon: 0,title: '导出报告'}, {
-				btn: ['确认','取消']
-			});
-		});
-		
-		
-	});	
-</script>
+            <!-- Content End -->
+            </div>
+        </section>
+        </div>
+    </div>
+    <!--/*/ <th:block th:include="template/exceptiontemplate :: footerpart"></th:block> /*/-->
 </body>
 </html>

@@ -10,6 +10,8 @@ package com.detection.services;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+
 import com.detection.model.pdfparse.Cover;
 import com.detection.model.pdfparse.ListResult;
 import com.detection.model.pdfparse.PDFParserResult;
@@ -60,6 +62,19 @@ public interface PDFParserService {
     public List<ListResult> processOnForthParagraph(String paragraph);
     
     /**
+     * 检 测 项: 7.1.14(消火栓系统、消防供水设施、水泵故障信号反馈)
+     * 重要等级: B
+     * 规范要求: 水泵发生故障时,应有信号反馈回消防控制室
+     * 以下是不符合规范要求的检测点：
+     * 00000D2101 地下室2层、第101号检测点 (1#)
+     * 00000D2102 地下室2层、第102号检测点 (2#)
+     * @param src
+     * @param reportNum
+     * @return
+     */
+    public ListResult parseFourthPart(String src, String reportNum);
+    
+    /**
      * @author lcc
      * @version 1.0
      * function 
@@ -99,6 +114,17 @@ public interface PDFParserService {
     public List<Result> processOnThirdParagraph(
             String paragraph, PDFParserResult returnObj);
     
+    /**
+     * @author lcc
+     * @version 1.0
+     */
+    public Result parseThirdPart(String tempStr, String reportNum);
+    
+    /**
+     * @author lcc
+     * @version 1.0
+     */
+    public void prtMacher(Matcher m);
     
     /**
      * @author lcc
