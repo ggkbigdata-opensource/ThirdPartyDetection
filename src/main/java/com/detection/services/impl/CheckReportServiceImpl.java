@@ -23,6 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.detection.config.LevelWeightProperties;
+import com.detection.model.owner.OwnerUnit;
+import com.detection.model.owner.OwnerUnitRepository;
 import com.detection.model.pdfparse.Cover;
 import com.detection.model.pdfparse.ListResult;
 import com.detection.model.pdfparse.PDFParserResult;
@@ -31,170 +34,87 @@ import com.detection.model.report.entities.CheckItemDetail;
 import com.detection.model.report.entities.CheckReport;
 import com.detection.model.report.entities.CheckReportInfo;
 import com.detection.model.report.entities.CheckReportResultStat;
+import com.detection.model.report.entities.CheckReportUnqualifiedItemDetail;
 import com.detection.model.report.repositories.CheckItemDetailRepository;
 import com.detection.model.report.repositories.CheckReportRepository;
 import com.detection.model.report.repositories.CheckReportResultStatRepository;
 import com.detection.services.CheckReportService;
 import com.detection.services.PDFParserService;
+import com.detection.util.DateUtil;
+import com.detection.util.EncryptionHelper;
 
-/**
- *
- * @author lcc (lincc@ggkbigdata.com)
- * @version 1.0, 2017年2月21日 下午4:37:46
- */
+
 @Service
-public class CheckReportServiceImpl implements CheckReportService{
-    //@Autowired
-    //private CheckReportMapper mapper;
-    
+public class CheckReportServiceImpl implements CheckReportService {
+    // @Autowired
+    // private CheckReportMapper mapper;
+
     @Autowired
     private CheckReportRepository checkReportRepo;
     @Autowired
-    private CheckReportResultStatRepository checkReportResultStatRepo;
-    @Autowired
-    private CheckItemDetailRepository checkItemDetailRepo;
-    
+    private OwnerUnitRepository ownerUnitRepo;
     @Autowired
     private PDFParserService pdfParser;
-    
-    
+    @Autowired
+    private LevelWeightProperties weight;
+
     @Value("${uploadPath}")
     private String uploadPath;
-    
+
     @Value("${downloadPath}")
     private String downloadPath;
 
     @Override
-    public String saveCheckReportInfo(JSONObject info) {
-
-/*        CheckReport checkInfo = new CheckReport();
-        checkInfo.setAgentName(info.getString("agentName") != null ? 
-                info.getString("agentName").trim() : null);
-        checkInfo.setContactFax(info.getString("contactFax") != null ? 
-                info.getString("contactFax").trim() : null);
-        checkInfo.setContactPostCode(info.getString("contactPostcode") != null ?
-                info.getString("contactPostcode").trim() :null);
-        checkInfo.setContactTel(info.getString("contactTel") != null ? 
-                info.getString("contactTel").trim() : null);
-        checkInfo.setMessage(info.getString("message") != null ? 
-                info.getString("message").trim() : null);
-        checkInfo.setProjectAddress(info.getString("projectAddress") != null ? 
-                info.getString("projectAddress").trim() : null);
-        checkInfo.setProjectName(info.getString("projectName").trim() != null ?
-                info.getString("projectName") : null);
-        checkInfo.setQaAddress(info.getString("qaAddress") != null ? 
-                info.getString("qaAddress").trim() : null);
-        checkInfo.setQaName(info.getString("qaName") != null ? 
-                info.getString("qaName").trim() : null);
-        checkInfo.setReportNum(info.getString("reportNum") != null ? 
-                info.getString("reportNum").trim() : null);
-        checkInfo.setReportConclusion(info.getString("reportConclusion") != null ? 
-                info.getString("reportConclusion").trim() : null);
-        checkReportRepo.save(checkInfo);*/
-        return "success";
-    }
-
-    @Override
-    public void saveCheckReportResultStat(JSONArray resultStatObj, 
-            String reportNum) {
-        
-        //checkReportResultStatRepo.deleteByReportNum(reportNum);
-        
-        List<CheckReportResultStat> list = new ArrayList<CheckReportResultStat>();
-        int size = resultStatObj.size();
-        for(int index = 0; index < size; index++) {
-            CheckReportResultStat stat = new CheckReportResultStat();
-            JSONObject obj = resultStatObj.getJSONObject(index);
-            stat.setCheckNum(obj.getString("value1") != null ? 
-                    Integer.parseInt(obj.getString("value1")) : 0);
-            stat.setItemCode(obj.getString("label") != null ?
-                    obj.getString("label") : null);
-            stat.setItemName(obj.getString("name") != null ?
-                    obj.getString("name") : null);
-            //stat.setReportNum(reportNum);
-            stat.setCheckLevel(obj.getString("level") != null ?
-                    obj.getString("level") : null);
-            stat.setUnqualifiedNum(obj.getString("value2") != null ?
-                    Integer.parseInt(obj.getString("value2")) : 0);
-            list.add(stat);
-        }
-        checkReportResultStatRepo.save(list);;
-    }
-
-    @Override
-    public void saveCheckItemDetail(JSONArray resultDetailObj, String reportNum) {
-        //checkItemDetailRepo.deleteByReportNum(reportNum);
-        List<CheckItemDetail> list = new ArrayList<CheckItemDetail>();
-        int size = resultDetailObj.size();
-        for(int index = 0; index < size; index++) {
-            JSONObject obj = resultDetailObj.getJSONObject(index);
-            CheckItemDetail detail = new CheckItemDetail();
-            detail.setCheckLevel(obj.getString("level") != null ?
-                    obj.getString("level").trim() : null);
-            detail.setCheckNum((obj.getString("value1") != null 
-                    && !"".equals(obj.getString("value1").trim())) ?
-                    Integer.parseInt(obj.getString("value1").trim()) : null);
-            detail.setItemCode(obj.getString("label") != null ?
-                    obj.getString("label").trim() : null);
-            //detail.setReportNum(reportNum);
-            detail.setUnqualifiedNum((obj.getString("value2") != null 
-                    && !"".equals(obj.getString("value2").trim())) ?
-                    Integer.parseInt(obj.getString("value2").trim()) : null);
-            detail.setItemName(obj.getString("name") != null ?
-                    obj.getString("name") : null);
-            list.add(detail);
-        }
-        checkItemDetailRepo.save(list);
-    }
-    
-    @Override
-    public boolean uploadAndSaveReport(String fileName, MultipartFile file) throws IOException{
+    public boolean uploadAndSaveReport(String fileName, MultipartFile file) throws IOException {
         boolean result = false;
-        String upFilePath = uploadPath +fileName;
+        String upFilePath = uploadPath + fileName;
         String downFilePath = downloadPath + fileName;
-        
-        BufferedOutputStream out = new BufferedOutputStream(
-                new FileOutputStream(new File(upFilePath)));
-        
+
+        File outPath = new File(uploadPath);
+        if (!outPath.exists()) {
+            outPath.mkdirs();
+        }
+        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(new File(upFilePath)));
+
         out.write(file.getBytes());
         out.flush();
         out.close();
-        parseAndSaveReportToDB(upFilePath,downFilePath);
+        parseAndSaveReportToDB(upFilePath, downFilePath);
         result = true;
-        
+
         return result;
     }
-    
+
     @Override
-    public boolean parseAndSaveReportToDB(String upFilePath, String downloadPath) throws IOException{
-        
+    public boolean parseAndSaveReportToDB(String upFilePath, String downloadPath) throws IOException {
+
         boolean result = false;
         // 解析报告并入库
         PDFParserResult parseResult = pdfParser.parse(new File(upFilePath));
-        
 
         Cover reportCover = parseResult.getCover();
         List<Result> firstPart = parseResult.getFirstPart();
-        //String reportConclusion = parseResult.getSecondPart();
+        // String reportConclusion = parseResult.getSecondPart();
         List<Result> thirdPart = parseResult.getThirdPart();
         List<ListResult> forthPart = parseResult.getForthPart();
-        //TODO delete old report
-        if(reportCover.getReportNum() != null){
+        // TODO delete old report
+        if (reportCover.getReportNum() != null) {
             deleteReportByReportNum(reportCover.getReportNum());
         }
-        
-        //保存report对象
+
+        // 保存report对象
         CheckReport checkReport = new CheckReport();
         CheckReportInfo checkReportInfo = new CheckReportInfo();
         List<CheckReportResultStat> checkReportStatList = new ArrayList<CheckReportResultStat>();
         List<CheckItemDetail> checkItemDetailList = new ArrayList<CheckItemDetail>();
-        
-        //report basic info
+        List<CheckReportUnqualifiedItemDetail> checkReportUnqualifiedItemList = new ArrayList<CheckReportUnqualifiedItemDetail>();
+        // report basic info
         checkReport.setReportNum(reportCover.getReportNum());
         checkReport.setCreateDate(new Date());
         checkReport.setModifyDate(new Date());
-        
-        //process on report cover info
+
+        // process on report cover info
+        checkReportInfo.setReportNum(reportCover.getReportNum());
         checkReportInfo.setAgentName(reportCover.getAgentName());
         checkReportInfo.setContactFax(reportCover.getContactFax());
         checkReportInfo.setContactPostCode(reportCover.getContactPostcode());
@@ -205,75 +125,291 @@ public class CheckReportServiceImpl implements CheckReportService{
         checkReportInfo.setQaName(reportCover.getQaName());
         checkReportInfo.setReportConclusion(reportCover.getReportConclusion());
         checkReportInfo.setFilePath(downloadPath);
-        
-        //process on first part
+
+        // process on first part
         Iterator<Result> it1 = firstPart.iterator();
-        while(it1.hasNext()){
+        while (it1.hasNext()) {
             CheckReportResultStat element = new CheckReportResultStat();
             Result nextItem = it1.next();
-            element.setCheckLevel(nextItem.getLevel());
-            if(nextItem.getValue1()!=null && !nextItem.getValue1().equals("")){
+            element.setImportantGrade(nextItem.getLevel());
+            if (nextItem.getValue1() != null && !nextItem.getValue1().equals("")) {
                 element.setCheckNum(Integer.parseInt(nextItem.getValue1()));
             }
             element.setItemCode(nextItem.getLabel());
             element.setItemName(nextItem.getName());
-            if(nextItem.getValue1()!=null && !nextItem.getValue1().equals("")){
+            if (nextItem.getValue1() != null && !nextItem.getValue1().equals("")) {
                 element.setUnqualifiedNum(Integer.parseInt(nextItem.getValue2()));
             }
             checkReportStatList.add(element);
         }
-        
-        //process on third part
+
+        // process on third part
         Iterator<Result> it2 = thirdPart.iterator();
-        while(it2.hasNext()){
+        while (it2.hasNext()) {
             CheckItemDetail element = new CheckItemDetail();
             Result nextItem = it2.next();
-            element.setCheckLevel(nextItem.getLevel());
-            if(nextItem.getValue1()!=null && !nextItem.getValue1().equals("")){
+            element.setImportantGrade(nextItem.getLevel());
+            if (nextItem.getValue1() != null && !nextItem.getValue1().equals("")) {
                 element.setCheckNum(Integer.parseInt(nextItem.getValue1()));
             }
             element.setItemCode(nextItem.getLabel());
             element.setItemName(nextItem.getName());
-            if(nextItem.getValue1()!=null && !nextItem.getValue1().equals("")){
+            if (nextItem.getValue1() != null && !nextItem.getValue1().equals("")) {
                 element.setUnqualifiedNum(Integer.parseInt(nextItem.getValue2()));
             }
             checkItemDetailList.add(element);
         }
-        
-        
+        // TODO 第四第五部分保存内容
+        // process on fourth part
+        Iterator<ListResult> it3 = forthPart.iterator();
+        while (it3.hasNext()) {
+            CheckReportUnqualifiedItemDetail element = new CheckReportUnqualifiedItemDetail();
+            ListResult nextItem = it3.next();
+            element.setImportantGrade(nextItem.getImportantGrade());
+            element.setRequirements(nextItem.getRequirements());
+            element.setTestItem(nextItem.getTestItem());
+            element.setUnqualifiedCheckPointByStringList(nextItem.getNonstandardItems());
+            checkReportUnqualifiedItemList.add(element);
+        }
+
         checkReport.setCheckReportInfo(checkReportInfo);
         checkReport.setCheckItemDetail(checkItemDetailList);
         checkReport.setCheckReportResultStat(checkReportStatList);
-        //TODO 第四第五部分保存内容
+        checkReport.setUnqualifiedItemDetail(checkReportUnqualifiedItemList);
         
+        checkReport.getCheckReportInfo().setRiskLevel(computRiskLevel(checkReport));
         
-        checkReportRepo.saveAndFlush(checkReport);
+        checkReportRepo.save(checkReport);
         result = true;
-        
+
         return result;
     }
 
     @Override
     public void deleteReportByReportNum(String reportNum) {
-        
-        if(checkReportRepo.findOne(reportNum)!=null){
+        if (checkReportRepo.findOne(reportNum) != null) {
             checkReportRepo.delete(reportNum);
         }
     }
 
     @Override
-    public CheckReport getReportByReportNum(String reportNum) {
-        
-        return checkReportRepo.findOne(reportNum);
+    public JSONObject getAllReports() {
+        JSONObject result = new JSONObject();
+        int code = 200;
+        String message = "success";
+
+        List<CheckReport> reportlist = checkReportRepo.findAll();
+        List<CheckReportInfo> dataList = new ArrayList<CheckReportInfo>();
+        Iterator<CheckReport> it = reportlist.iterator();
+        while (it.hasNext()) {
+            dataList.add(it.next().getCheckReportInfo());
+        }
+        result.put("code", code);
+        result.put("message", message);
+        result.put("data", dataList);
+
+        return result;
     }
 
     @Override
-    public List<CheckReport> getAllReports() {
-        
-        return checkReportRepo.findAll();
+    public JSONObject getReportByCondition(String projectName, String reportNum, String riskLevel, String qaName) {
+        // TODO Auto-generated method stub
+        if (reportNum != null && !reportNum.equals("")) {
+            CheckReport result = checkReportRepo.findOne(reportNum);
+        }
+        return null;
     }
-    
-    
+
+    @Override
+    public JSONObject getAbstractReportInfo(String reportNum) {
+        // TODO Auto-generated method stub
+        JSONObject result = new JSONObject();
+        int code = 201;
+        String message = "Fail.Report Not Found.";
+        String reportDate = null;
+        String projectName = null;
+        int riskLevel = 0;
+        
+        CheckReport report = checkReportRepo.findOne(reportNum);
+        if(report != null){
+            code = 200;
+            message = "success";
+            reportDate = DateUtil.getYearMonthDateByHyphen(report.getCreateDate());
+            projectName = report.getCheckReportInfo().getProjectName();
+            riskLevel = report.getCheckReportInfo().getRiskLevel();
+        }
+        result.put("code", code);
+        result.put("message", message);
+        result.put("reportNum", reportNum);
+        result.put("reportDate", reportDate);
+        result.put("projectName", projectName);
+        result.put("riskLevel", riskLevel);
+
+        return result;
+    }
+
+    @Override
+    public JSONObject getDetailReportInfo(String verifyToken) {
+        // TODO Auto-generated method stub
+        JSONObject result = new JSONObject();
+        int code = 201;
+        String message = "Fail";
+        String reportNum = null;
+        //int riskLevel = 0;
+        String riskLevel = "危险等级";
+        String reportDate = null;
+        String reportConclusion = null;
+        String rectifyComments = null;
+        List<CheckReportUnqualifiedItemDetail> unqualifiedItemList = new ArrayList<CheckReportUnqualifiedItemDetail>();
+        String projectName = null;
+        String dutyTel = null;
+        String dutyPerson = null;
+        
+        List<OwnerUnit> ownerUnits = ownerUnitRepo.findByToken(verifyToken);
+        if(ownerUnits!=null && ownerUnits.size()==1){
+            OwnerUnit ownerUnit = ownerUnits.get(0);
+            CheckReport report = checkReportRepo.findOne(ownerUnit.getAuthorizedReportNum());
+            if(report != null){
+                CheckReportInfo reportInfo = report.getCheckReportInfo();
+                code = 200;
+                message = "success";
+                reportNum = report.getReportNum();
+                riskLevel = riskLevel+ String.valueOf(reportInfo.getRiskLevel());
+                reportDate = DateUtil.getYearMonthDateByChinese(report.getCreateDate());
+                reportConclusion =reportInfo.getReportConclusion();
+                rectifyComments = "暂无";
+                unqualifiedItemList = report.getUnqualifiedItemDetail();
+                projectName = reportInfo.getProjectName();
+                dutyTel = ownerUnit.getDutyTel();
+                dutyPerson = ownerUnit.getDutyPerson();
+                ownerUnit.setTokenTime(new Date());
+            }
+        }
+        
+        result.put("code", code);
+        result.put("message", message);
+        result.put("reportNum", reportNum);
+        result.put("riskLevel", riskLevel);
+        result.put("reportDate", reportDate);
+        result.put("reportConclusion", reportConclusion);
+        result.put("rectifyComments", rectifyComments);
+        result.put("unqualifiedItemList", unqualifiedItemList);
+        result.put("projectName", projectName);
+        result.put("verifyToken", verifyToken);
+        result.put("dutyTel", dutyTel);
+        result.put("dutyPerson",dutyPerson);
+        
+        return result;
+    }
+
+    @Override
+    public JSONObject submitExtractCode(String reportNum, String dutyPerson, String dutyTel) throws Exception {
+        // TODO Auto-generated method stub
+        JSONObject result = new JSONObject();
+        int code = 201;
+        String message = "Fail. Unkonwn Owner Unit.";
+        String token = null;
+        OwnerUnit ownerUnit = ownerUnitRepo.findOne(dutyTel);
+        if(ownerUnit != null ){
+            if(ownerUnit.getDutyPerson().equals(dutyPerson) && ownerUnit.hasRecord(reportNum)){
+                Date date = new Date();
+                token = EncryptionHelper.encryptStringByMD5(dutyTel + date.getTime());
+                ownerUnit.setToken(token);
+                ownerUnit.setLoginTime(date);
+                ownerUnit.setTokenTime(date);
+                ownerUnit.setAuthorizedReportNum(reportNum);
+                ownerUnitRepo.save(ownerUnit);
+                code = 200;
+                message = "success";
+            }
+            else{
+                message = "Fail.Validation Fail.";
+            }
+        }
+        result.put("code", code);
+        result.put("message", message);
+        result.put("verifyToken", token);
+        
+        return result;
+    }
+
+    @Override
+    public JSONObject getReportPath(String fetchCode) {
+
+        // TODO Auto-generated method stub
+        JSONObject result = new JSONObject();
+        List<CheckReport> reportList = checkReportRepo.findByFetchCode(fetchCode);
+        
+        return result;
+    }
+
+    @Override
+    public boolean updateRiskLevel(String reportNum) {
+        // TODO Auto-generated method stub
+        boolean result = false;
+        CheckReport report = checkReportRepo.findOne(reportNum);
+        if(report != null){
+            int riskLevel = computRiskLevel(report);
+            if(riskLevel != 0){
+                report.getCheckReportInfo().setRiskLevel(riskLevel);
+                checkReportRepo.save(report);
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void updateAllRiskLevel() {
+        // TODO Auto-generated method stub
+        List<CheckReport> reportList = checkReportRepo.findAll();
+        Iterator<CheckReport> it = reportList.iterator();
+        while(it.hasNext()){
+            CheckReport report = it.next();
+            int riskLevel = computRiskLevel(report);
+            if(riskLevel != 0){
+                report.getCheckReportInfo().setRiskLevel(riskLevel);
+            }
+        }
+        checkReportRepo.save(reportList);
+    }
+
+    private int computRiskLevel(CheckReport report) {
+        // TODO Auto-generated method stub
+        int result = 0;
+        float score = 0f;
+        if(report != null && !report.getCheckReportResultStat().isEmpty()){
+            Iterator<CheckReportResultStat> it = report.getCheckReportResultStat().iterator();
+            int sum = 0;
+            int points = 0;
+            while(it.hasNext()){
+                CheckReportResultStat item = it.next();
+                if(item.getImportantGrade().equalsIgnoreCase("A")){
+                    sum = sum + item.getCheckNum()*weight.getLevelA();
+                    points = points + item.getUnqualifiedNum()*weight.getLevelA();
+                }
+                else if(item.getImportantGrade().equalsIgnoreCase("B")){
+                    sum = sum + item.getCheckNum()*weight.getLevelB();
+                    points = points + item.getUnqualifiedNum()*weight.getLevelB();
+                }
+                else if(item.getImportantGrade().equalsIgnoreCase("C")){
+                    sum = sum + item.getCheckNum()*weight.getLevelC();
+                    points = points + item.getUnqualifiedNum()*weight.getLevelC();
+                }
+            }
+            score = ((float)(sum-points)/(float)sum)*100;
+            if(score <= 25.00 ) {
+                result = 4;
+            } else if(score <= 65.00) {
+                result = 3;
+            } else if(score <= 85.00) {
+                result = 2;
+            } else {
+                result = 1;
+            }
+        }
+        return result;
+    }
+
 
 }
-

@@ -32,11 +32,11 @@ public class CheckReport {
 
     @Id
     private String reportNum;
-    
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "reportNum")
     private CheckReportInfo checkReportInfo;
-    
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "reportNum")
     private List<CheckReportResultStat> checkReportResultStat = new ArrayList<CheckReportResultStat>();
@@ -53,6 +53,9 @@ public class CheckReport {
     private Date modifyDate;
     private String creatorName;
     private String modifierName;
+    
+    private String verifyToken;
+    private String fetchCode;
 
     public CheckReport() {
         super();
@@ -62,7 +65,7 @@ public class CheckReport {
     public String getReportNum() {
         return reportNum;
     }
-
+    
     public void setReportNum(String reportNum) {
         this.reportNum = reportNum;
     }
@@ -130,4 +133,22 @@ public class CheckReport {
     public void setModifierName(String modifierName) {
         this.modifierName = modifierName;
     }
+
+    public String getVerifyToken() {
+        return verifyToken;
+    }
+
+    public void setVerifyToken(String verifyToken) {
+        this.verifyToken = verifyToken;
+    }
+
+    public String getFetchCode() {
+        return fetchCode;
+    }
+
+    public void setFetchCode(String fetchCode) {
+        this.fetchCode = fetchCode;
+    }
+    
+    
 }

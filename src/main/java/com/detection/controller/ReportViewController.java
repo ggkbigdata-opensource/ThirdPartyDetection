@@ -20,11 +20,15 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.detection.services.CheckReportService;
 import com.detection.services.impl.CheckReportServiceImpl;
 
@@ -35,55 +39,79 @@ import com.detection.services.impl.CheckReportServiceImpl;
  */
 @Controller
 public class ReportViewController {
-	
-	@Autowired
-	private CheckReportService checkReportService;
-	
-    @RequestMapping({"/","/login"})
-    public String index(){
+
+    @Autowired
+    private CheckReportService checkReportService;
+
+    @RequestMapping({ "/", "/login" })
+    public String index() {
         return "/login";
     }
-    
-    @RequestMapping({"/main"})
-    public String main(){
+
+    @RequestMapping({ "/main" })
+    public String main() {
         return "/report/main";
     }
 
-	@PostMapping("/uploadReport")
-	public String uploadReport(@RequestParam("file") MultipartFile file) throws IOException {
-		if (!file.isEmpty()) {			
-			checkReportService.uploadAndSaveReport(file.getOriginalFilename(), file);
-		}
-		return "redirect:main";
-	}
-    
+    @PostMapping("/uploadReport")
+    public String uploadReport(@RequestParam("file") MultipartFile file) throws IOException {
+        if (!file.isEmpty()) {
+            checkReportService.uploadAndSaveReport(file.getOriginalFilename(), file);
+        }
+        return "redirect:main";
+    }
+
+    @RequestMapping(value = {"/fetchReport/{fetchCode}"}, method = RequestMethod.GET)
+    public String fetchReportFile(@PathVariable("fetchCode") String fetchCode){
+        JSONObject result = checkReportService.getReportPath(fetchCode);
+        
+        if(result!=null){
+            return "";
+        }
+        else{
+            return "redirect:404";
+        }
+    }
+
     @RequestMapping("/getReportPage")
     public String getReport() {
         return "/report/getReportPage";
     }
-    
+
     @RequestMapping("/showAbstractReportPage")
     public String reportAbstract() {
         return "/report/showAbstractReportPage";
     }
-    
+
     @RequestMapping("/showDetailReportPage")
-    public String frequentBusines() {
-        return "/report/showDetailReportPage";
+    public ModelAndView frequentBusines(@RequestParam String verifyToken) {
+        ModelAndView mv = new ModelAndView("/report/showDetailReportPage");
+        JSONObject result = checkReportService.getDetailReportInfo(verifyToken);
+        mv.addObject("result", result);
+        return mv;
     }
     
+    //测试返回信息后页面是否可用。
+    @RequestMapping("/testReport")
+    public ModelAndView testReport() {
+        ModelAndView mv = new ModelAndView("/report/showDetailReportPage");
+        JSONObject result = checkReportService.getDetailReportInfo("2FF26EA6577347EB1A73DB450D0B37BA");
+        mv.addObject("result", result);
+        return mv;
+    }
+
     @RequestMapping("/404")
     public String pageNotFound() {
         return "/errors/404";
     }
-    
+
     @RequestMapping("/505")
     public String visitError() {
         return "/errors/505";
     }
+
     @RequestMapping("/nopermissions")
     public String NoPermisssions() {
         return "/errors/nopermissions";
     }
 }
-

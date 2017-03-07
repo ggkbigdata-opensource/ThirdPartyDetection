@@ -13,5 +13,14 @@ public class FormCheck {
             result = true;
         return result;
     }
+    public static boolean isPhoneValid(String phone){
+        boolean result = false;
+        //Pattern pattern = Pattern.compile("^/d{12}|^/d{3}-/d{8}");
+        Pattern pattern = Pattern.compile("^\\d{11}$");
+        Matcher matcher = pattern.matcher(phone);
+        if(matcher.find())
+            result = true;
+        return result;
+    }
     
 }

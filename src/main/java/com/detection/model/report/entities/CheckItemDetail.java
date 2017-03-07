@@ -7,9 +7,15 @@
  */
 package com.detection.model.report.entities;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -19,98 +25,79 @@ import javax.persistence.Id;
  */
 @Entity
 public class CheckItemDetail {
-    
+
     @Id
     @GeneratedValue
     private int id;
-    //private String reportNum;
+    // private String reportNum;
     private String itemCode;
-    private String checkLevel;
+    private String importantGrade;
     private String itemName;
-    
-    private Integer checkNum;
-    private Integer unqualifiedNum;
-    
+
+    private int checkNum;
+    private int unqualifiedNum;
+
     private String regular;
-    private String unqualifiedCheckPoint ;
-    
+
     public CheckItemDetail() {
-        
+
     }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-/*	public String getReportNum() {
-		return reportNum;
-	}
+    public String getItemCode() {
+        return itemCode;
+    }
 
-	public void setReportNum(String reportNum) {
-		this.reportNum = reportNum;
-	}
-*/
-	public String getItemCode() {
-		return itemCode;
-	}
+    public void setItemCode(String itemCode) {
+        this.itemCode = itemCode;
+    }
 
-	public void setItemCode(String itemCode) {
-		this.itemCode = itemCode;
-	}
+    public String getImportantGrade() {
+        return importantGrade;
+    }
 
-	public String getCheckLevel() {
-		return checkLevel;
-	}
+    public void setImportantGrade(String importantGrade) {
+        this.importantGrade = importantGrade;
+    }
 
-	public void setCheckLevel(String checkLevel) {
-		this.checkLevel = checkLevel;
-	}
+    public String getItemName() {
+        return itemName;
+    }
 
-	public String getItemName() {
-		return itemName;
-	}
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
 
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
+    public int getCheckNum() {
+        return checkNum;
+    }
 
-	public Integer getCheckNum() {
-		return checkNum;
-	}
+    public void setCheckNum(int checkNum) {
+        this.checkNum = checkNum;
+    }
 
-	public void setCheckNum(Integer checkNum) {
-		this.checkNum = checkNum;
-	}
+    public int getUnqualifiedNum() {
+        return unqualifiedNum;
+    }
 
-	public Integer getUnqualifiedNum() {
-		return unqualifiedNum;
-	}
+    public void setUnqualifiedNum(int unqualifiedNum) {
+        this.unqualifiedNum = unqualifiedNum;
+    }
 
-	public void setUnqualifiedNum(Integer unqualifiedNum) {
-		this.unqualifiedNum = unqualifiedNum;
-	}
+    public String getRegular() {
+        return regular;
+    }
 
-	public String getRegular() {
-		return regular;
-	}
+    public void setRegular(String regular) {
+        this.regular = regular;
+    }
 
-	public void setRegular(String regular) {
-		this.regular = regular;
-	}
 
-	public String getUnqualifiedCheckPoint() {
-		return unqualifiedCheckPoint;
-	}
-
-	public void setUnqualifiedCheckPoint(String unqualifiedCheckPoint) {
-		this.unqualifiedCheckPoint = unqualifiedCheckPoint;
-	}
-
-    
-    
 }
-
