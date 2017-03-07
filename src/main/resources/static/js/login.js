@@ -16,8 +16,8 @@ $(function(){
                 $('#loginName').val('');
                 $('#userPassword').val('');
             } else {
-                sessionStorage.setItem('token', result.token);
-                self.location = 'main';
+                //sessionStorage.setItem('token', result.token);
+                //self.location = 'main';
             }
         });
     }

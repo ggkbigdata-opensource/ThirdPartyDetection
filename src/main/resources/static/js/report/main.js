@@ -22,7 +22,7 @@ $(function() {
                     item[0] = result.data[d].reportNum;      //报告编码
                     item[1] = result.data[d].projectName;    //报告名称
                     item[2] = result.data[d].projectAddress; //项目地址
-                    item[3] = '一级风险';      //风险等级
+                    item[3] = result.data[d].riskLevel;      //风险等级
                     item[4] = result.data[d].qaName;         //检测单位
                     item[5] = result.data[d].contactTel;     //联系电话
                     item[6] = '<a class="evaluateReport" style="cursor:pointer" href="showAbstractReportPage?reportNum=' + result.data[d].reportNum + '">评估报告</a>&nbsp;'

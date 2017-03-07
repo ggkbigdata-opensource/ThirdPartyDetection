@@ -32,7 +32,7 @@ $(function(){
     }
     
     $('#signoutButton').click(function(){
-        signout();
+        $.getJSON('logout', null, function(result) {});
     });
-    isLogin();
+    //isLogin();
 });
