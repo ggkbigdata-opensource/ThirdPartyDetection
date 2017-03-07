@@ -7,10 +7,6 @@
  */
 package com.detection.controller.rest;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -21,10 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.detection.model.report.entities.CheckReport;
-import com.detection.model.report.entities.CheckReportInfo;
 import com.detection.services.CheckReportService;
-import com.detection.services.ReportService;
 
 /**
  *

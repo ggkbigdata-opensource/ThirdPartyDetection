@@ -1,5 +1,6 @@
 package com.detection.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,26 +14,22 @@ import java.util.Date;
 
 public class DateUtil {
 
-    @SuppressWarnings("deprecation")
     public static String getYearMonthDateByHyphen(Date date) {
         if(date == null){
             date = new Date();
         }
-        String year = String.valueOf(date.getYear() + 1900);
-        String month = String.valueOf(date.getMonth());
-        String day = String.valueOf(date.getDate());
-        return " " + year + "-" + month + "-" + day + " ";
+        SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd ");
+
+        return sdf.format(date);
     }
 
-    @SuppressWarnings("deprecation")
     public static String getYearMonthDateByChinese(Date date) {
         if(date == null){
             date = new Date();
         }
-        String year = String.valueOf(date.getYear() + 1900);
-        String month = String.valueOf(date.getMonth());
-        String day = String.valueOf(date.getDate());
-        return " " + year + "年 " + month + "月 " + day + "日 ";
+        SimpleDateFormat sdf = new SimpleDateFormat(" yyyy年MM月dd日 ");
+
+        return sdf.format(date);
     }
 
 }

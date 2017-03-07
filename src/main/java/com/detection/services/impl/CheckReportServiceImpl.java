@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.detection.config.LevelWeightProperties;
 import com.detection.model.owner.OwnerUnit;
 import com.detection.model.owner.OwnerUnitRepository;
 import com.detection.model.pdfparse.Cover;
@@ -52,9 +53,10 @@ public class CheckReportServiceImpl implements CheckReportService {
     private CheckReportRepository checkReportRepo;
     @Autowired
     private OwnerUnitRepository ownerUnitRepo;
-
     @Autowired
     private PDFParserService pdfParser;
+    @Autowired
+    private LevelWeightProperties weight;
 
     @Value("${uploadPath}")
     private String uploadPath;
@@ -174,7 +176,9 @@ public class CheckReportServiceImpl implements CheckReportService {
         checkReport.setCheckItemDetail(checkItemDetailList);
         checkReport.setCheckReportResultStat(checkReportStatList);
         checkReport.setUnqualifiedItemDetail(checkReportUnqualifiedItemList);
-
+        
+        checkReport.getCheckReportInfo().setRiskLevel(computRiskLevel(checkReport));
+        
         checkReportRepo.save(checkReport);
         result = true;
 
@@ -338,5 +342,74 @@ public class CheckReportServiceImpl implements CheckReportService {
         
         return result;
     }
+
+    @Override
+    public boolean updateRiskLevel(String reportNum) {
+        // TODO Auto-generated method stub
+        boolean result = false;
+        CheckReport report = checkReportRepo.findOne(reportNum);
+        if(report != null){
+            int riskLevel = computRiskLevel(report);
+            if(riskLevel != 0){
+                report.getCheckReportInfo().setRiskLevel(riskLevel);
+                checkReportRepo.save(report);
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void updateAllRiskLevel() {
+        // TODO Auto-generated method stub
+        List<CheckReport> reportList = checkReportRepo.findAll();
+        Iterator<CheckReport> it = reportList.iterator();
+        while(it.hasNext()){
+            CheckReport report = it.next();
+            int riskLevel = computRiskLevel(report);
+            if(riskLevel != 0){
+                report.getCheckReportInfo().setRiskLevel(riskLevel);
+            }
+        }
+        checkReportRepo.save(reportList);
+    }
+
+    private int computRiskLevel(CheckReport report) {
+        // TODO Auto-generated method stub
+        int result = 0;
+        float score = 0f;
+        if(report != null && !report.getCheckReportResultStat().isEmpty()){
+            Iterator<CheckReportResultStat> it = report.getCheckReportResultStat().iterator();
+            int sum = 0;
+            int points = 0;
+            while(it.hasNext()){
+                CheckReportResultStat item = it.next();
+                if(item.getImportantGrade().equalsIgnoreCase("A")){
+                    sum = sum + item.getCheckNum()*weight.getLevelA();
+                    points = points + item.getUnqualifiedNum()*weight.getLevelA();
+                }
+                else if(item.getImportantGrade().equalsIgnoreCase("B")){
+                    sum = sum + item.getCheckNum()*weight.getLevelB();
+                    points = points + item.getUnqualifiedNum()*weight.getLevelB();
+                }
+                else if(item.getImportantGrade().equalsIgnoreCase("C")){
+                    sum = sum + item.getCheckNum()*weight.getLevelC();
+                    points = points + item.getUnqualifiedNum()*weight.getLevelC();
+                }
+            }
+            score = ((float)(sum-points)/(float)sum)*100;
+            if(score <= 25.00 ) {
+                result = 4;
+            } else if(score <= 65.00) {
+                result = 3;
+            } else if(score <= 85.00) {
+                result = 2;
+            } else {
+                result = 1;
+            }
+        }
+        return result;
+    }
+
 
 }
