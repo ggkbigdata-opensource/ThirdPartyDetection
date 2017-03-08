@@ -12,12 +12,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 /**
- *
- * @author lcc (lincc@ggkbigdata.com)
- * @version 1.0, 2017年2月21日 上午10:10:38
+ * @fileName LevelWeightProperties.java
+ * @author csk
+ * @createTime 2017年3月8日 上午9:39:28
+ * @version 1.0
+ * @function
  */
 @Component
-@ConfigurationProperties(prefix="fire.detection")
+@ConfigurationProperties(prefix="fire.default.riskWeight")
 public class LevelWeightProperties {
     
     private int levelA;

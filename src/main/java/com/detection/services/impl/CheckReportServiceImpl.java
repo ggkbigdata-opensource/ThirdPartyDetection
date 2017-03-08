@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.detection.config.LevelWeightProperties;
+import com.detection.config.RiskLevelBoundary;
 import com.detection.model.owner.OwnerUnit;
 import com.detection.model.owner.OwnerUnitRepository;
 import com.detection.model.pdfparse.Cover;
@@ -57,6 +58,8 @@ public class CheckReportServiceImpl implements CheckReportService {
     private PDFParserService pdfParser;
     @Autowired
     private LevelWeightProperties weight;
+    @Autowired
+    private RiskLevelBoundary boundary;
 
     @Value("${uploadPath}")
     private String uploadPath;
@@ -398,11 +401,11 @@ public class CheckReportServiceImpl implements CheckReportService {
                 }
             }
             score = ((float)(sum-points)/(float)sum)*100;
-            if(score <= 25.00 ) {
+            if(score <= boundary.getFirstLevelBoundary() ) {
                 result = 4;
-            } else if(score <= 65.00) {
+            } else if(score <= boundary.getSecondLevelBoundary()) {
                 result = 3;
-            } else if(score <= 85.00) {
+            } else if(score <= boundary.getThirdLevelBoundary()) {
                 result = 2;
             } else {
                 result = 1;
