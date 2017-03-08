@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @version 1.0
  * @function
  */
-@Controller
+/*@Controller
 public class DefinedErrorController implements ErrorController {
 
     private static final String ERROR_PATH = "/error";
@@ -27,3 +27,4 @@ public class DefinedErrorController implements ErrorController {
         return ERROR_PATH;
     }
 }
+*/

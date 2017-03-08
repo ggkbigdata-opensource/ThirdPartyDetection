@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
@@ -27,6 +28,8 @@ public class OwnerUnitServiceImpl implements OwnerUnitService {
     
     @Autowired
     private OwnerUnitRepository ownerUnitRepo;
+    @Value("${reportNumForDemo}")
+    private String reportNumForDemo;
 
     @Override
     public JSONObject addOwnerUnit(String dutyTel, String dutyPerson, String ownerName, String email) {
@@ -89,8 +92,10 @@ public class OwnerUnitServiceImpl implements OwnerUnitService {
     }
 
     @Override
-    public void testFetchReport() {
+    public JSONObject testFetchReport() {
         // TODO Auto-generated method stub
+        JSONObject result = new JSONObject();
+        int updatedNum = 0;
         List<OwnerUnit> ownerList = ownerUnitRepo.findAll();
         Iterator<OwnerUnit> it = ownerList.iterator();
         while(it.hasNext()){
@@ -100,18 +105,22 @@ public class OwnerUnitServiceImpl implements OwnerUnitService {
             boolean hasRecord = false;
             while(recordIt.hasNext()){
                 item = recordIt.next();
-                if(item.getReportNum().equals("16GJA153")){
+                if(item.getReportNum().equals(reportNumForDemo)){
                     hasRecord = true;
                     break;
                 }
             }
             if(!hasRecord){
+                updatedNum++;
                 item.setRecordDate(new Date());
-                item.setReportNum("16GJA153");
+                item.setReportNum(reportNumForDemo);
                 owner.addOneCheckRecord(item);
             }
         }
         ownerUnitRepo.save(ownerList);
+        result.put("result", "finish");
+        result.put("updated", updatedNum);
+        return result;
     }
 
 }

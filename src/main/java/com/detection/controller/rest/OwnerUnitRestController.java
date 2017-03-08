@@ -25,7 +25,8 @@ public class OwnerUnitRestController {
     private OwnerUnitService ownerUnitService;
     
     @GetMapping(value = "/registration/test")
-    public void testFetch(){
-        ownerUnitService.testFetchReport();
+    public JSONObject testFetch(){
+        
+        return ownerUnitService.testFetchReport();
     }
 }

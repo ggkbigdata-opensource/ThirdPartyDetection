@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.processing.RoundEnvironment;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,7 +46,6 @@ import com.detection.services.PDFParserService;
 import com.detection.util.DateUtil;
 import com.detection.util.EncryptionHelper;
 
-
 @Service
 public class CheckReportServiceImpl implements CheckReportService {
     // @Autowired
@@ -66,10 +67,14 @@ public class CheckReportServiceImpl implements CheckReportService {
 
     @Value("${downloadPath}")
     private String downloadPath;
+    
+    @Value("${detectionLevelPrefix}")
+    private String detectionLevelPrefix;
 
     @Override
-    public boolean uploadAndSaveReport(String fileName, MultipartFile file) throws IOException {
+    public boolean uploadAndSaveReport(String fileName, MultipartFile file) throws Exception {
         boolean result = false;
+        fileName = EncryptionHelper.encryptFileNameByMD5(fileName);
         String upFilePath = uploadPath + fileName;
         String downFilePath = downloadPath + fileName;
 
@@ -78,7 +83,7 @@ public class CheckReportServiceImpl implements CheckReportService {
             outPath.mkdirs();
         }
         BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(new File(upFilePath)));
-
+        
         out.write(file.getBytes());
         out.flush();
         out.close();
@@ -180,7 +185,9 @@ public class CheckReportServiceImpl implements CheckReportService {
         checkReport.setCheckReportResultStat(checkReportStatList);
         checkReport.setUnqualifiedItemDetail(checkReportUnqualifiedItemList);
         
-        checkReport.getCheckReportInfo().setRiskLevel(computRiskLevel(checkReport));
+        float riskScore = computeRiskScore(checkReport);
+        checkReport.getCheckReportInfo().setRiskScore(riskScore);
+        checkReport.getCheckReportInfo().setRiskLevel(computRiskLevel(riskScore));
         
         checkReportRepo.save(checkReport);
         result = true;
@@ -231,10 +238,10 @@ public class CheckReportServiceImpl implements CheckReportService {
         String message = "Fail.Report Not Found.";
         String reportDate = null;
         String projectName = null;
-        int riskLevel = 0;
-        
+        String riskLevel = null;
+
         CheckReport report = checkReportRepo.findOne(reportNum);
-        if(report != null){
+        if (report != null) {
             code = 200;
             message = "success";
             reportDate = DateUtil.getYearMonthDateByHyphen(report.getCreateDate());
@@ -258,8 +265,9 @@ public class CheckReportServiceImpl implements CheckReportService {
         int code = 201;
         String message = "Fail";
         String reportNum = null;
-        //int riskLevel = 0;
-        String riskLevel = "危险等级";
+        // int riskLevel = 0;
+        String riskLevel = null;
+        String riskScore = "";
         String reportDate = null;
         String reportConclusion = null;
         String rectifyComments = null;
@@ -267,19 +275,20 @@ public class CheckReportServiceImpl implements CheckReportService {
         String projectName = null;
         String dutyTel = null;
         String dutyPerson = null;
-        
+
         List<OwnerUnit> ownerUnits = ownerUnitRepo.findByToken(verifyToken);
-        if(ownerUnits!=null && ownerUnits.size()==1){
+        if (ownerUnits != null && ownerUnits.size() == 1) {
             OwnerUnit ownerUnit = ownerUnits.get(0);
             CheckReport report = checkReportRepo.findOne(ownerUnit.getAuthorizedReportNum());
-            if(report != null){
+            if (report != null) {
                 CheckReportInfo reportInfo = report.getCheckReportInfo();
                 code = 200;
                 message = "success";
                 reportNum = report.getReportNum();
-                riskLevel = riskLevel+ String.valueOf(reportInfo.getRiskLevel());
+                riskLevel = reportInfo.getRiskLevel();
+                riskScore = String.format("%.2f",reportInfo.getRiskScore());
                 reportDate = DateUtil.getYearMonthDateByChinese(report.getCreateDate());
-                reportConclusion =reportInfo.getReportConclusion();
+                reportConclusion = reportInfo.getReportConclusion();
                 rectifyComments = "暂无";
                 unqualifiedItemList = report.getUnqualifiedItemDetail();
                 projectName = reportInfo.getProjectName();
@@ -288,11 +297,12 @@ public class CheckReportServiceImpl implements CheckReportService {
                 ownerUnit.setTokenTime(new Date());
             }
         }
-        
+
         result.put("code", code);
         result.put("message", message);
         result.put("reportNum", reportNum);
         result.put("riskLevel", riskLevel);
+        result.put("riskScore", riskScore);
         result.put("reportDate", reportDate);
         result.put("reportConclusion", reportConclusion);
         result.put("rectifyComments", rectifyComments);
@@ -300,8 +310,8 @@ public class CheckReportServiceImpl implements CheckReportService {
         result.put("projectName", projectName);
         result.put("verifyToken", verifyToken);
         result.put("dutyTel", dutyTel);
-        result.put("dutyPerson",dutyPerson);
-        
+        result.put("dutyPerson", dutyPerson);
+
         return result;
     }
 
@@ -313,8 +323,8 @@ public class CheckReportServiceImpl implements CheckReportService {
         String message = "Fail. Unkonwn Owner Unit.";
         String token = null;
         OwnerUnit ownerUnit = ownerUnitRepo.findOne(dutyTel);
-        if(ownerUnit != null ){
-            if(ownerUnit.getDutyPerson().equals(dutyPerson) && ownerUnit.hasRecord(reportNum)){
+        if (ownerUnit != null) {
+            if (ownerUnit.getDutyPerson().equals(dutyPerson) && ownerUnit.hasRecord(reportNum)) {
                 Date date = new Date();
                 token = EncryptionHelper.encryptStringByMD5(dutyTel + date.getTime());
                 ownerUnit.setToken(token);
@@ -324,15 +334,14 @@ public class CheckReportServiceImpl implements CheckReportService {
                 ownerUnitRepo.save(ownerUnit);
                 code = 200;
                 message = "success";
-            }
-            else{
+            } else {
                 message = "Fail.Validation Fail.";
             }
         }
         result.put("code", code);
         result.put("message", message);
         result.put("verifyToken", token);
-        
+
         return result;
     }
 
@@ -342,7 +351,7 @@ public class CheckReportServiceImpl implements CheckReportService {
         // TODO Auto-generated method stub
         JSONObject result = new JSONObject();
         List<CheckReport> reportList = checkReportRepo.findByFetchCode(fetchCode);
-        
+
         return result;
     }
 
@@ -351,10 +360,12 @@ public class CheckReportServiceImpl implements CheckReportService {
         // TODO Auto-generated method stub
         boolean result = false;
         CheckReport report = checkReportRepo.findOne(reportNum);
-        if(report != null){
-            int riskLevel = computRiskLevel(report);
-            if(riskLevel != 0){
+        if (report != null) {
+            float riskScore = computeRiskScore(report);
+            String riskLevel = computRiskLevel(riskScore);
+            if (riskLevel != null) {
                 report.getCheckReportInfo().setRiskLevel(riskLevel);
+                report.getCheckReportInfo().setRiskScore(riskScore);
                 checkReportRepo.save(report);
                 result = true;
             }
@@ -367,52 +378,62 @@ public class CheckReportServiceImpl implements CheckReportService {
         // TODO Auto-generated method stub
         List<CheckReport> reportList = checkReportRepo.findAll();
         Iterator<CheckReport> it = reportList.iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             CheckReport report = it.next();
-            int riskLevel = computRiskLevel(report);
-            if(riskLevel != 0){
+            float riskScore = computeRiskScore(report);
+            String riskLevel = computRiskLevel(riskScore);
+            if (riskLevel != null) {
+                report.getCheckReportInfo().setRiskScore(riskScore);
                 report.getCheckReportInfo().setRiskLevel(riskLevel);
             }
         }
         checkReportRepo.save(reportList);
     }
 
-    private int computRiskLevel(CheckReport report) {
+    private String computRiskLevel(float riskScore) {
         // TODO Auto-generated method stub
-        int result = 0;
-        float score = 0f;
-        if(report != null && !report.getCheckReportResultStat().isEmpty()){
-            Iterator<CheckReportResultStat> it = report.getCheckReportResultStat().iterator();
-            int sum = 0;
-            int points = 0;
-            while(it.hasNext()){
-                CheckReportResultStat item = it.next();
-                if(item.getImportantGrade().equalsIgnoreCase("A")){
-                    sum = sum + item.getCheckNum()*weight.getLevelA();
-                    points = points + item.getUnqualifiedNum()*weight.getLevelA();
-                }
-                else if(item.getImportantGrade().equalsIgnoreCase("B")){
-                    sum = sum + item.getCheckNum()*weight.getLevelB();
-                    points = points + item.getUnqualifiedNum()*weight.getLevelB();
-                }
-                else if(item.getImportantGrade().equalsIgnoreCase("C")){
-                    sum = sum + item.getCheckNum()*weight.getLevelC();
-                    points = points + item.getUnqualifiedNum()*weight.getLevelC();
-                }
-            }
-            score = ((float)(sum-points)/(float)sum)*100;
-            if(score <= boundary.getFirstLevelBoundary() ) {
-                result = 4;
-            } else if(score <= boundary.getSecondLevelBoundary()) {
-                result = 3;
-            } else if(score <= boundary.getThirdLevelBoundary()) {
-                result = 2;
+        String result = null;
+        if(riskScore>0 && riskScore<=100){
+            if (riskScore <= boundary.getFirstLevelBoundary()) {
+                result = detectionLevelPrefix+"4";
+            } else if (riskScore <= boundary.getSecondLevelBoundary()) {
+                result = detectionLevelPrefix+"3";
+            } else if (riskScore <= boundary.getThirdLevelBoundary()) {
+                result = detectionLevelPrefix+"2";
             } else {
-                result = 1;
+                result = detectionLevelPrefix+"1";
             }
         }
         return result;
     }
+    
+    private String computeRiskLevel(CheckReport report){
+        float score = computeRiskScore(report);
+        return computRiskLevel(score);
+    }
 
-
+    private float computeRiskScore(CheckReport report) {
+        // TODO Auto-generated method stub
+        float score = 0;
+        if (report != null && !report.getCheckReportResultStat().isEmpty()) {
+            Iterator<CheckReportResultStat> it = report.getCheckReportResultStat().iterator();
+            int sum = 0;
+            int points = 0;
+            while (it.hasNext()) {
+                CheckReportResultStat item = it.next();
+                if (item.getImportantGrade().equalsIgnoreCase("A")) {
+                    sum = sum + item.getCheckNum() * weight.getLevelA();
+                    points = points + item.getUnqualifiedNum() * weight.getLevelA();
+                } else if (item.getImportantGrade().equalsIgnoreCase("B")) {
+                    sum = sum + item.getCheckNum() * weight.getLevelB();
+                    points = points + item.getUnqualifiedNum() * weight.getLevelB();
+                } else if (item.getImportantGrade().equalsIgnoreCase("C")) {
+                    sum = sum + item.getCheckNum() * weight.getLevelC();
+                    points = points + item.getUnqualifiedNum() * weight.getLevelC();
+                }
+            }
+            score = ((float) (sum - points) / (float) sum) * 100;
+        }
+        return score;
+    }
 }
