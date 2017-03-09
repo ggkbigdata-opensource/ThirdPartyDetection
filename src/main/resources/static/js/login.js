@@ -17,7 +17,7 @@ $(function(){
                 $('#userPassword').val('');
             } else {
                 //sessionStorage.setItem('token', result.token);
-                //self.location = 'main';
+                self.location = 'main';
             }
         });
     }

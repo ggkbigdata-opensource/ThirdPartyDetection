@@ -28,9 +28,10 @@ public interface CheckReportService {
      * @author csk
      * @version 1.0
      * @throws IOException 
+     * @throws Exception 
      * @function 上传报告文件，解析并保存到数据库
      */
-    public boolean uploadAndSaveReport(String path, MultipartFile file) throws IOException;
+    public boolean uploadAndSaveReport(String path, MultipartFile file) throws IOException, Exception;
     
     /**
      * @author csk

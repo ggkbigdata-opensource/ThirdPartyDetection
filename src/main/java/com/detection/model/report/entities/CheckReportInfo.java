@@ -28,7 +28,8 @@ public class CheckReportInfo {
     private String message;
     @Column(length = 2048)
     private String reportConclusion;
-    private int riskLevel;
+    private String riskLevel;
+    private float riskScore;
     private String filePath;
     
     public CheckReportInfo(){
@@ -123,13 +124,20 @@ public class CheckReportInfo {
         this.reportConclusion = reportConclusion;
     }
     
-
-    public int getRiskLevel() {
+    public String getRiskLevel() {
         return riskLevel;
     }
 
-    public void setRiskLevel(int riskLevel) {
+    public void setRiskLevel(String riskLevel) {
         this.riskLevel = riskLevel;
+    }
+
+    public float getRiskScore() {
+        return riskScore;
+    }
+
+    public void setRiskScore(float riskScore) {
+        this.riskScore = riskScore;
     }
 
     public String getFilePath() {

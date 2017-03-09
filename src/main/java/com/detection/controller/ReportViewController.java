@@ -17,6 +17,8 @@ import java.io.FileOutputStream;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -29,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.detection.services.AuthenticationService;
 import com.detection.services.CheckReportService;
 import com.detection.services.impl.CheckReportServiceImpl;
 
@@ -42,26 +45,45 @@ public class ReportViewController {
 
     @Autowired
     private CheckReportService checkReportService;
+    
+    @Autowired
+    private AuthenticationService authService;
 
-    @RequestMapping({ "/", "/login" })
+    @RequestMapping({ "/" })
     public String index() {
         return "/login";
     }
 
     @RequestMapping({ "/main" })
-    public String main() {
-        return "/report/main";
+    public String main( HttpServletRequest request ) {
+        String result = "report/main";
+        int permittedRole = 1;
+        if(!authService.isLoggedin(request)){
+            result = "redirect:/";
+        }
+        else if(!authService.isPermitted(request, permittedRole)){
+            result ="redirect:nopermissions";
+        }
+        return result;
     }
 
     @PostMapping("/uploadReport")
-    public String uploadReport(@RequestParam("file") MultipartFile file) throws IOException {
-        if (!file.isEmpty()) {
+    public String uploadReport(@RequestParam("file") MultipartFile file ,HttpServletRequest request) throws Exception {
+        String result = "redirect:main";
+        int permittedRole = 1;
+        if(!authService.isLoggedin(request)){
+            result = "redirect:/";
+        }
+        else if(!authService.isPermitted(request, permittedRole)){
+            result ="redirect:nopermissions";
+        }
+        else if (!file.isEmpty()) {
             checkReportService.uploadAndSaveReport(file.getOriginalFilename(), file);
         }
-        return "redirect:main";
+        return result;
     }
 
-    @RequestMapping(value = {"/fetchReport/{fetchCode}"}, method = RequestMethod.GET)
+/*    @RequestMapping(value = {"/fetchReport/{fetchCode}"}, method = RequestMethod.GET)
     public String fetchReportFile(@PathVariable("fetchCode") String fetchCode){
         JSONObject result = checkReportService.getReportPath(fetchCode);
         
@@ -71,7 +93,7 @@ public class ReportViewController {
         else{
             return "redirect:404";
         }
-    }
+    }*/
 
     @RequestMapping("/getReportPage")
     public String getReport() {
@@ -79,10 +101,24 @@ public class ReportViewController {
     }
 
     @RequestMapping("/showAbstractReportPage")
-    public String reportAbstract() {
-        return "/report/showAbstractReportPage";
+    public String reportAbstract(HttpServletRequest request) {
+        String result = "/report/showAbstractReportPage";
+        int permittedRole = 1;
+        if(!authService.isLoggedin(request)){
+            result = "redirect:/";
+        }
+        else if(!authService.isPermitted(request, permittedRole)){
+            result ="redirect:nopermissions";
+        }
+        return result;
     }
-
+    
+/*    @RequestMapping(value = {"/deleteReportByReportNum"} , method = RequestMethod.GET)
+    public String deleteReportByReportNum(@RequestParam String reportNum, HttpServletRequest request){
+        //request.getAttribute("token");
+        return "redirect:main";
+    }
+    */
     @RequestMapping("/showDetailReportPage")
     public ModelAndView frequentBusines(@RequestParam String verifyToken) {
         ModelAndView mv = new ModelAndView("/report/showDetailReportPage");
@@ -91,7 +127,7 @@ public class ReportViewController {
         return mv;
     }
     
-    //测试返回信息后页面是否可用。
+/*    //测试返回信息后页面是否可用。
     @RequestMapping("/testReport")
     public ModelAndView testReport() {
         ModelAndView mv = new ModelAndView("/report/showDetailReportPage");
@@ -99,8 +135,8 @@ public class ReportViewController {
         mv.addObject("result", result);
         return mv;
     }
-
-    @RequestMapping("/404")
+*/
+    @RequestMapping({"/404"})
     public String pageNotFound() {
         return "/errors/404";
     }

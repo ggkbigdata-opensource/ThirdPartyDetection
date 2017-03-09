@@ -1,7 +1,15 @@
 package com.detection.services.impl;
 
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.detection.model.user.User;
+import com.detection.model.user.UserRepository;
 import com.detection.services.AuthenticationService;
 
 /**
@@ -14,22 +22,55 @@ import com.detection.services.AuthenticationService;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+    @Autowired
+    private UserRepository userRepo;
+
     @Override
-    public boolean isPermitted(String token, String role) {
+    public boolean isPermitted(HttpServletRequest request, int permittedRole) {
         // TODO Auto-generated method stub
-        return false;
+        boolean result = false;
+        HttpSession session = request.getSession();
+        String userName = (String) session.getAttribute("userName");
+        String token = (String) session.getAttribute("token");
+        int role = Integer.parseInt((String) session.getAttribute("role"));
+        if (userName != null && token != null) {
+            User user = userRepo.findOne(userName);
+            if (user != null && isTokenValid(user,token)
+                    && role == permittedRole) {
+                result = true;
+            }
+        }
+        return result;
     }
 
     @Override
-    public boolean isTokenValid(String token) {
+    public boolean isTokenValid(User user, String token) {
         // TODO Auto-generated method stub
-        return false;
+        boolean result = false;
+        if(user.getToken().equalsIgnoreCase(token)){
+            Date currentTime = new Date();
+            if((currentTime.getTime() - user.getTokenUpdateTime().getTime())<=1800000){
+                user.setTokenUpdateTime(currentTime);
+                result = true;
+            }
+        }
+        return result;
     }
 
     @Override
-    public boolean isLoggedin() {
+    public boolean isLoggedin(HttpServletRequest request) {
         // TODO Auto-generated method stub
-        return false;
+        boolean result = false;
+        HttpSession session = request.getSession();
+        String userName = (String) session.getAttribute("userName");
+        String token = (String) session.getAttribute("token");
+        if (userName != null && token != null ) {
+            User user = userRepo.findOne(userName);
+            if (user != null) {
+                result = true;
+            }
+        }
+        return result;
     }
 
 }
