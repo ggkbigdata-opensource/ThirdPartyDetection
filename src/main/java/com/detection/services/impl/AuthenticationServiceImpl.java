@@ -66,7 +66,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String token = (String) session.getAttribute("token");
         if (userName != null && token != null ) {
             User user = userRepo.findOne(userName);
-            if (user != null) {
+            if (user != null && isTokenValid(user,token)) {
                 result = true;
             }
         }

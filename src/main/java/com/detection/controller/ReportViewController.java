@@ -49,7 +49,7 @@ public class ReportViewController {
     @Autowired
     private AuthenticationService authService;
 
-    @RequestMapping({ "/" })
+    @RequestMapping({ "/","/loginPage" })
     public String index() {
         return "/login";
     }
