@@ -253,7 +253,18 @@ public class CheckReportServiceImpl implements CheckReportService {
         result.put("reportNum", reportNum);
         result.put("reportDate", reportDate);
         result.put("projectName", projectName);
-        result.put("riskLevel", riskLevel);
+        if(riskLevel.equalsIgnoreCase("危险等级1")){
+            result.put("riskLevel", 1);
+        }
+        else if(riskLevel.equalsIgnoreCase("危险等级2")){
+            result.put("riskLevel", 2);
+        }
+        else if(riskLevel.equalsIgnoreCase("危险等级3")){
+            result.put("riskLevel", 3);
+        }
+        else{
+            result.put("riskLevel", 4);
+        }
 
         return result;
     }

@@ -11,7 +11,7 @@ $(function(){
         }
         $.getJSON(proxy, params, function(result) {
             if(null == result || 200 != result.code) {
-                //self.location = '505';
+                self.location = 'loginPage';
                 alert('账号密码错误');
                 $('#loginName').val('');
                 $('#userPassword').val('');
@@ -38,9 +38,17 @@ $(function(){
         }
     }
     
-    isLogin();
+    //isLogin();
     
     $('#submitLogin').click(function(){
         userLogin();
     });
+    
+
+	document.onkeydown = function(e) {
+		var ev = document.all ? window.event : e;
+		if (ev.keyCode == 13) {
+			userLogin();
+		}
+	}
 });

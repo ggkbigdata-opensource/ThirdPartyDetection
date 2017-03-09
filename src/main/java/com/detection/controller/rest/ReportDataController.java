@@ -7,6 +7,9 @@
  */
 package com.detection.controller.rest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,14 +41,30 @@ public class ReportDataController {
      */
     @RequestMapping(value = {"/report/submitExtractCode" }, method = RequestMethod.GET)
     public JSONObject submitExtractCode(@RequestParam String reportNum, 
-            @RequestParam String dutyPerson, @RequestParam String dutyTel) throws Exception {
+            @RequestParam String dutyPerson, @RequestParam String dutyTel, HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
+        JSONObject result = checkReportService.submitExtractCode(reportNum, dutyPerson, dutyTel);
+        String token = result.getString("verifyToken");
+        if(dutyPerson!=null && dutyTel != null){
+            session.setAttribute("ownerToken", token);
+            session.setAttribute("watermark", dutyPerson+dutyTel);
+        }
         return checkReportService.submitExtractCode(reportNum, dutyPerson, dutyTel);
     }
     
     @RequestMapping(value = {"/report/getDetailReportInfo" }, method = RequestMethod.GET)
-    public JSONObject getDetailReportInfo(@RequestParam String verifyToken) {
-
-        return checkReportService.getDetailReportInfo(verifyToken);
+    public JSONObject getDetailReportInfo(@RequestParam String verifyToken, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String ownerToken = (String)session.getAttribute("ownerToken");
+        JSONObject result = new JSONObject();
+        if(verifyToken.equalsIgnoreCase(ownerToken)){
+            result = checkReportService.getDetailReportInfo(verifyToken);
+        }
+        else{
+            result.put("code", 201);
+            result.put("message", "fail");
+        }
+        return result;
     }
     
     /**
@@ -71,11 +90,13 @@ public class ReportDataController {
      * @param verifyToken  
      */
     @RequestMapping(value = {"/report/getWatermark"}, method = RequestMethod.GET)
-    public JSONObject getWatermark(@RequestParam String verifyToken) {
+    public JSONObject getWatermark(@RequestParam String verifyToken, HttpServletRequest request) {
         JSONObject obj = new JSONObject();
+        
         obj.put("code", 200);   //false == 201
         obj.put("message", "succes");
-        obj.put("watermark", "蔡禹13450255760");
+        String watermark = (String) request.getSession().getAttribute("watermark");
+        obj.put("watermark", watermark);
         return obj;
     }
 }
