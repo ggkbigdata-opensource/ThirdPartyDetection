@@ -113,12 +113,22 @@ public class ReportViewController {
         return result;
     }
     
-/*    @RequestMapping(value = {"/deleteReportByReportNum"} , method = RequestMethod.GET)
+    @RequestMapping(value = {"/deleteReportByReportNum"} , method = RequestMethod.GET)
     public String deleteReportByReportNum(@RequestParam String reportNum, HttpServletRequest request){
-        //request.getAttribute("token");
-        return "redirect:main";
+        String result = "redirect:main";
+        int permittedRole = 1;
+        if(!authService.isLoggedin(request)){
+            result = "redirect:/";
+        }
+        else if(!authService.isPermitted(request, permittedRole)){
+            result ="redirect:nopermissions";
+        }
+        else if (reportNum != null) {
+            checkReportService.deleteReportByReportNum(reportNum);
+        }
+        return result;
     }
-    */
+
     @RequestMapping("/showDetailReportPage")
     public ModelAndView frequentBusines(@RequestParam String verifyToken) {
         ModelAndView mv = new ModelAndView("/report/showDetailReportPage");

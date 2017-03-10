@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.detection.services.AuthenticationService;
 import com.detection.services.CheckReportService;
 
 /**
@@ -30,11 +31,22 @@ public class ReportRestController {
 
     @Autowired
     private CheckReportService service;
+    @Autowired
+    private AuthenticationService authService;
     
     @RequestMapping(value = {"/getReportList"} , method = RequestMethod.GET)
-    public JSONObject getReportList(@RequestParam(name = "token") String token, HttpServletRequest request){
-        return service.getAllReports();
+    public JSONObject getReportList( HttpServletRequest request ){
+        //
+        int permittedRole = 1;
+        JSONObject result = new JSONObject();
+        result.put("code", 201);
+        result.put("message", "fail");
+        if(authService.isLoggedin(request) && authService.isPermitted(request, permittedRole)){
+            result = service.getAllReports();
+        }
+        return result;
     }
+
     
     @RequestMapping(value = {"/testSession"} , method = RequestMethod.GET)
     public JSONObject testSession( HttpServletRequest request ){

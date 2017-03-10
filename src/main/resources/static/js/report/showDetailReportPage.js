@@ -12,7 +12,7 @@ function watermark(settings) {
         watermark_cols:20,
         watermark_x_space:20,
         watermark_y_space:15,
-        watermark_color:'#000000',
+        watermark_color:'#508ef0',
         watermark_alpha:0.3,
         watermark_fontsize:'18px',
         watermark_font:'微软雅黑',
