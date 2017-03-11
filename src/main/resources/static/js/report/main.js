@@ -1,6 +1,18 @@
 /**
  * 
  */
+
+    
+function deleteReportByReportNum(reportNum) {
+	if(confirm("确定要删除报告："+reportNum+" ?")){
+		$.get("deleteReportByReportNum?reportNum="+reportNum,function(data,status){
+			alert("删除成功");
+			//showReportList();
+			self.location = 'main';
+		  });
+	}
+}
+
 $(function() {
     //show reportList
     function showReportList() {
@@ -25,9 +37,9 @@ $(function() {
                     item[3] = result.data[d].riskLevel;      //风险等级
                     item[4] = result.data[d].qaName;         //检测单位
                     item[5] = result.data[d].contactTel;     //联系电话
-                    item[6] = '<a class="evaluateReport" style="cursor:pointer" href="showAbstractReportPage?reportNum=' + result.data[d].reportNum + '">评估报告</a>&nbsp;'
+                    item[6] = '<a class="evaluateReport" style="cursor:pointer" href="showAbstractReportPage?reportNum=' + result.data[d].reportNum + '">分析报告</a>&nbsp;'
                             + '<a class="detectionReport" style="cursor:pointer" href="' + result.data[d].filePath + '">检测报告</a>&nbsp;'
-                            + '<a class="deleteReport" style="cursor:pointer" reportNum="' + result.data[d].reportNum + '">删除</a>';      //
+                            + '<a class="deleteReport" style="cursor:pointer" href="JavaScript: " onclick="deleteReportByReportNum(\'' + result.data[d].reportNum + '\')">删除</a>';      //
                     data[index++] = item;
                 }
                 $("#reportListTable").dataTable({
@@ -39,6 +51,8 @@ $(function() {
             }
         });
     }
+
+    
     // 文件上传
     $(":file").filestyle({
         icon : false,
