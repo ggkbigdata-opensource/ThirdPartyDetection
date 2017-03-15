@@ -101,8 +101,20 @@ public interface CheckReportService {
      */
     public JSONObject getReportPath(String fetchCode);
     
+    /**
+     * @author csk
+     * @version 1.0
+     * @function 更新单个报告的风险等级
+     */
     public boolean updateRiskLevel(String reportNum);
     
+    /**
+     * @author csk
+     * @version 1.0
+     * @function 更新所有报告风险等级
+     */
     public void updateAllRiskLevel();
+    
+    
 }
 

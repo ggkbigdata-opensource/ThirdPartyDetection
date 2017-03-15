@@ -6,7 +6,7 @@ spring:
     password: Root12345..
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: false
 
 server:
