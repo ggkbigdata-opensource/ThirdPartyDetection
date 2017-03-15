@@ -185,9 +185,9 @@ public class CheckReportServiceImpl implements CheckReportService {
         checkReport.setCheckReportResultStat(checkReportStatList);
         checkReport.setUnqualifiedItemDetail(checkReportUnqualifiedItemList);
         
-        float riskScore = computeRiskScore(checkReport);
-        checkReport.getCheckReportInfo().setRiskScore(riskScore);
-        checkReport.getCheckReportInfo().setRiskLevel(computRiskLevel(riskScore));
+        //float riskScore = computeRiskScore(checkReport);
+        //checkReport.getCheckReportInfo().setRiskScore(riskScore);
+        //checkReport.getCheckReportInfo().setRiskLevel(computRiskLevel(riskScore));
         
         checkReportRepo.save(checkReport);
         result = true;
@@ -369,6 +369,20 @@ public class CheckReportServiceImpl implements CheckReportService {
     @Override
     public boolean updateRiskLevel(String reportNum) {
         // TODO Auto-generated method stub
+        
+        return false;
+    }
+
+    @Override
+    public void updateAllRiskLevel() {
+        // TODO Auto-generated method stub
+        
+    }
+    
+/*
+    @Override
+    public boolean updateRiskLevel(String reportNum) {
+        // TODO Auto-generated method stub
         boolean result = false;
         CheckReport report = checkReportRepo.findOne(reportNum);
         if (report != null) {
@@ -446,5 +460,5 @@ public class CheckReportServiceImpl implements CheckReportService {
             score = ((float) (sum - points) / (float) sum) * 100;
         }
         return score;
-    }
+    }*/
 }
