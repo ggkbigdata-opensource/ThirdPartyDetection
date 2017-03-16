@@ -16,7 +16,7 @@ import com.detection.model.weight.WeightConfigRepo;
  * @author csk
  * @createTime 2017年3月15日 下午7:13:58
  * @version 1.0
- * @function
+ * @function 测试各种后台方法用 restcontroller
  */
 @RestController
 public class TestRestController {
@@ -27,6 +27,8 @@ public class TestRestController {
     @RequestMapping("/testWeightInit")
     public String TestWeightInit(@RequestParam String configName){
         String result;
+        //set a configuration file name start with 'test' to load default values of weight.
+        //采用test开头的配置名，可以初始化一个
         Pattern pattern = Pattern.compile("^test.*");
         WeightConfig conf;
         if(pattern.matcher(configName).find()){

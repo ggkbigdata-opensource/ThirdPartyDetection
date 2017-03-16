@@ -13,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
-import org.apache.hadoop.mapred.legacyjobhistory_jsp;
-
 /**
  * @fileName WeightConfig.java
  * @author csk
