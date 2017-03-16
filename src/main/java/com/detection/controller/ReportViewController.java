@@ -51,7 +51,7 @@ public class ReportViewController {
 
     @RequestMapping({ "/","/loginPage" })
     public String index() {
-        return "/login";
+        return "login";
     }
 
     @RequestMapping({ "/main" })
@@ -97,12 +97,12 @@ public class ReportViewController {
 
     @RequestMapping("/getReportPage")
     public String getReport() {
-        return "/report/getReportPage";
+        return "report/getReportPage";
     }
 
     @RequestMapping("/showAbstractReportPage")
     public String reportAbstract(HttpServletRequest request) {
-        String result = "/report/showAbstractReportPage";
+        String result = "report/showAbstractReportPage";
         int permittedRole = 1;
         if(!authService.isLoggedin(request)){
             result = "redirect:/";
@@ -131,33 +131,24 @@ public class ReportViewController {
 
     @RequestMapping("/showDetailReportPage")
     public ModelAndView frequentBusines(@RequestParam String verifyToken) {
-        ModelAndView mv = new ModelAndView("/report/showDetailReportPage");
+        ModelAndView mv = new ModelAndView("report/showDetailReportPage");
         JSONObject result = checkReportService.getDetailReportInfo(verifyToken);
         mv.addObject("result", result);
         return mv;
     }
-    
-/*    //测试返回信息后页面是否可用。
-    @RequestMapping("/testReport")
-    public ModelAndView testReport() {
-        ModelAndView mv = new ModelAndView("/report/showDetailReportPage");
-        JSONObject result = checkReportService.getDetailReportInfo("2FF26EA6577347EB1A73DB450D0B37BA");
-        mv.addObject("result", result);
-        return mv;
-    }
-*/
+
     @RequestMapping({"/404"})
     public String pageNotFound() {
-        return "/errors/404";
+        return "errors/404";
     }
 
     @RequestMapping("/505")
     public String visitError() {
-        return "/errors/505";
+        return "errors/505";
     }
 
     @RequestMapping("/nopermissions")
     public String NoPermisssions() {
-        return "/errors/nopermissions";
+        return "errors/nopermissions";
     }
 }

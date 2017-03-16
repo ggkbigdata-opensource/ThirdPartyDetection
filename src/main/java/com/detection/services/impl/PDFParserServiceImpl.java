@@ -48,7 +48,15 @@ public class PDFParserServiceImpl implements PDFParserService {
 
     @Override
     public PDFParserResult parse(File pdfFile) throws IOException {
+        if(pdfFile.canRead()){
+            System.out.println("file can read!");
+        }
+        else{
+            System.out.println("file can not read!");
+        }
+        //System.out.println("file length: " + pdfFile.length());
         PDDocument pdfDocument = PDDocument.load(pdfFile);
+        //System.out.println("number of pages: " + pdfDocument.getNumberOfPages());
         PDFParserResult returnObj = new PDFParserResult();
         int lastPage = pdfDocument.getNumberOfPages();
         PDFTextStripper stripper=new PDFTextStripper();
@@ -56,6 +64,9 @@ public class PDFParserServiceImpl implements PDFParserService {
         stripper.setStartPage(1);
         stripper.setEndPage(lastPage);
         String allText = stripper.getText(pdfDocument);
+        byte[] bytes = allText.getBytes();
+        allText = new String(bytes,"UTF-8");
+        //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n>>>>>>>>>>>>>>>>>>>>>>>\nALL text:\n\n"+allText);
         int sIndex = 0;
         int eIndex = 0;
         {
@@ -64,6 +75,7 @@ public class PDFParserServiceImpl implements PDFParserService {
             String paragraph = allText.substring(0, eIndex);
             Cover cover = null;
             try {
+                System.out.println("not yet enter process on cover...");
                 cover = this.processOnCover(paragraph);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -74,7 +86,11 @@ public class PDFParserServiceImpl implements PDFParserService {
         }
         {
             String start = "单项评定结果";
+            bytes = start.getBytes();
+            start = new String(bytes,"UTF-8");
             String end = "检测结论说明";
+            bytes = end.getBytes();
+            end = new String(bytes,"UTF-8");
             sIndex = allText.indexOf(start)+start.length();
             eIndex = allText.indexOf(end);
             String paragraph = allText.substring(sIndex, eIndex);
@@ -147,8 +163,12 @@ public class PDFParserServiceImpl implements PDFParserService {
     @Override
     public Cover processOnCover(String paragraph) {
         Cover cover = new Cover();
-        String[] lines = paragraph.split("\r\n");
-
+        System.out.println("Entered process on cover...");
+        System.out.println("the paragraph is: "+paragraph);
+        String[] lines = paragraph.split("\n");
+        System.out.println("using \\n to split:" + lines.length);
+        String[] liness = paragraph.split("\r\n");
+        System.out.println("using \\n to split:" + liness.length);
         Pattern projectName = Pattern.compile("^项目名称:\\s*(.*)\\s*$");
         Pattern projectAddress = Pattern.compile("^项目地址:\\s*(.*)\\s*$");
         Pattern agentName = Pattern.compile("^委托单位:\\s*(.*)\\s*$");
@@ -310,7 +330,7 @@ public class PDFParserServiceImpl implements PDFParserService {
         List<ListResult> rs = new ArrayList<ListResult>();
         Pattern reportNumPat = Pattern.compile("工程编号:\\s*(\\d+)");
         String reportNum = "";
-        String[] lineListt = paragraph.split("\r\n");
+        String[] lineListt = paragraph.split("\n");
         for(int i=0;i<lineListt.length;i++){
             String line = lineListt[i];
             Matcher reportNumMat = reportNumPat.matcher(line);
@@ -345,7 +365,7 @@ public class PDFParserServiceImpl implements PDFParserService {
     
     @Override
     public ListResult parseFourthPart(String src, String reportNum) {
-        String[] lines = src.split("\r\n");
+        String[] lines = src.split("\n");
         String line = null;
         String testItem = null;
         String importantGrade = null;
@@ -410,7 +430,7 @@ public class PDFParserServiceImpl implements PDFParserService {
             PDFParserResult returnObj) {
         List<Result> rs = new ArrayList<Result>();
         // 匹配换行+数字.组合
-        Pattern linePat = Pattern.compile("\r\n[\\d]{1,}[\\.]{0,}");
+        Pattern linePat = Pattern.compile("\n[\\d]{1,}[\\.]{0,}");
         Matcher lineMatcher = linePat.matcher(paragraph);
         int start = 0;
         int end = 1;
@@ -442,7 +462,7 @@ public class PDFParserServiceImpl implements PDFParserService {
         }
         String label = tempStr.substring(0, tempStr.indexOf(" "));
         tempStr = tempStr.replace(label, "");
-        String[] lines = tempStr.split("\r\n");
+        String[] lines = tempStr.split("\n");
         String line = null;
         String level = null;
         String value1 = null;
@@ -528,14 +548,14 @@ public class PDFParserServiceImpl implements PDFParserService {
     @Override
     public List<Result> processOnFirstParagraph(String paragraph) {
         List<Result> rs = new ArrayList<Result>();
-        Pattern linePat = Pattern.compile("\r\n[\\d]{1,}[\\s]{1}");
+        Pattern linePat = Pattern.compile("\n[\\d]{1,}[\\s]{1}");
         Matcher lineMatcher = linePat.matcher(paragraph);
         int start = 0;
         int end = 1;
         String tempStr = "";
         Result result = null;
         List<String> strs = null;
-        Pattern labelPat = Pattern.compile("\r\n[\\d]{1,}[\\s]{1}");
+        Pattern labelPat = Pattern.compile("\n[\\d]{1,}[\\s]{1}");
         Pattern namePat = Pattern.compile("[A|B|C]{1}[\\s]{2}[\\d]{1,}[\\s]{2}[\\d]{1,}");
         Matcher tempMatcher = null;
         String tempValue = "";

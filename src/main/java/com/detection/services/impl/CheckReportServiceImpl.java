@@ -82,10 +82,22 @@ public class CheckReportServiceImpl implements CheckReportService {
         if (!outPath.exists()) {
             outPath.mkdirs();
         }
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(new File(upFilePath)));
+        File upFile = new File(upFilePath);
+        if(upFile.canWrite()){
+            System.out.println("file can write!");
+        }
+        else{
+            System.out.println("file can not write!");
+        }
+
+        
+        FileOutputStream upFileOS = new FileOutputStream(upFile);
+        BufferedOutputStream out = new BufferedOutputStream(upFileOS);
         
         out.write(file.getBytes());
         out.flush();
+        System.out.println("file length: "+upFile.length());
+        upFileOS.close();
         out.close();
         parseAndSaveReportToDB(upFilePath, downFilePath);
         result = true;
@@ -98,8 +110,16 @@ public class CheckReportServiceImpl implements CheckReportService {
 
         boolean result = false;
         // 解析报告并入库
-        PDFParserResult parseResult = pdfParser.parse(new File(upFilePath));
-
+        File upFile = new File(upFilePath);
+        if(upFile.canRead()){
+            System.out.println("file can read!");
+        }
+        else{
+            System.out.println("file can not read!");
+        }
+        System.out.println("start parsing=====>>>>>>>>>>>");
+        PDFParserResult parseResult = pdfParser.parse(upFile);
+        System.out.println("file length: "+upFile.length());
         Cover reportCover = parseResult.getCover();
         List<Result> firstPart = parseResult.getFirstPart();
         // String reportConclusion = parseResult.getSecondPart();
@@ -136,6 +156,7 @@ public class CheckReportServiceImpl implements CheckReportService {
 
         // process on first part
         Iterator<Result> it1 = firstPart.iterator();
+        System.out.println("第一部分处理开始=====>>>>>>>>>>>");
         while (it1.hasNext()) {
             CheckReportResultStat element = new CheckReportResultStat();
             Result nextItem = it1.next();
@@ -148,11 +169,13 @@ public class CheckReportServiceImpl implements CheckReportService {
             if (nextItem.getValue1() != null && !nextItem.getValue1().equals("")) {
                 element.setUnqualifiedNum(Integer.parseInt(nextItem.getValue2()));
             }
+            System.out.println(element.getItemName() +"   " +element.getItemCode() +"   " +element.getCheckNum() +"   " +element.getUnqualifiedNum());
             checkReportStatList.add(element);
         }
 
         // process on third part
         Iterator<Result> it2 = thirdPart.iterator();
+        System.out.println("\n\n第三部分处理开始=====>>>>>>>>>>>");
         while (it2.hasNext()) {
             CheckItemDetail element = new CheckItemDetail();
             Result nextItem = it2.next();
@@ -165,11 +188,13 @@ public class CheckReportServiceImpl implements CheckReportService {
             if (nextItem.getValue1() != null && !nextItem.getValue1().equals("")) {
                 element.setUnqualifiedNum(Integer.parseInt(nextItem.getValue2()));
             }
+            System.out.println(element.getItemName() +"   " +element.getItemCode() +"   " +element.getCheckNum() +"   " +element.getUnqualifiedNum());
             checkItemDetailList.add(element);
         }
         // TODO 第四第五部分保存内容
         // process on fourth part
         Iterator<ListResult> it3 = forthPart.iterator();
+        System.out.println("\n\n第四部分处理开始=====>>>>>>>>>>>");
         while (it3.hasNext()) {
             CheckReportUnqualifiedItemDetail element = new CheckReportUnqualifiedItemDetail();
             ListResult nextItem = it3.next();
@@ -177,6 +202,7 @@ public class CheckReportServiceImpl implements CheckReportService {
             element.setRequirements(nextItem.getRequirements());
             element.setTestItem(nextItem.getTestItem());
             element.setUnqualifiedCheckPointByStringList(nextItem.getNonstandardItems());
+            System.out.println(element.getTestItem() +"   " +element.getRequirements() +"   " +element.getImportantGrade());
             checkReportUnqualifiedItemList.add(element);
         }
 
@@ -188,7 +214,9 @@ public class CheckReportServiceImpl implements CheckReportService {
         float riskScore = computeRiskScore(checkReport);
         checkReport.getCheckReportInfo().setRiskScore(riskScore);
         checkReport.getCheckReportInfo().setRiskLevel(computRiskLevel(riskScore));
-        
+        System.out.println("risk score: " +riskScore );
+        System.out.println("报告号码："+reportCover.getReportNum());
+        System.out.println("检测公司："+reportCover.getAgentName());
         checkReportRepo.save(checkReport);
         result = true;
 
