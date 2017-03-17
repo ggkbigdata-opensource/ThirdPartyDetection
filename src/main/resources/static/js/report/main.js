@@ -37,9 +37,9 @@ $(function() {
                     item[3] = result.data[d].riskLevel;      //风险等级
                     item[4] = result.data[d].qaName;         //检测单位
                     item[5] = result.data[d].contactTel;     //联系电话
-                    item[6] = '<a class="evaluateReport" style="cursor:pointer" href="showAbstractReportPage?reportNum=' + result.data[d].reportNum + '">分析报告</a>&nbsp;'
-                            + '<a class="detectionReport" style="cursor:pointer" href="' + result.data[d].filePath + '">检测报告</a>&nbsp;'
-                            + '<a class="deleteReport" style="cursor:pointer" href="JavaScript: " onclick="deleteReportByReportNum(\'' + result.data[d].reportNum + '\')">删除</a>';      //
+                    item[6] = '<div class="table-toolbar tc">' + '<a class="evaluateReport" target="_blank" href="showAbstractReportPage?reportNum=' + result.data[d].reportNum + '">分析报告</a>;'
+                            + '<a class="detectionReport" target="_blank" href="' + result.data[d].filePath + '">检测报告</a>;'
+                            + '<a class="deleteReport" target="_blank" href="JavaScript: " onclick="deleteReportByReportNum(\'' + result.data[d].reportNum + '\')">删除</a>' + '</div>';      //
                     data[index++] = item;
                 }
                 $("#reportListTable").dataTable({

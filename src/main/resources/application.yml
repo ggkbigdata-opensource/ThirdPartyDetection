@@ -2,7 +2,7 @@
 spring:
   profiles:
     active:
-      - desklocal
+      - dev
   thymeleaf:
     mode: LEGACYHTML5
 
@@ -23,8 +23,7 @@ fire:
       firstLevelBoundary: 25.0
       secondLevelBoundary: 65.0
       thirdLevelBoundary: 85.0
-
+      
+isDebug: false
 detectionLevelPrefix: 危险等级
 reportNumForDemo: 16GJA153
-uploadPath: src/main/resources/static/reportUploads/
-downloadPath: reportUploads/
