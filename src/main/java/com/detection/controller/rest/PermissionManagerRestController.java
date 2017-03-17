@@ -9,7 +9,11 @@ package com.detection.controller.rest;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,8 +58,15 @@ public class PermissionManagerRestController {
      * 
      */
     @RequestMapping(value = { "/userLogin" }, method = RequestMethod.GET)
-    public JSONObject userLogin(@RequestParam String loginName, String userPassword) throws Exception {
-        return userControlService.userLogin(loginName, userPassword);
+    public JSONObject userLogin(@RequestParam String loginName, @RequestParam String userPassword, HttpServletRequest request) throws Exception {
+        JSONObject result = userControlService.userLogin(loginName, userPassword);
+        HttpSession session = request.getSession();
+        if(result.getIntValue("code") == 200){
+            session.setAttribute("userName", loginName);
+            session.setAttribute("token", result.getString("token"));
+            session.setAttribute("role", result.getString("role"));
+        }
+        return result;
     }
 
     /**

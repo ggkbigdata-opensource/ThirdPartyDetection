@@ -1,7 +1,7 @@
 @charset "utf-8";
 /*login*/
 .login-wrapper {
-    padding-top: 85px;
+    padding-top: 95px;
     background-image: url(imgs/login-bg.png);
     background-position: center top;
     background-repeat: no-repeat;
@@ -89,7 +89,7 @@
     border-color: #cd4c39;
 }
 .loginFooter {
-    padding-top: 50px;
+    padding-top: 30px;
     line-height: 28px;
     color: #999;
 }

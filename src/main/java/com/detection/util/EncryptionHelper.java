@@ -46,6 +46,11 @@ public class EncryptionHelper {
         return out;
     }
     
+    public static String encryptFileNameByMD5(String fileName) throws Exception{
+
+        return encryptStringByMD5(fileName)+"."+getExtension(fileName);
+    }
+    
     public static String getUserToken(String userName, Date updateTime) throws Exception{
         String concateStr = userName + updateTime.toString();
         return encryptStringByMD5(concateStr);
@@ -63,5 +68,15 @@ public class EncryptionHelper {
             }
         }
         return hs.toUpperCase();
+    }
+    
+    private static String getExtension(String filename) {   
+        if ((filename != null) && (filename.length() > 0)) {   
+            int dot = filename.lastIndexOf('.');   
+            if ((dot >-1) && (dot < (filename.length() - 1))) {   
+                return filename.substring(dot + 1);   
+            }   
+        }   
+        return filename;   
     }
 }

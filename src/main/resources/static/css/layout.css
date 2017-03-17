@@ -374,6 +374,7 @@ body.mini-navbar .content-wrapper {
     width: 20px;
     height: 20px;
     border-radius: 50px;
+    display: block;
 }
 .navbar-top-links > li span,
 .navbar-top-links > li a {
@@ -496,6 +497,9 @@ body.mini-navbar .content-wrapper {
     border-bottom-width: 1px;
     border-color: #cdd2e1;
     background-color: #dfe2ef;
+}
+.table-bordered > thead > tr > th {
+	border-left: 1px solid #cdd2e1;
 }
 .table-bordered > tbody > tr > td, 
 .table-bordered > tbody > tr > th, 

@@ -1,5 +1,9 @@
 package com.detection.services;
 
+import javax.servlet.http.HttpServletRequest;
+
+import com.detection.model.user.User;
+
 /**
  * @fileName AuthenticationService.java
  * @author csk
@@ -10,8 +14,8 @@ package com.detection.services;
 
 public interface AuthenticationService {
 
-    public boolean isPermitted(String token, String role);
-    public boolean isTokenValid(String token);
-    public boolean isLoggedin();
+    public boolean isTokenValid(User user, String token);
+    public boolean isPermitted(HttpServletRequest request, int permittedRole);
+    public boolean isLoggedin(HttpServletRequest request);
     
 }
