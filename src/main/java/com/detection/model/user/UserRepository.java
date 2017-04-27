@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @function
  */
 
-public interface UserRepository extends JpaRepository<User, String> {
-    public List<User> findByToken(String token);
+public interface UserRepository extends JpaRepository<CrUser, Long> {
+    public List<CrUser> findByToken(String token);
+    public CrUser findByUserName(String userName);
 }

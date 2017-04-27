@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.detection.model.user.User;
+import com.detection.model.user.CrUser;
 import com.detection.model.user.UserRepository;
 import com.detection.services.UserControlService;
 import com.detection.util.EncryptionHelper;
@@ -39,10 +39,10 @@ public class UserControlServiceImpl implements UserControlService {
         int role = 0;
         String userName = null;
         String message = "Fail.User Not Found.";
-        List<User> userList = userRepository.findByToken(token.toUpperCase());
+        List<CrUser> userList = userRepository.findByToken(token.toUpperCase());
         if (userList != null && userList.size() != 0) {
             if (userList.size() == 1) {
-                User user = userList.get(0);
+                CrUser user = userList.get(0);
                 Date currentTime = new Date();
                 // 1800000 = 30min = 1800s = 1800000ms
                 // 表示token更新时间小于30分钟为有效
@@ -88,11 +88,11 @@ public class UserControlServiceImpl implements UserControlService {
         String message = "Fail.Unknown Reason";
         if (!userName.equals("") && userName != null && !userPassword.equals("") && userPassword != null
                 && !role.equals("") && role != null) {
-            if (userRepository.findOne(userName) != null) {
+            if (userRepository.findByUserName(userName) != null) {
                 code = 201;
                 message = "User Already Exist! Try other Name.";
             } else {
-                User user = new User();
+                CrUser user = new CrUser();
                 user.setRole(Integer.parseInt(role));
                 user.setUserName(userName);
                 user.setUserPassword(EncryptionHelper.encryptStringByMD5(userPassword));
@@ -123,7 +123,7 @@ public class UserControlServiceImpl implements UserControlService {
         int code = 201;
         int role = 0;
         
-        User currentUser = userRepository.findOne(loginName);
+        CrUser currentUser = userRepository.findByUserName(loginName);
         if (currentUser != null && currentUser.getUserPassword().equalsIgnoreCase(userPassword)) {
             code = 200;
             role = currentUser.getRole();
@@ -154,10 +154,9 @@ public class UserControlServiceImpl implements UserControlService {
         JSONObject result = new JSONObject();
         int code = 201;
         String message = "Fail.";
-        User currentUser = userRepository.findOne(userName);
+        CrUser currentUser = userRepository.findByUserName(userName);
         // TODO Auto-generated method stub
         if (currentUser != null){
-            
             currentUser.setLastLogin(currentUser.getLoginTime());
             currentUser.setToken("");
             currentUser.setTokenUpdateTime(null);
@@ -171,4 +170,32 @@ public class UserControlServiceImpl implements UserControlService {
         return result;
     }
 
+    
+    @Override
+    public JSONObject changePassword(String userName, String oldPass, String newPass1, String newPass2) {
+        int code = 201;
+        String message = "";
+        JSONObject result = new JSONObject();
+        CrUser user = userRepository.findByUserName(userName);
+        if(user.getUserPassword().equalsIgnoreCase(oldPass)){
+            if(newPass1.equals(newPass2)){
+                user.setUserPassword(newPass1);
+                userRepository.save(user);
+                code = 200;
+                message = "success.";
+            }
+            else{
+                code = 201;
+                message = "fail. two new password not the same.";
+            }
+            
+        }
+        else{
+            code = 201;
+            message ="fail,wrong pass.";
+        }
+        result.put("code",code);
+        result.put("message", message);
+        return result;
+    }
 }

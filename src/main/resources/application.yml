@@ -1,18 +1,19 @@
-
 spring:
   profiles:
     active:
-      - dev
+      - local
   thymeleaf:
     mode: LEGACYHTML5
 
   http:
     multipart:
       max-file-size: 100MB
-      
+      max-request-size: 100MB
   redis:
     port: 6379
     host: localhost
+server: 
+  context-path: /third
 fire:
   default:
     riskWeight:
@@ -23,7 +24,69 @@ fire:
       firstLevelBoundary: 25.0
       secondLevelBoundary: 65.0
       thirdLevelBoundary: 85.0
-      
 isDebug: false
 detectionLevelPrefix: 危险等级
 reportNumForDemo: 16GJA153
+uploadPath: reportUploads/
+defaultUser: admin
+defaultPassword: 123456
+
+---
+spring:
+  profiles: local
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/fire?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  port: 8080
+
+---
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: Root12345..
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+server:
+  port: 8080
+  
+---
+spring:
+  profiles: test
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://120.24.248.84:3306/xiaofang?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8
+    username: xiaofang
+    password: xf408~^Aa@
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+server:
+  port: 6001
+
+---
+spring:
+  profiles: prod
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/fire_data?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: Fire@gyky408..
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+server:
+  port: 6001

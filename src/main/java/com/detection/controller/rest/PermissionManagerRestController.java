@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.detection.model.user.User;
+import com.detection.model.user.CrUser;
 import com.detection.model.user.UserRepository;
 import com.detection.services.UserControlService;
 import com.detection.util.EncryptionHelper;
@@ -36,18 +37,6 @@ public class PermissionManagerRestController {
 
     @Autowired
     private UserControlService userControlService;
-
-    /**
-     * @author lcc
-     * @version 1.0
-     * @function 校验用户权限接口，传入用户的token，返回用户的权限和用户名（code,200），如果对应的token不存在则，
-     *           code返回201 用户权限：1表示具备查看，所有页面权限，0表示，仅仅具有查看单个页面的权限
-     *
-     */
-    @RequestMapping(value = { "/verifyToken" }, method = RequestMethod.GET)
-    public JSONObject verifyToken(@RequestParam String token) {
-        return userControlService.verifyToken(token);
-    }
 
     /**
      * @author lcc
@@ -73,24 +62,29 @@ public class PermissionManagerRestController {
      * @author csk
      * @version 1.0
      * @throws Exception
-     * @function 添加用户
-     * 
-     */
-    @RequestMapping(value = { "/addUser" }, method = RequestMethod.GET)
-    public JSONObject addUser(@RequestParam String userName, String userPassword, String role) throws Exception {
-        return userControlService.addUser(userName, userPassword, role);
-    }
-    
-    /**
-     * @author csk
-     * @version 1.0
-     * @throws Exception
      * @function 注销并清除token
      * 
      */
     @RequestMapping(value = { "/userLogout" }, method = RequestMethod.GET)
-    public JSONObject userLogout(@RequestParam String userName){
-        return userControlService.userLogout(userName);
+    public ModelAndView userLogout(@RequestParam String userName){
+        ModelAndView mv = new ModelAndView("redirect:/");
+        mv.addObject("result", userControlService.userLogout(userName));
+        return mv;
         
     }
+    
+    @RequestMapping(value = { "/submitNewPass" }, method = RequestMethod.GET)
+    public ModelAndView submitNewPass(@RequestParam String oldPass,@RequestParam String newPass1,@RequestParam String newPass2, HttpServletRequest request){
+        String resultPath = "redirect:changePassword";
+        JSONObject result = new JSONObject();
+        result = userControlService.changePassword((String)request.getSession().getAttribute("userName"),oldPass,newPass1,newPass2);
+        if(result.getIntValue("code")==200){
+            resultPath="redirect:main";
+        }
+        ModelAndView mv = new ModelAndView(resultPath);
+        mv.addObject("result", result);
+        return mv;
+        
+    }
+
 }

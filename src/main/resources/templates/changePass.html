@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html>
+<head th:with="title=${'更改密码'}" th:include="template/reporttemplate::head">
+</head>
+<body>
+    <div id="wrapper fixed-sidebar">
+        <!--/*/ <th:block th:include="template/reporttemplate :: bodypart"></th:block> /*/-->
+        <div class="content-wrapper">
+            <ol class="breadcrumb">
+                <li class="active">天河区开展第三方消防设施检测危险源分析报告</li>
+            </ol>
+            <section class="main-content animated fadeInRight">
+                <form>
+                       <div class="code-group">
+                        <div class="tit">原密码：</div>
+                        <div class="input-control">
+                            <input id="oldPass" type="text" value="" placeholder="原密码" />
+                        </div>
+                    </div>
+                    <div class="code-group">
+                        <div class="tit">新密码：</div>
+                        <div class="input-control">
+                            <input id="newPass1" type="text" value=""
+                                placeholder="新密码" />
+                        </div>
+                    </div>
+                    <div class="code-group">
+                        <div class="tit">再次输入：</div>
+                        <div class="input-control">
+                            <input id="newPass2" type="text" value=""
+                                placeholder="再次输入" />
+                        </div>
+                    </div>
+
+                    <div class="code-group tc">
+                        <a class="btn-submit"
+                            style='display: inline-block; line-height: 40px;'
+                            onclick="submitNewPass()">提交</a>
+                    </div>
+                    <div class="tips">
+                        <span class="tit">温馨提示：</span> <span>请牢记您的密码！</span>
+                    </div>
+                    <div class="tips">
+                        <span class="tit">温馨提示：</span> <span>请牢记您的密码！</span>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+    <!--/*/ <th:block th:include="template/reporttemplate :: footerpart"></th:block> /*/-->
+    <script th:src="@{/js/report/changePassword.js}"></script>
+</body>
+</html>

@@ -10,12 +10,9 @@ package com.detection.services;
 import java.io.IOException;
 import java.util.List;
 
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.detection.model.report.entities.CheckReport;
 
 /**
  *
@@ -27,19 +24,21 @@ public interface CheckReportService {
     /**
      * @author csk
      * @version 1.0
+     * @param request 
      * @throws IOException 
      * @throws Exception 
      * @function 上传报告文件，解析并保存到数据库
      */
-    public boolean uploadAndSaveReport(String path, MultipartFile file) throws IOException, Exception;
+    public boolean uploadAndSaveReport(String path, MultipartFile file, String operatorName,String ctxPath) throws IOException, Exception;
     
     /**
      * @author csk
      * @version 1.0
      * @throws IOException 
+     * @throws Exception 
      * @function 解析文件并保存到数据库
      */
-    public boolean parseAndSaveReportToDB(String upFilePath, String downloadPath) throws IOException;
+    public boolean parseAndSaveReportToDB(String upFilePath, String fileName,String encryptedFileName, String operatorName) throws IOException, Exception;
     
     /**
      * @author csk
@@ -47,7 +46,7 @@ public interface CheckReportService {
      * @throws IOException 
      * @function 按报告编号删除一份报告
      */
-    public void deleteReportByReportNum(String reportNum);
+    public JSONObject deleteReportByReportNum(String reportNum);
     
     /**
      * @author csk
@@ -56,14 +55,6 @@ public interface CheckReportService {
      * @function 查找所有报告
      */
     public JSONObject getAllReports();
-    
-    /**
-     * @author csk
-     * @version 1.0
-     * @throws IOException 
-     * @function 按条件查找报告
-     */
-    public JSONObject getReportByCondition(String projectName, String reportNum, String riskLevel, String qaName);
     
     /**
      * @author csk
@@ -94,15 +85,25 @@ public interface CheckReportService {
      */
     public JSONObject submitExtractCode(String reportNum, String dutyPerson, String dutyTel) throws Exception;
     
-    /**
-     * @author csk
-     * @version 1.0
-     * @function 获取文件路径
-     */
-    public JSONObject getReportPath(String fetchCode);
-    
+   
     public boolean updateRiskLevel(String reportNum);
     
     public void updateAllRiskLevel();
+
+    public String getReportURL(String reportNum);
+
+    public String getOriginalName(String reportNum);
+    
+    public void uploadRiskLevel(MultipartFile file) throws IOException;
+
+    void deleteReportRecordByReportNum(String reportNum);
+
+    /**
+     * @createDate 2017年4月27日下午4:42:37 
+     * @author wangzhiwang
+     * @return 
+     * @description
+     */
+    public List<String> findAllReportNum();
 }
 

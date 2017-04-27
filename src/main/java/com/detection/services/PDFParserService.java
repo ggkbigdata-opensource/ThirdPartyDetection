@@ -9,6 +9,7 @@ package com.detection.services;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -29,13 +30,6 @@ public interface PDFParserService {
     /**
      * @author lcc
      * @version 1.0
-     * @function 解析测试解析PDF文件
-     */
-    public PDFParserResult parse_test(File pdfFile) throws IOException;
-    
-    /**
-     * @author lcc
-     * @version 1.0
      * @function 根据文件解析PDF文件结果
      */
     public PDFParserResult parse(File pdfFile) throws IOException;
@@ -43,9 +37,10 @@ public interface PDFParserService {
     /**
      * @author lcc
      * @version 1.0
+     * @throws ParseException 
      * @function 根据文件解析检测报告的PDF封面
      */
-    public Cover processOnCover(String paragraph);
+    public Cover processOnCover(String paragraph) throws ParseException;
     
     /**
      * @author lcc
@@ -111,14 +106,7 @@ public interface PDFParserService {
          2  0
         7.1.5 水泵外观质量及安装质量 泵及电机的外观表面不应有碰损，轴心不应有偏心；水泵之间及其与墙或其他设备之间 的间距应满足安装、运行、维护管理要求  2  0
      */
-    public List<Result> processOnThirdParagraph(
-            String paragraph, PDFParserResult returnObj);
-    
-    /**
-     * @author lcc
-     * @version 1.0
-     */
-    public Result parseThirdPart(String tempStr, String reportNum);
+    public List<Result> processOnThirdParagraph(String paragraph);
     
     /**
      * @author lcc
