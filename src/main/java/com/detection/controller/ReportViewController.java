@@ -16,7 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashMap;   
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -137,6 +138,7 @@ public class ReportViewController {
     }
 
     @RequestMapping(value = "/uploadReport", method = RequestMethod.POST)
+    @ResponseBody
     public JSONObject uploadReport(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request) throws Exception {
         
         JSONObject result = new JSONObject();
@@ -169,6 +171,7 @@ public class ReportViewController {
             uploadReports.add(reportNum);
         }
         
+        result.put("status", "success");
         String concent = null;
         for (String report : uploadReports) {
             if (map.get(report)!=null) {

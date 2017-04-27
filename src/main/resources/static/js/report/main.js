@@ -87,8 +87,32 @@ $(function() {
             area : '650px',
             btn : [ '导入', '关闭' ],
             yes : function(index, layero) {
-                layer.msg("正在导入检测报告，请稍候...");
-                $("#import-dialog").submit();
+            	if($('#inputfile1')[0].files.length > 0){
+            		
+            		layer.msg("正在导入检测报告，请稍候...");
+            		 (function UpladFile() {
+            	            var fileObj = document.getElementById("import-dialog")[0].files; // 获取文件对象
+            	            var FileController = "/third/uploadReport";                    // 接收上传文件的后台地址 
+            	            // FormData 对象
+            	            var form = new FormData();
+            	            for(var i=0;i<fileObj.length;i++){
+            	            	form.append("files", fileObj[i]); // 文件对象
+            	            }
+            	                                      
+            	            // XMLHttpRequest 对象
+            	            var xhr = new XMLHttpRequest();
+            	            xhr.open("post", FileController, true);
+            	            xhr.onload = function () {
+            	            	
+            	            };
+            	            xhr.success = function(data){
+            	            	alert(data);
+            	            }
+            	            xhr.send(form);
+            	        })()
+            	}else{
+            		layer.alert('请选择导入文件！');
+            	}
             },
             btn2 : function(index, layero) {
 
