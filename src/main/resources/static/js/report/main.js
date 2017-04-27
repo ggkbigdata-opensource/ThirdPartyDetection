@@ -105,10 +105,11 @@ $(function() {
             	            xhr.onload = function () {
             	            	
             	            };
+            	            
+            	            xhr.send(form);
             	            xhr.success = function(data){
             	            	alert(data);
             	            }
-            	            xhr.send(form);
             	        })()
             	}else{
             		layer.alert('请选择导入文件！');
