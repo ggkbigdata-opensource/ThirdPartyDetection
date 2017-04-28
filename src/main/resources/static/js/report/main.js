@@ -106,6 +106,10 @@ $(function() {
             	            	if(xhr.readyState ==4&& xhr.status==200){
             	            		var result = eval('(' + data.target.response + ')');
             	            		console.log(result);
+            	            		if(!result.result){
+            	            			layer.alert(result.msg);
+            	            			return;
+            	            		}
             	            		if(!result.status){
             	            			layer.confirm(result.msg,{
             	            				btn: ['是','否'],
@@ -127,13 +131,17 @@ $(function() {
             	            				xhrAgain.onreadystatechange = function (dataAgain){
             	            					if(xhrAgain.readyState ==4&& xhrAgain.status==200){
             	            						var resultAgain = eval('(' + dataAgain.target.response + ')');
+            	            						if(!resultAgain.result){
+            	            							layer.alert('result.msg');
+            	            	            			return;
+            	            						}
             	            						if(resultAgain.status){
             	            							layer.confirm(resultAgain.msg,{
             	            								btn: ['确定'],
             	            								shade: 0.5,
             	            								shadeClose: false
             	            							},function(){
-            	            								parent.location.reload();
+            	            								location.reload();
             	            							});
             	            						}else{
             	            							layer.alert(resultAgain.msg);
@@ -148,7 +156,7 @@ $(function() {
             	            				shade:0.5,
             	            				shadeClose: false
             	            			},function(){
-            	            				parent.location.reload();
+            	            				location.reload();
             	            			});
             	            		}
             	            	}
