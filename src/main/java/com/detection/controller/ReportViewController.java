@@ -184,9 +184,9 @@ public class ReportViewController {
         
         if (result.getBoolean("status")) {
             this.uploadReportAgain(files, request);
-            result.put("msg", "上传成功");
+            result.put("msg", "导入成功");
         }else{
-            result.put("msg", "存在相同的文件，分别为"+concent+"是否覆盖？");
+            result.put("msg", "存在相同的文件，分别为"+concent+"是否覆盖，并全部导入？");
         }
         
         return result;
@@ -194,15 +194,18 @@ public class ReportViewController {
     }
 
     @RequestMapping(value = "/uploadReportAgain", method = RequestMethod.POST)
-    public String uploadReportAgain(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request)
+    @ResponseBody
+    public JSONObject uploadReportAgain(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request)
             throws Exception {
 
-        String result = "redirect:main";
+        JSONObject result = new JSONObject();
+        
+        //String result = "redirect:main";
         int permittedRole = 1;
         if (!authService.isLoggedin(request)) {
-            result = "redirect:/";
+           // result = "redirect:/";
         } else if (!authService.isPermitted(request, permittedRole)) {
-            result = "redirect:nopermissions";
+           // result = "redirect:nopermissions";
         } else if (!files.isEmpty()) {
             // String ctxPath =
             // request.getSession().getServletContext().getRealPath("");
@@ -219,6 +222,8 @@ public class ReportViewController {
             }
 
         }
+        result.put("msg", "导入成功");
+        result.put("status", true);
         return result;
     }
 
