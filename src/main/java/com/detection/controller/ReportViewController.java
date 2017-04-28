@@ -183,8 +183,8 @@ public class ReportViewController {
         }
         
         if (result.getBoolean("status")) {
-            this.uploadReportAgain(files, request);
             result.put("msg", "导入成功");
+            result = this.uploadReportAgain(files, request);
         }else{
             result.put("msg", "存在相同的文件，分别为"+concent+"是否覆盖，并全部导入？");
         }
@@ -225,12 +225,13 @@ public class ReportViewController {
             }
             result.put("msg", "导入成功");
             result.put("status", true);
+            result.put("result", true);
             return result;
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             result.put("msg", "导入失败，请查看文件格式是否正确");
-            result.put("status", false);
+            result.put("result", false);
             return result;
         }
     }
