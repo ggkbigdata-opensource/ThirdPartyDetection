@@ -2,28 +2,28 @@
  * 
  */
 
-function deleteReportByReportNumEmbed(reportNum) {
-        layer.confirm("确认删除报告："+reportNum+"?",{
-            title : '删除检测报告：',
-            area : '350px',
-            btn : [ '删除', '取消' ],
-            yes : function(index, layero) {
-                //layer.msg("正在删除检测报告，请稍候...");
-                $.get("deleteReportByReportNum?reportNum=" + reportNum, function(data,status) {
-                    if(data.code == 200){
-                        layer.msg("删除成功");
-                    }
-                    else{
-                        layer.msg("删除失败：" + data.message);
-                    }
-                    setTimeout(function(){self.location = 'embeddedMain';},500);
-                });
-            },
-            btn2 : function(index, layero) {
-            },
-            shadeClose : true,
-        });
-    }
+function deleteReportByReportNum(reportNum) {
+    layer.confirm("确认删除报告："+reportNum+"?",{
+        title : '删除检测报告：',
+        area : '350px',
+        btn : [ '删除', '取消' ],
+        yes : function(index, layero) {
+            //layer.msg("正在删除检测报告，请稍候...");
+            $.get("deleteReportByReportNum?reportNum=" + reportNum, function(data,status) {
+                if(data.code == 200){
+                    layer.msg("删除成功");
+                }
+                else{
+                    layer.msg("删除失败：" + data.message);
+                }
+                setTimeout(function(){self.location = 'main';},500);
+            });
+        },
+        btn2 : function(index, layero) {
+        },
+        shadeClose : true,
+    });
+}
 
 $(function() {
     // show reportList
@@ -34,7 +34,8 @@ $(function() {
          * 'projectAddress' : null, 'riskLevel' : null, 'qaName' : null, 'token' :
          * sessionStorage.getItem('token') }
          */
-        $.getJSON(
+        $
+                .getJSON(
                         proxy,
                         function(result) {
                             if (null != result && 200 == result.code) {
@@ -57,7 +58,7 @@ $(function() {
                                             + '<a class="detectionReport" target="_blank" href="fetchReport/'
                                             + result.data[d].reportNum
                                             + '">检测报告</a>;'
-                                            + '<a class="deleteReport" " href="JavaScript: " onclick="deleteReportByReportNumEmbed(\''
+                                            + '<a class="deleteReport" " href="JavaScript: " onclick="deleteReportByReportNum(\''
                                             + result.data[d].reportNum
                                             + '\')">删除</a>' + '</div>'; //
                                     data[index++] = item;
@@ -71,7 +72,7 @@ $(function() {
                             }
                         });
     }
-    
+
     // 文件上传
     $(":file").filestyle({
         icon : false,
@@ -86,13 +87,82 @@ $(function() {
             area : '650px',
             btn : [ '导入', '关闭' ],
             yes : function(index, layero) {
-                layer.msg("正在导入检测报告，请稍候...");
-                $("#import-dialog").submit();
+            	if($('#inputfile1')[0].files.length > 0){
+            		layer.msg("正在导入检测报告，请稍候...",{
+            			shade:0.5,
+            			shadeClose: false
+            		});
+            		 (function UpladFile() {
+            	            var fileObj = document.getElementById("import-dialog")[0].files; // 获取文件对象
+            	            var FileController = "/third/uploadReport";                    // 接收上传文件的后台地址 
+            	            var form = new FormData();                                    // FormData 对象
+            	            for(var i=0;i<fileObj.length;i++){
+            	            	form.append("files", fileObj[i]);                            // 文件对象
+            	            }
+            	            var xhr = new XMLHttpRequest();                              // XMLHttpRequest 对象
+            	            xhr.open("post", FileController, true);
+            	            xhr.send(form);
+            	            xhr.onreadystatechange = function(data){
+            	            	if(xhr.readyState ==4&& xhr.status==200){
+            	            		var result = eval('(' + data.target.response + ')');
+            	            		console.log(result);
+            	            		if(!result.status){
+            	            			layer.confirm(result.msg,{
+            	            				btn: ['是','否'],
+            	            				shade: 0.5,
+            	            				shadeClose: false
+            	            			},function(){
+            	            				layer.msg("正在导入检测报告，请稍候...",{
+            	            					shade:0.5,
+            	            					shadeClose: false
+            	            				});
+            	            				var FileControllerAgain = '/third/uploadReportAgain';
+            	            				var xhrAgain = new XMLHttpRequest();
+            	            				var formA = new FormData();                                    // FormData 对象
+            	            	            for(var i=0;i<fileObj.length;i++){
+            	            	            	formA.append("files", fileObj[i]);                            // 文件对象
+            	            	            }
+            	            				xhrAgain.open("post", FileControllerAgain, true);
+            	            				xhrAgain.send(formA);
+            	            				xhrAgain.onreadystatechange = function (dataAgain){
+            	            					if(xhrAgain.readyState ==4&& xhrAgain.status==200){
+            	            						var resultAgain = eval('(' + dataAgain.target.response + ')');
+            	            						if(resultAgain.status){
+            	            							layer.confirm(resultAgain.msg,{
+            	            								btn: ['确定'],
+            	            								shade: 0.5,
+            	            								shadeClose: false
+            	            							},function(){
+            	            								location.reload();
+            	            							});
+            	            						}else{
+            	            							layer.alert(resultAgain.msg);
+            	            						}
+            	            					}
+            	            				}
+            	            			},function(){
+            	            			});
+            	            		}else{
+            	            			layer.confirm(result.msg,{
+            	            				btn: ['确定'],
+            	            				shade:0.5,
+            	            				shadeClose: false
+            	            			},function(){
+            	            				location.reload();
+            	            			});
+            	            		}
+            	            	}
+            	            }
+            	        })()
+            	}else{
+            		layer.alert('请选择导入文件！');
+            	}
             },
             btn2 : function(index, layero) {
 
             },
-            shadeClose : true,
+            shade: false,
+            shadeClose : false,
             content : $('#import-dialog')
         });
     });
