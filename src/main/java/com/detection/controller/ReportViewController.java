@@ -199,32 +199,40 @@ public class ReportViewController {
             throws Exception {
 
         JSONObject result = new JSONObject();
-        
-        //String result = "redirect:main";
-        int permittedRole = 1;
-        if (!authService.isLoggedin(request)) {
-           // result = "redirect:/";
-        } else if (!authService.isPermitted(request, permittedRole)) {
-           // result = "redirect:nopermissions";
-        } else if (!files.isEmpty()) {
-            // String ctxPath =
-            // request.getSession().getServletContext().getRealPath("");
-            String ctxPath = File.separator + "upload" + File.separator + "third" + File.separator;
-            int total = files.size();
-            int current = 0;
-            Iterator<MultipartFile> it = files.iterator();
-            while (it.hasNext()) {
-                current++;
-                MultipartFile file = it.next();
-                System.out.println("正在解析第 " + current + " / " + total + " 份报告: " + file.getOriginalFilename());
-                checkReportService.uploadAndSaveReport(file.getOriginalFilename(), file,
-                        authService.getUserRealName(request), ctxPath);
-            }
+        try {
+            
+            //String result = "redirect:main";
+            int permittedRole = 1;
+            if (!authService.isLoggedin(request)) {
+               // result = "redirect:/";
+            } else if (!authService.isPermitted(request, permittedRole)) {
+               // result = "redirect:nopermissions";
+            } else if (!files.isEmpty()) {
+                // String ctxPath =
+                // request.getSession().getServletContext().getRealPath("");
+                String ctxPath = File.separator + "upload" + File.separator + "third" + File.separator;
+                int total = files.size();
+                int current = 0;
+                Iterator<MultipartFile> it = files.iterator();
+                while (it.hasNext()) {
+                    current++;
+                    MultipartFile file = it.next();
+                    System.out.println("正在解析第 " + current + " / " + total + " 份报告: " + file.getOriginalFilename());
+                    checkReportService.uploadAndSaveReport(file.getOriginalFilename(), file,
+                            authService.getUserRealName(request), ctxPath);
+                }
 
+            }
+            result.put("msg", "导入成功");
+            result.put("status", true);
+            return result;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            result.put("msg", "导入失败，请查看文件格式是否正确");
+            result.put("status", false);
+            return result;
         }
-        result.put("msg", "导入成功");
-        result.put("status", true);
-        return result;
     }
 
     @RequestMapping(value = "/uploadRiskLevel", method = RequestMethod.POST)
