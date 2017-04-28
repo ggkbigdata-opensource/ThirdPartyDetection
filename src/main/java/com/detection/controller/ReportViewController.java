@@ -15,10 +15,13 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;   
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -166,8 +169,41 @@ public class ReportViewController {
             String end = "建筑消防设施检测报告";
             eIndex = allText.indexOf(end);
             String paragraph = allText.substring(0, eIndex);
-            Cover cover = pdfParser.processOnCover(paragraph);
-            String reportNum = cover.getReportNum();
+
+            
+            String osName = System.getProperty("os.name");
+            String system;
+            if (osName.contains("win") || osName.contains("Win")) {
+                system = "\r\n";
+            } else if (osName.contains("Linux") || osName.contains("linux")) {
+                system = "\n";
+            } else {
+                system = "\r";
+            }
+            
+            String[] lines = paragraph.split(system);
+            Pattern reportNumP = Pattern.compile("\\d{2}[a-zA-Z]{2}(A|B)(\\d{3})\\s*$");
+
+            String reportNum =null;
+            
+            for (int i = 0; i < lines.length; i++) {
+                String line = lines[i];
+                Matcher m = reportNumP.matcher(line);
+                if (m.find()) {
+                   reportNum = line.replace(" ", "").trim();
+                   if (!reportNum.contains("天消")||reportNum.length()<10) {
+                       result.put("result", false);
+                       result.put("msg", "项目编号为："+reportNum+"的项目编号格式不正确");
+                       return result;
+                   }
+                   Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+                   Matcher ma = p.matcher(reportNum);
+                   reportNum = ma.replaceAll("");
+                   
+                  
+                }
+            }
+            
             uploadReports.add(reportNum);
         }
         
@@ -183,7 +219,6 @@ public class ReportViewController {
         }
         
         if (result.getBoolean("status")) {
-            result.put("msg", "导入成功");
             result = this.uploadReportAgain(files, request);
         }else{
             result.put("msg", "存在相同的文件，分别为"+concent+"是否覆盖，并全部导入？");
@@ -199,6 +234,7 @@ public class ReportViewController {
             throws Exception {
 
         JSONObject result = new JSONObject();
+        String fileName=null;
         try {
             
             //String result = "redirect:main";
@@ -217,6 +253,7 @@ public class ReportViewController {
                 while (it.hasNext()) {
                     current++;
                     MultipartFile file = it.next();
+                    fileName = file.getOriginalFilename();
                     System.out.println("正在解析第 " + current + " / " + total + " 份报告: " + file.getOriginalFilename());
                     checkReportService.uploadAndSaveReport(file.getOriginalFilename(), file,
                             authService.getUserRealName(request), ctxPath);
@@ -230,8 +267,9 @@ public class ReportViewController {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            result.put("msg", "导入失败，请查看文件格式是否正确");
+            result.put("msg", "导入失败，请查看文件"+fileName+"的格式是否正确");
             result.put("result", false);
+            result.put("status", false);
             return result;
         }
     }
