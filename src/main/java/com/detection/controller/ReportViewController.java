@@ -182,7 +182,7 @@ public class ReportViewController {
             }
         }
         
-        if ("success".equals(result.getString("status"))) {
+        if (result.getBoolean("status")) {
             this.uploadReportAgain(files, request);
             result.put("msg", "上传成功");
         }else{
