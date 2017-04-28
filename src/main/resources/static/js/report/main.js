@@ -88,7 +88,6 @@ $(function() {
             btn : [ '导入', '关闭' ],
             yes : function(index, layero) {
             	if($('#inputfile1')[0].files.length > 0){
-            		
             		layer.msg("正在导入检测报告，请稍候...");
             		 (function UpladFile() {
             	            var fileObj = document.getElementById("import-dialog")[0].files; // 获取文件对象
@@ -107,8 +106,21 @@ $(function() {
             	            };
             	            
             	            xhr.send(form);
-            	            xhr.success = function(data){
-            	            	alert(data);
+            	            xhr.onreadystatechange = function(data){
+            	            	if(xhr.readyState ==4&& xhr.status==200){
+            	            		var result = eval('(' + data.target.response + ')');
+            	            		console.log(result);
+            	            		if(!result.status){
+            	            			layer.confirm(result.msg,{
+            	            				btn: ['是','否'],
+            	            				shade: false
+            	            			},function(){
+            	            				$('#import-dialog').submit();
+            	            			},function(){
+            	            				
+            	            			})
+            	            		}
+            	            	}
             	            }
             	        })()
             	}else{

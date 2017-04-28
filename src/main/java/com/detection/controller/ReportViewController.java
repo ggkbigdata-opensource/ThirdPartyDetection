@@ -172,13 +172,13 @@ public class ReportViewController {
         }
         
         result.put("status", "success");
-        String concent = null;
+        String concent = "";
         for (String report : uploadReports) {
             if (map.get(report)!=null) {
-                concent=report+",";
-                result.put("status", "false");
+                concent=concent+report+",";
+                result.put("status", false);
             }else{
-                result.put("status", "success");
+                result.put("status", true);
             }
         }
         
@@ -186,7 +186,7 @@ public class ReportViewController {
             this.uploadReportAgain(files, request);
             result.put("msg", "上传成功");
         }else{
-            result.put("msg", "存在相同的文件，分别为"+concent+",是否覆盖？");
+            result.put("msg", "存在相同的文件，分别为"+concent+"是否覆盖？");
         }
         
         return result;

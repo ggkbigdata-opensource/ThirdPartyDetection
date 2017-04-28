@@ -59,20 +59,20 @@
                 </div>
             </section>
             <form id="import-dialog" enctype="multipart/form-data"
-                 method="post"
+               th:action="@{/uploadReportAgain}"  method="post"
                 class="dialog">
                 <div class="form-group">
                     <input type="file" id="inputfile1" name="files"
                         multiple="multiple">
                 </div>
             </form>
-<!--             <form id="import-risk-level-dialog" enctype="multipart/form-data"
+			<form id="import-risk-level-dialog" enctype="multipart/form-data"
                 th:action="@{/uploadRiskLevel}" method="post"
                 class="dialog">
                 <div class="form-group">
                     <input type="file" id="inputfile2" name="files" multiple="multiple">
                 </div>
-            </form> -->
+            </form>
         </div>
     </div>
     <!--/*/ <th:block th:include="template/template :: footerpart"></th:block> /*/-->
