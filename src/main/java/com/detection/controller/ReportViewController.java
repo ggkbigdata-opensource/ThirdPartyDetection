@@ -185,7 +185,7 @@ public class ReportViewController {
             Pattern reportNumP = Pattern.compile("\\d{2}[a-zA-Z]{2}(A|B)(\\d{3})\\s*$");
 
             String reportNum =null;
-            
+            String fileName = multipartFile.getOriginalFilename();
             for (int i = 0; i < lines.length; i++) {
                 String line = lines[i];
                 Matcher m = reportNumP.matcher(line);
@@ -193,16 +193,14 @@ public class ReportViewController {
                    reportNum = line.replace(" ", "").trim();
                    if (!reportNum.contains("天消")||reportNum.length()<10) {
                        result.put("result", false);
-                       result.put("msg", "项目编号为："+reportNum+"的项目编号格式不正确");
+                       result.put("msg", "文件为："+fileName+"的项目编号格式不正确");
                        return result;
                    }
-                   Pattern p = Pattern.compile("\\s*|\t|\r|\n");
-                   Matcher ma = p.matcher(reportNum);
-                   reportNum = ma.replaceAll("");
-                   
                   
                 }
             }
+            
+            reportNum = reportNum.substring(reportNum.indexOf("天消"));
             
             uploadReports.add(reportNum);
         }
@@ -213,6 +211,7 @@ public class ReportViewController {
             if (map.get(report)!=null) {
                 concent=concent+report+",";
                 result.put("status", false);
+                result.put("result", false);
             }else{
                 result.put("status", true);
             }

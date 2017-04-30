@@ -196,8 +196,11 @@ public class PDFParserServiceImpl implements PDFParserService {
                 continue;
             }
             m = reportNum.matcher(line);
+            String reportN=null;
             if (m.find()) {
-                cover.setReportNum(m.group(0).replace(" ", "").trim());
+            	reportN = line.replace(" ", "").trim();
+	            reportN = reportN.substring(reportN.indexOf("天消"));
+                cover.setReportNum(reportN.trim());
                 globalReportNum = cover.getReportNum();
                 continue;
             }
