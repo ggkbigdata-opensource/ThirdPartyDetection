@@ -11,7 +11,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,15 +21,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.juli.FileHandler;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.propertyeditors.FileEditor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -605,16 +602,19 @@ public class CheckReportServiceImpl implements CheckReportService {
     }
 
     @Override
-    public void uploadRiskLevel(MultipartFile file) throws IOException {
+    public void uploadRiskLevel(MultipartFile file) throws IOException, InvalidFormatException {
         // TODO Auto-generated method stub
-        InputStream in = file.getInputStream();
-        HSSFWorkbook wb = new HSSFWorkbook(in);
-        HSSFSheet sheet = wb.getSheetAt(0);
+       // InputStream in = file.getInputStream();
+        //HSSFWorkbook wb = new HSSFWorkbook(in);
+        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+
+        Sheet sheet = workbook.getSheetAt(0);
+        //HSSFSheet sheet = wb.getSheetAt(0);
         String queryQAName = "";
         String reportNumPattern = "";
         if(sheet !=null){
             int rowIndex=0;
-            HSSFRow row = sheet.getRow(rowIndex);
+            Row row = sheet.getRow(rowIndex);
             while(queryQAName.equals("")){
                 row = sheet.getRow(rowIndex);
                 if(row.getCell(0).getStringCellValue().contains("检测中心")){
@@ -683,7 +683,7 @@ public class CheckReportServiceImpl implements CheckReportService {
             System.out.println("Fail Count : " +failCount);
             System.out.println("Ambiguous Count : " +ambiguousCount);
         }
-        wb.close();
+        //wb.close();
     }
 
     @Override

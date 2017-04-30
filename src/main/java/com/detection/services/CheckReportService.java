@@ -10,6 +10,7 @@ package com.detection.services;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
@@ -94,7 +95,7 @@ public interface CheckReportService {
 
     public String getOriginalName(String reportNum);
     
-    public void uploadRiskLevel(MultipartFile file) throws IOException;
+    public void uploadRiskLevel(MultipartFile file) throws IOException, InvalidFormatException;
 
     void deleteReportRecordByReportNum(String reportNum);
 
