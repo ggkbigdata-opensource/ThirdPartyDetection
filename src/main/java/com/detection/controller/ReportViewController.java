@@ -320,8 +320,8 @@ public class ReportViewController {
         return "report/getReportPage";
     }
 
-    @RequestMapping(value = "/showAbstractReportPage", method = RequestMethod.POST)
-    public String reportAbstract(HttpServletRequest request,@RequestParam(required=true)String reportNum) {
+    @RequestMapping(value = "/showAbstractReportPage", method = RequestMethod.GET)
+    public String reportAbstract(HttpServletRequest request) {
         String result = "report/showAbstractReportPage";
         int permittedRole = 1;
         if (!authService.isLoggedin(request)) {
@@ -329,7 +329,6 @@ public class ReportViewController {
         } else if (!authService.isPermitted(request, permittedRole)) {
             result = "redirect:nopermissions";
         }
-        request.setAttribute("reportNum", reportNum);
         return result;
     }
 
