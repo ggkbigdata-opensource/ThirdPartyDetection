@@ -49,7 +49,7 @@ public class ReportRestController {
     }
     
     @RequestMapping(value = { "/deleteReportByReportNum" }, method = RequestMethod.GET)
-    public JSONObject deleteReportByReportNum(@RequestParam String reportNum, HttpServletRequest request) {
+    public JSONObject deleteReportByReportNum(@RequestParam(required=true) String reportNum, HttpServletRequest request) {
         JSONObject result = new JSONObject();
         int permittedRole = 1;
         if (!authService.isLoggedin(request)) {
@@ -58,7 +58,8 @@ public class ReportRestController {
         } else if (!authService.isPermitted(request, permittedRole)) {
             result.put("code", 201);
             result.put("message", "您没有权限！");
-        } else if (reportNum != null) {
+        } else {
+        	reportNum="天消"+reportNum;
             result = service.deleteReportByReportNum(reportNum);
         }
         return result;

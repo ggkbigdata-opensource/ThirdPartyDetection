@@ -294,6 +294,7 @@ public class ReportViewController {
             HttpServletResponse response, HttpServletRequest request) throws IOException {
 
         HttpHeaders headers = new HttpHeaders();
+        reportNum="天消"+reportNum;
         String filePath = checkReportService.getReportURL(reportNum);
         int permittedRole = 1;
         if (authService.isLoggedin(request) && filePath != null && !filePath.equals("")
