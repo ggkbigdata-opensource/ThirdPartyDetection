@@ -24,14 +24,21 @@ function deleteReportByReportNum(reportNum) {
         shadeClose : true,
     });
 }
-function dbclick(id){
+function dbclick(id,name){
 	var text = document.getElementById(id);
-	console.log(text.outerHTML);
-	if(text.outerHTML)
-	text.outerHTML = '<input style="width:60%;margin-right:5px;" value="' + id + '" /><button onclick="getId()">修改</button>';
+	if(name === 'null'){
+		text.outerHTML = '<input name="' + id + '" style="width:60%;margin-right:5px;" value="" /><button onclick="getId(\'' + id + '\')">修改</button>';
+	}else{
+		text.outerHTML = '<input name="' + id + '" style="width:60%;margin-right:5px;" value="' + name + '" /><button onclick="getId(\'' + id + '\')">修改</button>';
+	}
 }
-function getId(){
-	alert('23');
+function getId(id){
+	var na = document.getElementsByName(id)[0];
+	console.log(na.value);
+	$.post('updateStreet',{'reportNum':id,'streetName':na.value},function(result){
+		console.log(result);
+		
+	});
 }
 $(function() {
     // show reportList
@@ -51,7 +58,7 @@ $(function() {
                     for ( var d in result.data) {
                         var item = new Array()
                         item[0] = result.data[d].reportNum; // 报告编号
-                        item[1] = '<span style="cursor:pointer;" id="dbClick' + d + '" ondblclick="dbclick(this.id)">' + (result.data[d].streetName == null?'暂无':result.data[d].streetName) + '</span>'; // 街道名称
+                        item[1] = '<span style="cursor:pointer;" id="' + result.data[d].reportNum + '" ondblclick="dbclick(this.id,\'' + result.data[d].streetName + '\')">' + (result.data[d].streetName == null?'暂无':result.data[d].streetName) + '</span>'; // 街道名称
                         item[2] = result.data[d].projectName; // 报告名称
                         item[3] = result.data[d].projectAddress; // 项目地址
                         item[4] = result.data[d].riskLevel; // 风险等级
