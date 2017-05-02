@@ -24,7 +24,15 @@ function deleteReportByReportNum(reportNum) {
         shadeClose : true,
     });
 }
-
+function dbclick(id){
+	var text = document.getElementById(id);
+	console.log(text.outerHTML);
+	if(text.outerHTML)
+	text.outerHTML = '<input style="width:60%;margin-right:5px;" value="' + id + '" /><button onclick="getId()">修改</button>';
+}
+function getId(){
+	alert('23');
+}
 $(function() {
     // show reportList
     function showReportList() {
@@ -43,7 +51,7 @@ $(function() {
                     for ( var d in result.data) {
                         var item = new Array()
                         item[0] = result.data[d].reportNum; // 报告编号
-                        item[1] = result.data[d].streetName || ''; // 街道名称
+                        item[1] = '<span style="cursor:pointer;" id="dbClick' + d + '" ondblclick="dbclick(this.id)">' + (result.data[d].streetName == null?'暂无':result.data[d].streetName) + '</span>'; // 街道名称
                         item[2] = result.data[d].projectName; // 报告名称
                         item[3] = result.data[d].projectAddress; // 项目地址
                         item[4] = result.data[d].riskLevel; // 风险等级
@@ -52,25 +60,25 @@ $(function() {
                         item[7] = result.data[d].contactTel; // 联系电话
                         var idNew = result.data[d].reportNum.substr(2,result.data[d].reportNum.length);
                         item[8] = '<div class="table-toolbar tc">'
-                            + '<a class="evaluateReport" target="_blank" href="showAbstractReportPage?reportNum='
-                            + idNew
-                            + '">分析报告</a>;'
-                            + '<a class="detectionReport" target="_blank" href="fetchReport/'
-                            + idNew
-                            + '">检测报告</a>;'
-                            + '<a class="deleteReport" " href="JavaScript: " onclick="deleteReportByReportNum(\''
-                            + idNew
-                            + '\')">删除</a>' + '</div>'; //
-                    data[index++] = item;
-                }
-                $("#reportListTable").dataTable({
-                    "data" : data,
-                    language : {
-                        url : "css/datatables/Chinese.json"
+                                + '<a class="evaluateReport" target="_blank" href="showAbstractReportPage?reportNum='
+                                + idNew
+                                + '">分析报告</a>;'
+                                + '<a class="detectionReport" target="_blank" href="fetchReport/'
+                                + idNew
+                                + '">检测报告</a>;'
+                                + '<a class="deleteReport" " href="JavaScript: " onclick="deleteReportByReportNum(\''
+                                + idNew
+                                + '\')">删除</a>' + '</div>'; //
+                        data[index++] = item;
                     }
-                });
-            }
-        });
+                    $("#reportListTable").dataTable({
+                        "data" : data,
+                        language : {
+                            url : "css/datatables/Chinese.json"
+                        }
+                    });
+                }
+            });
     }
 
     // 文件上传

@@ -43,7 +43,7 @@ $(function() {
                     for ( var d in result.data) {
                         var item = new Array()
                         item[0] = result.data[d].reportNum; // 报告编号
-                        item[1] = result.data[d].streetName || ''; // 街道名称
+                        item[1] = '<span>' + (result.data[d].streetName || '123') + '</span>'; // 街道名称
                         item[2] = result.data[d].projectName; // 报告名称
                         item[3] = result.data[d].projectAddress; // 项目地址
                         item[4] = result.data[d].riskLevel; // 风险等级
