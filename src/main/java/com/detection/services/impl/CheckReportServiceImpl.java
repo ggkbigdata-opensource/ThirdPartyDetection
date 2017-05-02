@@ -160,7 +160,7 @@ public class CheckReportServiceImpl implements CheckReportService {
         checkReport.setReportNum(reportNum);
         
         //获取街道信息
-        BsBuildingInfo buildingInfo = buildingInfoRepository.findByItemNumber(reportNum);
+        BsBuildingInfo buildingInfo = buildingInfoRepository.findByItemNumber(reportNum.replace("天消", ""));
         if (buildingInfo!=null&&!"".equals(buildingInfo)) {
 			checkReport.setStreetId(buildingInfo.getStreetId());
 		}else {
@@ -353,7 +353,9 @@ public class CheckReportServiceImpl implements CheckReportService {
                   }else {
                       item.put("streetName", null);
                   }
-			}
+			}else {
+                item.put("streetName", null);
+            }
             
             item.put("reportNum", checkReportInfo.getReportNum());
             item.put("projectName", checkReportInfo.getProjectName());
