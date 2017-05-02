@@ -111,7 +111,7 @@ $(function() {
             	            			layer.alert(result.msg);
             	            			return;
             	            		}
-            	            		if(!result.status){
+            	            		if(!result.status && result.result){
             	            			layer.confirm(result.msg,{
             	            				btn: ['是','否'],
             	            				shade: 0.5,

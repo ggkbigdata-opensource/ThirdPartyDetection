@@ -108,11 +108,11 @@ $(function() {
             	            	if(xhr.readyState ==4&& xhr.status==200){
             	            		var result = eval('(' + data.target.response + ')');
             	            		console.log(result);
-            	            		if(!result.result && result.status!=false){
+            	            		if(!result.result && !result.status){
             	            			layer.alert(result.msg);
             	            			return;
             	            		}
-            	            		if(!result.status){
+            	            		if(!result.status && result.result){
             	            			layer.confirm(result.msg,{
             	            				btn: ['是','否'],
             	            				shade: 0.5,
