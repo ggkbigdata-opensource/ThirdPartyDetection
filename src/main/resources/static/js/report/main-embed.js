@@ -90,7 +90,8 @@ $(function() {
             	if($('#inputfile1')[0].files.length > 0){
             		layer.msg("正在导入检测报告，请稍候...",{
             			shade:0.5,
-            			shadeClose: false
+            			shadeClose: false,
+            			time: 0
             		});
             		 (function UpladFile() {
             	            var fileObj = document.getElementById("import-dialog")[0].files; // 获取文件对象
@@ -118,7 +119,8 @@ $(function() {
             	            			},function(){
             	            				layer.msg("正在导入检测报告，请稍候...",{
             	            					shade:0.5,
-            	            					shadeClose: false
+            	            					shadeClose: false,
+            	            					time: 0
             	            				});
             	            				var FileControllerAgain = '/third/uploadReportAgain';
             	            				var xhrAgain = new XMLHttpRequest();
