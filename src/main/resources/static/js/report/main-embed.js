@@ -107,7 +107,7 @@ $(function() {
             	            	if(xhr.readyState ==4&& xhr.status==200){
             	            		var result = eval('(' + data.target.response + ')');
             	            		console.log(result);
-            	            		if(!result.result){
+            	            		if(!result.result && result.status != false){
             	            			layer.alert(result.msg);
             	            			return;
             	            		}
