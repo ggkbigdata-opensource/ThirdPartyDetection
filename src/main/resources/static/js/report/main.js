@@ -51,15 +51,16 @@ $(function() {
                                     item[5] = result.data[d].detectDate;//检测时间
                                     item[6] = result.data[d].qaName; // 检测单位
                                     item[7] = result.data[d].contactTel; // 联系电话
+                                    var idNew = result.data[d].reportNum.substr(2,result.data[d].reportNum.length);
                                     item[8] = '<div class="table-toolbar tc">'
                                             + '<a class="evaluateReport" target="_blank" href="showAbstractReportPage?reportNum='
-                                            + result.data[d].reportNum
+                                            + idNew
                                             + '">分析报告</a>;'
                                             + '<a class="detectionReport" target="_blank" href="fetchReport/'
-                                            + result.data[d].reportNum
+                                            + idNew
                                             + '">检测报告</a>;'
                                             + '<a class="deleteReport" " href="JavaScript: " onclick="deleteReportByReportNum(\''
-                                            + result.data[d].reportNum
+                                            + idNew
                                             + '\')">删除</a>' + '</div>'; //
                                     data[index++] = item;
                                 }

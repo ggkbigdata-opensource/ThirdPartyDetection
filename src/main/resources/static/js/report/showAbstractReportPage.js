@@ -1,16 +1,16 @@
 /**
  * 
  */
-
 $(function() {
     function showAbstractReportPage() {
         var proxy = "report/getAbstractReportInfo";
         var reportNum = $(location).attr('href').split('?')[1].split('&')[0].split('=')[1];
         console.info(reportNum);
+        reportNum = '天消' + reportNum;
         var params = {
             'reportNum' : reportNum
         }
-        $.getJSON(proxy, params, function(result) {
+        $.post(proxy, params, function(result) {
             if(null == result || 200 != result.code) {
                 alert('您所查找的报告' + reportNum + '不存在');
                 self.location = '505';
@@ -28,7 +28,7 @@ $(function() {
                 }
                 $('#publishData').html(year + '-' + month + '-' + day);
             }
-        });
+        },'json');
     }
     showAbstractReportPage();
 });
