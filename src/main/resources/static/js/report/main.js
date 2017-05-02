@@ -37,7 +37,11 @@ function getId(id){
 	console.log(na.value);
 	$.post('updateStreet',{'reportNum':id,'streetName':na.value},function(result){
 		console.log(result);
-		
+		if(result.result == true){
+			location.reload();
+		}else{
+			//layer.alert(result.msg);
+		}
 	});
 }
 $(function() {
