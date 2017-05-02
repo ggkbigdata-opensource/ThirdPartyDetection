@@ -190,6 +190,7 @@ public class ReportViewController {
                    reportNum = line.replace(" ", "").trim();
                    if (!reportNum.contains("天消")||reportNum.length()<10) {
                        result.put("result", false);
+                       result.put("status", false);
                        result.put("msg", "文件为："+fileName+"的项目编号格式不正确");
                        return result;
                    }
@@ -208,8 +209,9 @@ public class ReportViewController {
             if (map.get(report)!=null) {
                 concent=concent+report+",";
                 result.put("status", false);
-                result.put("result", false);
+                result.put("result", true);
             }else{
+                result.put("status", true);
                 result.put("status", true);
             }
         }

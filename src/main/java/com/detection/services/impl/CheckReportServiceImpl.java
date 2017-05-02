@@ -7,6 +7,8 @@
  */
 package com.detection.services.impl;
 
+import static org.hamcrest.CoreMatchers.nullValue;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -154,21 +156,31 @@ public class CheckReportServiceImpl implements CheckReportService {
         List<CrCheckItemDetail> checkItemDetailList = new ArrayList<CrCheckItemDetail>();
         List<CrCheckReportUnqualifiedItemDetail> checkReportUnqualifiedItemList = new ArrayList<CrCheckReportUnqualifiedItemDetail>();
         // report basic info
-        checkReport.setReportNum(reportCover.getReportNum());
+        String reportNum = reportCover.getReportNum();
+        checkReport.setReportNum(reportNum);
+        
+        //获取街道信息
+        BsBuildingInfo buildingInfo = buildingInfoRepository.findByItemNumber(reportNum);
+        if (buildingInfo!=null&&!"".equals(buildingInfo)) {
+			checkReport.setStreetId(buildingInfo.getStreetId());
+		}else {
+			checkReport.setStreetId(null);
+		}
+        
         checkReport.setFilePath(upFilePath);
         checkReport.setFileName(encryptedFileName);
         checkReport.setOriginalName(fileName);
         checkReport.setCreateDate(reportCover.getReportDate());
         checkReport.setModifyDate(new Date());
-        if(reportCover.getReportNum() !=null){
-            int codeLength = reportCover.getReportNum().length();
-            String tempCodeFirstPart = reportCover.getReportNum().substring(codeLength-4);
+        if(reportNum !=null){
+            int codeLength = reportNum.length();
+            String tempCodeFirstPart = reportNum.substring(codeLength-4);
             String tempCodeSecondPart = EncryptionHelper.encryptStringByMD5(tempCodeFirstPart);
             
             checkReport.setFetchCode(tempCodeFirstPart + tempCodeSecondPart.substring(tempCodeSecondPart.length()-4));
         }
         // process on report cover info
-        checkReportInfo.setReportNum(reportCover.getReportNum());
+        checkReportInfo.setReportNum(reportNum);
         checkReportInfo.setAgentName(reportCover.getAgentName());
         checkReportInfo.setContactFax(reportCover.getContactFax());
         checkReportInfo.setContactPostCode(reportCover.getContactPostcode());
@@ -253,9 +265,9 @@ public class CheckReportServiceImpl implements CheckReportService {
         System.out.println("完成报告解析：\n风险评分: " +riskScore );
         System.out.println("报告号码："+reportCover.getReportNum());*/
         
-        deleteReportRecordByReportNum(reportCover.getReportNum());
+        deleteReportRecordByReportNum(reportNum);
         checkReportRepo.save(checkReport);
-        System.out.println("Finish Parsing report:" + reportCover.getReportNum());
+        System.out.println("Finish Parsing report:" + reportNum);
         result = true;
 
         return result;
@@ -301,7 +313,7 @@ public class CheckReportServiceImpl implements CheckReportService {
         List<JSONObject> dataList = new ArrayList<JSONObject>();
         Iterator<CrCheckReport> it = reportlist.iterator();
         
-        List<BsBuildingInfo> buildings = buildingInfoRepository.findAll();
+       /* List<BsBuildingInfo> buildings = buildingInfoRepository.findAll();
         Map<String, BsBuildingInfo> buildMap = new HashMap<String,BsBuildingInfo>();//存放所有的建筑概况表数据
         for (BsBuildingInfo info : buildings) {
             buildMap.put(info.getItemNumber(), info);
@@ -311,7 +323,7 @@ public class CheckReportServiceImpl implements CheckReportService {
         HashMap<Long, Street> streetMap = new HashMap<Long,Street>();//存放所有的街道信息
         for (Street street : list) {
             streetMap.put(street.getId(), street);
-        }
+        }*/
         
         
         while (it.hasNext()) {
@@ -320,7 +332,7 @@ public class CheckReportServiceImpl implements CheckReportService {
             JSONObject item = new JSONObject();
             
             //加入街道
-            if (buildMap.get(checkReportInfo.getReportNum())!=null) {
+           /* if (buildMap.get(checkReportInfo.getReportNum())!=null) {
                 Long streetId = buildMap.get(checkReportInfo.getReportNum()).getStreetId();
                 Street street = streetMap.get(streetId);
                 if (street!=null) {
@@ -333,7 +345,15 @@ public class CheckReportServiceImpl implements CheckReportService {
             }else {
                 item.put("streetName", null);
                 item.put("streetId", null);
-            }
+            }*/
+            if (checkReport.getStreetId()!=null) {
+            	  Street street = streetRepository.findOne(checkReport.getStreetId());
+                  if (street!=null) {
+                      item.put("streetName", street.getName());
+                  }else {
+                      item.put("streetName", null);
+                  }
+			}
             
             item.put("reportNum", checkReportInfo.getReportNum());
             item.put("projectName", checkReportInfo.getProjectName());

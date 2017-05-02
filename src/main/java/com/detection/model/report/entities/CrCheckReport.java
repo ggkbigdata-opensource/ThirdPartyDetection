@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -49,6 +48,7 @@ public class CrCheckReport {
     @JoinColumn(name = "reportNum")
     private List<CrCheckReportUnqualifiedItemDetail> unqualifiedItemDetail = new ArrayList<CrCheckReportUnqualifiedItemDetail>();
 
+    private Long streetId;
     private Date createDate;
     private Date modifyDate;
     private String creatorName;
@@ -175,6 +175,15 @@ public class CrCheckReport {
     public void setFetchCode(String fetchCode) {
         this.fetchCode = fetchCode;
     }
+
+	public Long getStreetId() {
+		return streetId;
+	}
+
+	public void setStreetId(Long streetId) {
+		this.streetId = streetId;
+	}
+
     
     
 }
