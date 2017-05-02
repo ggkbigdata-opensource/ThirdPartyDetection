@@ -106,5 +106,15 @@ public interface CheckReportService {
      * @description
      */
     public List<String> findAllReportNum();
+
+    /**
+     * @createDate 2017年5月2日下午7:19:14 
+     * @author wangzhiwang
+     * @param id 
+     * @param streetName
+     * @return 
+     * @description
+     */
+    public void updateStreet(String reportNum, String streetName);
 }
 

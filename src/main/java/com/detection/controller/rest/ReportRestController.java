@@ -8,9 +8,9 @@
 package com.detection.controller.rest;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,6 +45,24 @@ public class ReportRestController {
         if(authService.isLoggedin(request) && authService.isPermitted(request, permittedRole)){
             result = service.getAllReports();
         }
+        return result;
+    }
+    
+    @RequestMapping(value = {"/updateStreet"} , method = RequestMethod.POST)
+    public JSONObject updateStreet( HttpServletRequest request ,@RequestParam(required=true)String streetName,String reportNum){
+        
+        JSONObject result = new JSONObject();
+        try {
+             service.updateStreet(reportNum,streetName);
+             result.put("result", true);
+             result.put("msg", "修改成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("result", false);
+            result.put("msg", e.getMessage());
+            
+        }
+        
         return result;
     }
     
