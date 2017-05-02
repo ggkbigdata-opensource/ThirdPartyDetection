@@ -720,7 +720,7 @@ public class CheckReportServiceImpl implements CheckReportService {
             throw new RuntimeException("输入的街道名称不存在");
         }
         
-        Long idC = checkReportRepo.updateStreet(reportNum,streetName);
+        checkReportRepo.updateStreet(reportNum,street.getId());
         
     }
 
