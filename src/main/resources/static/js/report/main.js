@@ -34,44 +34,43 @@ $(function() {
          * 'projectAddress' : null, 'riskLevel' : null, 'qaName' : null, 'token' :
          * sessionStorage.getItem('token') }
          */
-        $
-                .getJSON(
-                        proxy,
-                        function(result) {
-                            if (null != result && 200 == result.code) {
-                                var data = new Array();
-                                var index = 0;
-                                for ( var d in result.data) {
-                                    var item = new Array()
-                                    item[0] = result.data[d].reportNum; // 报告编号
-                                    item[1] = result.data[d].streetName; // 街道名称
-                                    item[2] = result.data[d].projectName; // 报告名称
-                                    item[3] = result.data[d].projectAddress; // 项目地址
-                                    item[4] = result.data[d].riskLevel; // 风险等级
-                                    item[5] = result.data[d].detectDate;//检测时间
-                                    item[6] = result.data[d].qaName; // 检测单位
-                                    item[7] = result.data[d].contactTel; // 联系电话
-                                    var idNew = result.data[d].reportNum.substr(2,result.data[d].reportNum.length);
-                                    item[8] = '<div class="table-toolbar tc">'
-                                            + '<a class="evaluateReport" target="_blank" href="showAbstractReportPage?reportNum='
-                                            + idNew
-                                            + '">分析报告</a>;'
-                                            + '<a class="detectionReport" target="_blank" href="fetchReport/'
-                                            + idNew
-                                            + '">检测报告</a>;'
-                                            + '<a class="deleteReport" " href="JavaScript: " onclick="deleteReportByReportNum(\''
-                                            + idNew
-                                            + '\')">删除</a>' + '</div>'; //
-                                    data[index++] = item;
-                                }
-                                $("#reportListTable").dataTable({
-                                    "data" : data,
-                                    language : {
-                                        url : "css/datatables/Chinese.json"
-                                    }
-                                });
-                            }
-                        });
+        $.getJSON(
+            proxy,
+            function(result) {
+                if (null != result && 200 == result.code) {
+                    var data = new Array();
+                    var index = 0;
+                    for ( var d in result.data) {
+                        var item = new Array()
+                        item[0] = result.data[d].reportNum; // 报告编号
+                        item[1] = result.data[d].streetName || ''; // 街道名称
+                        item[2] = result.data[d].projectName; // 报告名称
+                        item[3] = result.data[d].projectAddress; // 项目地址
+                        item[4] = result.data[d].riskLevel; // 风险等级
+                        item[5] = result.data[d].detectDate;//检测时间
+                        item[6] = result.data[d].qaName; // 检测单位
+                        item[7] = result.data[d].contactTel; // 联系电话
+                        var idNew = result.data[d].reportNum.substr(2,result.data[d].reportNum.length);
+                        item[8] = '<div class="table-toolbar tc">'
+                            + '<a class="evaluateReport" target="_blank" href="showAbstractReportPage?reportNum='
+                            + idNew
+                            + '">分析报告</a>;'
+                            + '<a class="detectionReport" target="_blank" href="fetchReport/'
+                            + idNew
+                            + '">检测报告</a>;'
+                            + '<a class="deleteReport" " href="JavaScript: " onclick="deleteReportByReportNum(\''
+                            + idNew
+                            + '\')">删除</a>' + '</div>'; //
+                    data[index++] = item;
+                }
+                $("#reportListTable").dataTable({
+                    "data" : data,
+                    language : {
+                        url : "css/datatables/Chinese.json"
+                    }
+                });
+            }
+        });
     }
 
     // 文件上传
