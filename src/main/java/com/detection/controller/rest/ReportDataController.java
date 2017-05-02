@@ -82,7 +82,7 @@ public class ReportDataController {
      * riskLevel : 极高水平（4）、高水平（3）、中等水平（2）、低水平（1） 
      * code : 200 success, 201 failure
      */
-    @RequestMapping(value = {"getAbstractReportInfo" }, method = RequestMethod.GET)
+    @RequestMapping(value = {"getAbstractReportInfo" }, method = RequestMethod.POST)
     public JSONObject getAbstractReportInfo(@RequestParam String reportNum){
 
         return checkReportService.getAbstractReportInfo(reportNum);
