@@ -48,7 +48,7 @@ public class ReportRestController {
         return result;
     }
     
-    @RequestMapping(value = {"/updateStreet"} , method = RequestMethod.POST)
+    @RequestMapping(value = "/updateStreet" , method = RequestMethod.POST)
     public JSONObject updateStreet( HttpServletRequest request ,String streetName,String reportNum){
         
         JSONObject result = new JSONObject();
