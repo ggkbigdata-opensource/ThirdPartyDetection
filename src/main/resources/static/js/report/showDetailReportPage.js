@@ -126,7 +126,7 @@ function showDetailReportInfo() {
                     alert("无权限访问！！！");
                     self.location = '505';
                 } else {
-                    $('#reportNum').html(result.reportNum);
+                    $('#reportNum').html('天消 ' + result.reportNum);
                     $('#reportLevel').html(result.reportLevel);
                     $('#reportDate').html(result.reportDate);
                     $('#company').html(result.company);
