@@ -58,7 +58,7 @@ public interface BsBuildingInfoRepository extends JpaRepository<BsBuildingInfo, 
     @Query(value = "SELECT * FROM bs_building_info t where  t.id in ?1", nativeQuery = true)
     List<BsBuildingInfo> findByIds(long[] arr);
 
-    @Query(value = "SELECT * FROM bs_building_info t where  t.item_number like %?1% order by t.import_time desc", nativeQuery = true)
+    @Query(value = "SELECT * FROM bs_building_info t where  t.item_number like %?1%  limit 0,1", nativeQuery = true)
 	BsBuildingInfo findByItemNumber(String reportNum);
 
 }
