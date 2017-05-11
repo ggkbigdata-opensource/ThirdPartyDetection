@@ -153,7 +153,7 @@ $(function() {
             	            					if(xhrAgain.readyState ==4&& xhrAgain.status==200){
             	            						var resultAgain = eval('(' + dataAgain.target.response + ')');
             	            						if(!resultAgain.result){
-            	            							layer.alert('result.msg');
+            	            							layer.alert(resultAgain.msg);
             	            	            			return;
             	            						}
             	            						if(resultAgain.status){
