@@ -42,22 +42,22 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
 server:
   port: 8080
-
+  
 ---
 spring:
-  profiles: dev
+  profiles: test1
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/test?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8
     username: root
-    password: Root12345..
+    password: root
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: false
+    show-sql: true
 server:
   port: 8080
   
