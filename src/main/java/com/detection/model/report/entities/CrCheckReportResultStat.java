@@ -33,6 +33,7 @@ public class CrCheckReportResultStat {
     private String importantGrade;
     private int unqualifiedNum;
     private Date optTime;
+    private String reportNum;
     
     public CrCheckReportResultStat(){
     	
@@ -92,6 +93,14 @@ public class CrCheckReportResultStat {
 
     public void setOptTime(Date optTime) {
         this.optTime = optTime;
+    }
+
+    public String getReportNum() {
+        return reportNum;
+    }
+
+    public void setReportNum(String reportNum) {
+        this.reportNum = reportNum;
     }
     
     

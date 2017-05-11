@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
@@ -116,5 +117,14 @@ public interface CheckReportService {
      * @description
      */
     public void updateStreet(String reportNum, String streetName);
+
+    /**
+     * @createDate 2017年5月5日上午11:57:56 
+     * @author wangzhiwang
+     * @param sheetOne 
+     * @description
+     */
+    public void importExcel(Sheet sheetOne);
+
 }
 

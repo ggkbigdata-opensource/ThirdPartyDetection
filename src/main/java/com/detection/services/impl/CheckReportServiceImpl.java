@@ -19,7 +19,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -43,12 +46,16 @@ import com.detection.model.pdfparse.ListResult;
 import com.detection.model.pdfparse.PDFParserResult;
 import com.detection.model.pdfparse.Result;
 import com.detection.model.report.entities.CrCheckItemDetail;
+import com.detection.model.report.entities.CrCheckItemDetailCopy;
 import com.detection.model.report.entities.CrCheckReport;
 import com.detection.model.report.entities.CrCheckReportInfo;
 import com.detection.model.report.entities.CrCheckReportResultStat;
 import com.detection.model.report.entities.CrCheckReportUnqualifiedItemDetail;
+import com.detection.model.report.entities.ReportResultStatCopy;
+import com.detection.model.report.repositories.CheckItemDetailCopyRepository;
 import com.detection.model.report.repositories.CheckReportInfoRepository;
 import com.detection.model.report.repositories.CheckReportRepository;
+import com.detection.model.report.repositories.ReportResultStatCopyRepository;
 import com.detection.services.CheckReportService;
 import com.detection.services.PDFParserService;
 import com.detection.util.DateUtil;
@@ -75,6 +82,10 @@ public class CheckReportServiceImpl implements CheckReportService {
     private StreetRepository streetRepository;
     @Autowired
     private BsBuildingInfoRepository buildingInfoRepository;
+    @Autowired
+    private ReportResultStatCopyRepository reportResultStatCopyRepository;
+    @Autowired
+    private CheckItemDetailCopyRepository checkItemDetailCopyRepository;
     
     @Value("${uploadPath}")
     private String uploadPath;
@@ -218,7 +229,7 @@ public class CheckReportServiceImpl implements CheckReportService {
             element.setImportantGrade(nextItem.getLevel());
             element.setItemCode(nextItem.getLabel());
             //deprecated
-            //element.setItemName(nextItem.getName());
+            element.setItemName(nextItem.getName());
             if(digitsPattern.matcher(nextItem.getValue1()).matches()){
                 element.setCheckNum(Integer.parseInt(nextItem.getValue1()));
             }
@@ -309,39 +320,13 @@ public class CheckReportServiceImpl implements CheckReportService {
         List<JSONObject> dataList = new ArrayList<JSONObject>();
         Iterator<CrCheckReport> it = reportlist.iterator();
         
-       /* List<BsBuildingInfo> buildings = buildingInfoRepository.findAll();
-        Map<String, BsBuildingInfo> buildMap = new HashMap<String,BsBuildingInfo>();//存放所有的建筑概况表数据
-        for (BsBuildingInfo info : buildings) {
-            buildMap.put(info.getItemNumber(), info);
-        }
-        
-        List<Street> list = streetRepository.findAll();
-        HashMap<Long, Street> streetMap = new HashMap<Long,Street>();//存放所有的街道信息
-        for (Street street : list) {
-            streetMap.put(street.getId(), street);
-        }*/
-        
         
         while (it.hasNext()) {
             CrCheckReport checkReport = it.next();
             CrCheckReportInfo checkReportInfo = checkReport.getCheckReportInfo();
+            //CrCheckReportInfo checkReportInfo = checkReportInfoRepo.findbyReportNum(checkReport.getReportNum());
             JSONObject item = new JSONObject();
             
-            //加入街道
-           /* if (buildMap.get(checkReportInfo.getReportNum())!=null) {
-                Long streetId = buildMap.get(checkReportInfo.getReportNum()).getStreetId();
-                Street street = streetMap.get(streetId);
-                if (street!=null) {
-                    item.put("streetName", street.getName());
-                    item.put("streetId", streetId);
-                }else {
-                    item.put("streetName", null);
-                    item.put("streetId", null);
-                }
-            }else {
-                item.put("streetName", null);
-                item.put("streetId", null);
-            }*/
             if (checkReport.getStreetId()!=null) {
             	  Street street = streetRepository.findOne(checkReport.getStreetId());
                   if (street!=null) {
@@ -353,7 +338,7 @@ public class CheckReportServiceImpl implements CheckReportService {
                 item.put("streetName", null);
             }
             
-            item.put("reportNum", checkReportInfo.getReportNum());
+            item.put("reportNum", checkReport.getReportNum());
             item.put("projectName", checkReportInfo.getProjectName());
             item.put("projectAddress", checkReportInfo.getProjectAddress());
             item.put("riskLevel", checkReportInfo.getRiskLevel());
@@ -495,7 +480,7 @@ public class CheckReportServiceImpl implements CheckReportService {
         String token = null;
         String dutyPerson = null;
         //CrOwnerUnit ownerUnit = ownerUnitRepo.findOne(dutyTel);
-        CrOwnerUnit ownerUnit = ownerUnitRepo.findByDutyTelAndOwnerNameLike(dutyTel,ownerName);
+        CrOwnerUnit ownerUnit = ownerUnitRepo.findByDutyTelAndOwnerNameLike(dutyTel,ownerName,extracteCode);
         if(ownerUnit != null){
             String reportNum = checkReportRepo.findReportNumByFetchCode(extracteCode.toUpperCase());
             dutyPerson = ownerUnit.getDutyPerson();
@@ -635,7 +620,8 @@ public class CheckReportServiceImpl implements CheckReportService {
             Row row = sheet.getRow(rowIndex);
             while(queryQAName.equals("")){
                 row = sheet.getRow(rowIndex);
-                if(row.getCell(0).getStringCellValue().contains("检测中心")){
+                System.out.println(rowIndex);
+                if(row.getCell(0)!=null&&row.getCell(0).getStringCellValue()!=null&&row.getCell(0).getStringCellValue().contains("检测中心")){
                     queryQAName = "广东建筑消防设施检测中心有限公司";
                     reportNumPattern = "(\\d\\d\\w{2,3})(\\d{3})";
                     rowIndex++;
@@ -665,6 +651,11 @@ public class CheckReportServiceImpl implements CheckReportService {
                         Matcher matcher = pattern.matcher(currentName);
                         if(matcher.find()){
                             String reportNum = matcher.group(2);
+                            if (reportNum.contains("067")) {
+                                System.out.println("123");
+                            }
+                            System.out.println(rowIndex);
+                            
                             List<CrCheckReportInfo> reportInfos = checkReportInfoRepo.findbyReportNumLikeAndQaNameLike(reportNum, queryQAName);
                             Iterator<CrCheckReportInfo> it = reportInfos.iterator();
                             if(reportInfos.size()>1){
@@ -721,6 +712,128 @@ public class CheckReportServiceImpl implements CheckReportService {
         }
         
         checkReportRepo.updateStreet(reportNum,street.getId());
+        
+    }
+
+    @Override
+    public void importExcel(Sheet sheetOne) {
+        
+        for (int i = 0; i < sheetOne.getLastRowNum()+1; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (sheetOne.getRow(i) != null) {
+                    Cell cell = sheetOne.getRow(i).getCell(j);
+                    if (cell != null) {
+                        cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+                    }
+                }
+            }
+        }
+        
+        
+        if (sheetOne.getRow(0) == null || sheetOne.getRow(0).getCell(0) == null) {
+            throw new RuntimeException("项目编码不能为空");
+        }
+        String reportNum = sheetOne.getRow(0).getCell(0).getStringCellValue();
+        
+        int jianchexian=0;
+        for (int i = 1; i < sheetOne.getLastRowNum()+1; i++) {
+            if (sheetOne.getRow(i)==null||sheetOne.getRow(i).getCell(0)==null) {
+                continue;
+            }
+            String stringCellValue = sheetOne.getRow(i).getCell(0).getStringCellValue();
+            if ("检测点".equals(stringCellValue)) {
+                jianchexian=i;
+            }
+        }
+        
+        String itemCode =null;
+        
+        String itemName=null;
+        for (int i = 2; i < jianchexian; i++) {
+            
+           /* if ((i+1)%3==0) {
+                itemCode = sheetOne.getRow(i).getCell(0).getStringCellValue();
+                itemName = sheetOne.getRow(i).getCell(1).getStringCellValue();
+                
+            }*/
+            
+            if (StringUtils.isNotEmpty(sheetOne.getRow(i).getCell(0).getStringCellValue())) {
+                itemCode = sheetOne.getRow(i).getCell(0).getStringCellValue();
+                itemName = sheetOne.getRow(i).getCell(1).getStringCellValue();
+            }
+            
+            String dengji = sheetOne.getRow(i).getCell(2).getStringCellValue();
+            String jiancheshumu = sheetOne.getRow(i).getCell(3).getStringCellValue();
+            if ("/".equals(jiancheshumu)||StringUtils.isEmpty(jiancheshumu)) {
+                continue;
+            }
+            String buhegeshu = sheetOne.getRow(i).getCell(4).getStringCellValue();
+            ReportResultStatCopy stat = new ReportResultStatCopy();
+            stat.setReportNum(reportNum);
+            stat.setItemCode(itemCode);
+            stat.setImportantGrade(dengji);
+            stat.setItemName(itemName);
+            stat.setCheckNum(Integer.parseInt(jiancheshumu));
+            stat.setUnqualifiedNum(Integer.parseInt(buhegeshu));
+            
+            reportResultStatCopyRepository.save(stat);
+        }
+        for (int i = jianchexian; i < sheetOne.getLastRowNum()+1; i++) {
+            
+            if (sheetOne.getRow(i)==null||sheetOne.getRow(i).getCell(0)==null) {
+                continue;
+            }
+            String itemCode1 = sheetOne.getRow(i).getCell(0).getStringCellValue();
+            
+            Pattern elementPattern = Pattern.compile("(\\d+\\.\\d+\\.\\d+).*");
+            Matcher elementMatcher = elementPattern.matcher(itemCode1);
+            
+            if (!elementMatcher.find()) {
+                continue;
+            }
+System.out.println(itemCode1);
+            String itemName1 = sheetOne.getRow(i).getCell(1).getStringCellValue();
+            String importantGrade = sheetOne.getRow(i).getCell(2).getStringCellValue();
+            
+            
+            String checkNum = sheetOne.getRow(i).getCell(4).getStringCellValue();
+           if (StringUtils.isEmpty(checkNum)) {
+            continue;
+        }
+            if (StringUtils.isEmpty(checkNum)) {
+                continue;
+            }
+            if (checkNum.contains("/")) {
+                continue;
+            }
+            
+            String unqualifiedNum="0";
+            if (sheetOne.getRow(i)!=null&&sheetOne.getRow(i).getCell(5)!=null) {
+                
+                unqualifiedNum = sheetOne.getRow(i).getCell(5).getStringCellValue();
+            }
+            
+            
+            CrCheckItemDetailCopy detail = new CrCheckItemDetailCopy();
+            detail.setReportNum(reportNum);
+            detail.setItemCode(itemCode1);
+            detail.setItemName(itemName1);
+            detail.setImportantGrade(importantGrade);
+            detail.setCheckNum(Integer.parseInt(checkNum));
+            
+           /* if (StringUtils.isEmpty(unqualifiedNum)||"/".equals(unqualifiedNum)) {
+                unqualifiedNum="0";
+            }*/
+            if (StringUtils.isEmpty(unqualifiedNum)) {
+                unqualifiedNum="0";
+            }
+            if (unqualifiedNum.contains("/")) {
+                unqualifiedNum="0";
+            }
+            detail.setUnqualifiedNum(Integer.parseInt(unqualifiedNum!="/"?unqualifiedNum:"0"));
+            
+            checkItemDetailCopyRepository.save(detail);
+        }
         
     }
 

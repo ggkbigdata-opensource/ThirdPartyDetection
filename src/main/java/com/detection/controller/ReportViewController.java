@@ -28,6 +28,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -224,6 +227,34 @@ public class ReportViewController {
         
         return result;
 
+    }
+    @RequestMapping(value = "/uploadReport1", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject uploadReportForExcel(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request) throws Exception {
+        
+        JSONObject result = new JSONObject();
+        
+        String fileName = null;
+        
+        for (MultipartFile file : files) {
+         // 读取数据
+            try {
+                fileName = file.getOriginalFilename();
+                
+                Workbook workbook = WorkbookFactory.create(file.getInputStream());
+
+                Sheet sheetOne = workbook.getSheetAt(0);
+                
+                checkReportService.importExcel(sheetOne);
+                result.put("msg", "导入成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                result.put("msg", fileName+e.getMessage());
+                return result;
+            }
+        }
+        return result;
+        
     }
 
     @RequestMapping(value = "/uploadReportAgain", method = RequestMethod.POST)

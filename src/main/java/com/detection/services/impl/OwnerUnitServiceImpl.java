@@ -1,8 +1,6 @@
 package com.detection.services.impl;
 
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +9,6 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONObject;
 import com.detection.model.owner.CrOwnerUnit;
 import com.detection.model.owner.OwnerUnitRepository;
-import com.detection.model.report.entities.CrCheckRecord;
-import com.detection.model.report.entities.CrCheckReport;
 import com.detection.services.OwnerUnitService;
 import com.detection.util.FormCheck;
 
@@ -89,38 +85,6 @@ public class OwnerUnitServiceImpl implements OwnerUnitService {
     public JSONObject getOwnerUnitByTel(String dutyTel) {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public JSONObject testFetchReport() {
-        // TODO Auto-generated method stub
-        JSONObject result = new JSONObject();
-        int updatedNum = 0;
-        List<CrOwnerUnit> ownerList = ownerUnitRepo.findAll();
-        Iterator<CrOwnerUnit> it = ownerList.iterator();
-        while(it.hasNext()){
-            CrOwnerUnit owner = it.next();
-            CrCheckRecord item = new CrCheckRecord();
-            Iterator<CrCheckRecord> recordIt = owner.getCheckRecords().iterator();
-            boolean hasRecord = false;
-            while(recordIt.hasNext()){
-                item = recordIt.next();
-                if(item.getReportNum().equals(reportNumForDemo)){
-                    hasRecord = true;
-                    break;
-                }
-            }
-            if(!hasRecord){
-                updatedNum++;
-                item.setRecordDate(new Date());
-                item.setReportNum(reportNumForDemo);
-                owner.addOneCheckRecord(item);
-            }
-        }
-        ownerUnitRepo.save(ownerList);
-        result.put("result", "finish");
-        result.put("updated", updatedNum);
-        return result;
     }
 
 }

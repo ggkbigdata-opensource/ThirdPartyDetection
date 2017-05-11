@@ -23,6 +23,6 @@ public interface OwnerUnitService {
     
     public JSONObject getOwnerUnitByTel(String dutyTel);
     
-    public JSONObject testFetchReport();
+  //  public JSONObject testFetchReport();
     
 }

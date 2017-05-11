@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,7 +57,7 @@ public class PDFParserServiceImpl implements PDFParserService {
         int sIndex = 0;
         int eIndex = 0;
         {
-            // TODO
+            // 
             String end = "建筑消防设施检测报告";
             eIndex = allText.indexOf(end);
             String paragraph = allText.substring(0, eIndex);
@@ -71,7 +72,7 @@ public class PDFParserServiceImpl implements PDFParserService {
 
         }
         {
-            // TODO first part single item result
+            //  first part single item result
             String start = "单项评定结果";
             String end = "检测结论说明";
             sIndex = allText.indexOf(start) + start.length();
@@ -466,10 +467,35 @@ public class PDFParserServiceImpl implements PDFParserService {
     @Override
     public List<Result> processOnThirdParagraph(String paragraph) {
         List<Result> rs = new ArrayList<Result>();
-        paragraph.replaceAll(getLineEndByOS(), " ");
-        Pattern elementPattern = Pattern.compile("(\\d+\\.\\d+\\.\\d+).*\\s+(A|B|C)\\s+.*\\s+(\\d+|/)\\s+(\\d+|/)\\s+");
-        Matcher elementMatcher = elementPattern.matcher(paragraph);
+        String regExp = getLineEndByOS2();
+        String text = paragraph.replaceAll(regExp, " ");
+        
+        Pattern elementPattern = Pattern.compile("(\\d+\\.\\d+\\.\\d+).*?\\s+?(A|B|C)\\s+?.*?\\s+?(\\d+?|/)\\s+?(\\d+?|/)\\s+?");
+//        Pattern elementPattern = Pattern.compile("(\\d+\\.\\d+\\.\\d+).*");
+        Matcher elementMatcher = elementPattern.matcher(text);
         while (elementMatcher.find()) {
+            
+    /*        String group = elementMatcher.group();
+            group.replace("  ", " ");
+            String[] value = group.split(" ");
+            
+System.out.println(group);            
+            if (value.length>3) {
+                Result element = new Result();
+                element.setLabel(value[0]);
+                //element.setLevel(value[value.length-3]);
+                element.setValue1(value[value.length-3]);
+                element.setValue2(value[value.length-1]);
+                if (!element.getValue1().equals("/") && !element.getValue1().equals("0")) {
+                    rs.add(element);
+                }
+            }
+            
+            */
+           
+            
+            
+            
             Result element = new Result();
             element.setLabel(elementMatcher.group(1));
             element.setLevel(elementMatcher.group(2));
@@ -504,7 +530,8 @@ public class PDFParserServiceImpl implements PDFParserService {
     @Override
     public List<Result> processOnFirstParagraph(String paragraph) {
         List<Result> rs = new ArrayList<Result>();
-        Pattern itemPattern = Pattern.compile(getLineEndByOS() + "(\\d+)\\s*");
+        String lineEndByOS = getLineEndByOS();
+        Pattern itemPattern = Pattern.compile(lineEndByOS + "(\\d+|A)\\s*");
         Matcher itemMatcher = itemPattern.matcher(paragraph);
         int startIndex = 0;
         int endIndex = 0;
@@ -512,23 +539,80 @@ public class PDFParserServiceImpl implements PDFParserService {
         String tempStr = "";
         boolean findFlag = itemMatcher.find();
         while (findFlag) {
-            itemCode = itemMatcher.group(1);
-            if (itemMatcher.find()) {
-                findFlag = true;
-                endIndex = itemMatcher.start();
-            } else {
-                findFlag = false;
-                endIndex = paragraph.length();
+            String group = itemMatcher.group(1);
+            if ("A".contains(group)) {
+                Pattern pat = Pattern.compile(lineEndByOS + "(A)\\s*?");
+                Matcher mat = pat.matcher(paragraph);
+                List<Integer> indexs = new ArrayList<Integer>();//存储截取的角标
+                while (mat.find()) {
+                    indexs.add(mat.start()+1);
+                }
+                //截取数据
+                for (int i = 0; i < indexs.size()-1; i++) {
+                    String all = paragraph.substring(indexs.get(i), indexs.get(i+1));
+                    String[] values = all.split(lineEndByOS);
+                    //获取项目编号
+                    Pattern codePattern = Pattern.compile(lineEndByOS + "(\\d+)\\s*");
+                    Matcher codeMatcher = codePattern.matcher(all);
+                    
+                    if (codeMatcher.find()) {
+                        itemCode=codeMatcher.group(1);
+                    }
+                    
+                    for (String value : values) {
+                        String val = value.replace("\r\n", "").replace("\r", "").replace("\n", "");
+                        Pattern codePat = Pattern.compile("(\\d+|A|B|C)\\s*");//必须数字开头或是字母开头
+                        String substring = val.substring(0,1);
+                        Matcher codeMat = codePat.matcher(substring);
+                        if (codeMat.find()) {
+                            String[] split = value.split(" ");
+                            Result element = new Result();
+System.out.println(value);
+                            if (split.length>2) {
+                                if (split.length>4) {
+                                    element.setLabel(itemCode);
+                                    element.setName(split[1]);
+                                    element.setLevel(split[split.length-3]);
+                                    element.setValue1(split[split.length-2]);
+                                    element.setValue2(split[split.length-1]);
+                                }else if (split.length==4) {
+                                    element.setLabel(itemCode);
+                                    element.setLevel(split[split.length-3]);
+                                    element.setValue1(split[split.length-2]);
+                                    element.setValue2(split[split.length-1]);
+                                }else{
+                                    element.setLabel(itemCode);
+                                    element.setLevel(split[split.length-3]);
+                                    element.setValue1(split[split.length-2]);
+                                    element.setValue2(split[split.length-1]);
+                                }
+                                if (!element.getValue1().equals("/") && !element.getValue1().equals("0")) {
+                                    rs.add(element);
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            }else {
+                itemCode = itemMatcher.group(1);
+                if (itemMatcher.find()) {
+                    findFlag = true;
+                    endIndex = itemMatcher.start();
+                } else {
+                    findFlag = false;
+                    endIndex = paragraph.length();
+                }
+                tempStr = paragraph.substring(startIndex, endIndex);
+                startIndex = startIndex + getSingleItemResultOfFirstPart(tempStr, itemCode, rs);
             }
-            tempStr = paragraph.substring(startIndex, endIndex);
-            startIndex = startIndex + getSingleItemResultOfFirstPart(tempStr, itemCode, rs);
         }
 
         return rs;
     }
 
     private int getSingleItemResultOfFirstPart(String strToParse, String itemCode, List<Result> rs) {
-        // TODO Auto-generated method stub
+        //  Auto-generated method stub
         Pattern elementPattern = Pattern.compile("(A|B|C)\\s+(\\d+|/)\\s+(\\d+|/)");
         Matcher elementMatcher = elementPattern.matcher(strToParse);
         char itemIndex = 'A' - 1;
@@ -550,11 +634,25 @@ public class PDFParserServiceImpl implements PDFParserService {
         }
         return strToParse.length();
     }
-
+    
     private String getLineEndByOS() {
         String osName = System.getProperty("os.name");
         String result;
         if (osName.contains("win") || osName.contains("Win")) {
+            result = "\r\n";
+        } else if (osName.contains("Linux") || osName.contains("linux")) {
+            result = "\n";
+        } else {
+            result = "\r";
+        }
+        return result;
+    }
+
+    private String getLineEndByOS2() {
+        String osName = System.getProperty("os.name");
+        String result;
+        if (osName.contains("win") || osName.contains("Win")) {
+//            result = "\r\n[^(\\d+\\.\\d+\\.\\d+)]{1}";
             result = "\r\n";
         } else if (osName.contains("Linux") || osName.contains("linux")) {
             result = "\n";

@@ -21,4 +21,7 @@ public interface CheckReportInfoRepository extends JpaRepository<CrCheckReportIn
     
     @Query(value="SELECT t.project_name FROM cr_check_report_info t WHERE t.project_name like %?1%", nativeQuery = true)
     public String findbyOwnerNameLikeProjectName(String ownerName);
+
+    @Query(value="SELECT t.* FROM cr_check_report_info t WHERE t.report_num =?1", nativeQuery = true)
+    public CrCheckReportInfo findbyReportNum(String reportNum);
 }

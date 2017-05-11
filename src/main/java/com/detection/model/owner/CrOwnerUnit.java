@@ -1,27 +1,25 @@
 package com.detection.model.owner;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-
-import com.detection.model.report.entities.CrCheckRecord;
 
 @Entity
 public class CrOwnerUnit {
 
     @Id
+    @GeneratedValue
+    private Long id;
+    
     private String dutyTel;
+    
+    private String reportNum;
 
-    private String ownerName;
+    private String ownerName; 
+    
+    private String fetchCode; 
 
     private String email;
 
@@ -31,9 +29,6 @@ public class CrOwnerUnit {
 
     private String authorizedReportNum;
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "dutyTel")
-    private List<CrCheckRecord> checkRecords = new ArrayList<CrCheckRecord>();
 
     private Date registTime;
     
@@ -85,13 +80,6 @@ public class CrOwnerUnit {
         this.token = token;
     }
 
-    public List<CrCheckRecord> getCheckRecords() {
-        return checkRecords;
-    }
-
-    public void setCheckRecords(List<CrCheckRecord> checkRecords) {
-        this.checkRecords = checkRecords;
-    }
 
     public Date getRegistTime() {
         return registTime;
@@ -125,22 +113,30 @@ public class CrOwnerUnit {
         this.authorizedReportNum = authorizedReportNum;
     }
 
-    public void addOneCheckRecord(CrCheckRecord item) {
-        if (item != null) {
-            this.checkRecords.add(item);
-        }
-    }
-    
-    public boolean hasRecord(String reportNum){
-        boolean result = false;
-        Iterator<CrCheckRecord> it = checkRecords.iterator();
-        while(it.hasNext()){
-            if(it.next().getReportNum().equals(reportNum)){
-                result = true;
-                break;
-            }
-        }
-        return result;
+
+    public Long getId() {
+        return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getReportNum() {
+        return reportNum;
+    }
+
+    public void setReportNum(String reportNum) {
+        this.reportNum = reportNum;
+    }
+
+    public String getFetchCode() {
+        return fetchCode;
+    }
+
+    public void setFetchCode(String fetchCode) {
+        this.fetchCode = fetchCode;
+    }
+
+    
 }
