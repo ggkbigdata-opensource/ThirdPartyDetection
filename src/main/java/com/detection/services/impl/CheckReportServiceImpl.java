@@ -100,14 +100,14 @@ public class CheckReportServiceImpl implements CheckReportService {
     public boolean uploadAndSaveReport(String fileName, MultipartFile file, String operatorName, String ctxPath) throws Exception {
         boolean result = false;
         String encryptedFileName = EncryptionHelper.encryptStringByMD5(fileName);
-        String upFilePath = ctxPath+ uploadPath + encryptedFileName;
+       // String upFilePath = ctxPath+ uploadPath + encryptedFileName;
         //String downFilePath = downloadPath + fileName;
 
-        File outPath = new File(ctxPath+uploadPath);
+        File outPath = new File(uploadPath);
         if (!outPath.exists()) {
             outPath.mkdirs();
         }
-        File upFile = new File(upFilePath);
+        File upFile = new File(uploadPath+encryptedFileName);
         if(isDebug){
             if(upFile.canWrite()){
                 System.out.println("file can write!");
@@ -126,7 +126,7 @@ public class CheckReportServiceImpl implements CheckReportService {
         //System.out.println("file length: "+upFile.length());
         //upFileOS.close();
         out.close();
-        parseAndSaveReportToDB(upFilePath, fileName,encryptedFileName,operatorName);
+        parseAndSaveReportToDB(uploadPath+encryptedFileName, fileName,encryptedFileName,operatorName);
         result = true;
 
         return result;
@@ -651,10 +651,6 @@ public class CheckReportServiceImpl implements CheckReportService {
                         Matcher matcher = pattern.matcher(currentName);
                         if(matcher.find()){
                             String reportNum = matcher.group(2);
-                            if (reportNum.contains("067")) {
-                                System.out.println("123");
-                            }
-                            System.out.println(rowIndex);
                             
                             List<CrCheckReportInfo> reportInfos = checkReportInfoRepo.findbyReportNumLikeAndQaNameLike(reportNum, queryQAName);
                             Iterator<CrCheckReportInfo> it = reportInfos.iterator();
@@ -791,7 +787,6 @@ public class CheckReportServiceImpl implements CheckReportService {
             if (!elementMatcher.find()) {
                 continue;
             }
-System.out.println(itemCode1);
             String itemName1 = sheetOne.getRow(i).getCell(1).getStringCellValue();
             String importantGrade = sheetOne.getRow(i).getCell(2).getStringCellValue();
             

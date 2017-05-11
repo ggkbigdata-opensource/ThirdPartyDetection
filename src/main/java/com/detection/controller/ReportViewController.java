@@ -106,6 +106,20 @@ public class ReportViewController {
         mv.addObject("userName", (String) request.getSession().getAttribute("userName"));
         return mv;
     }
+    @RequestMapping(value = { "/mainEmbed" }, method = RequestMethod.GET)
+    public ModelAndView mainEmbed(HttpServletRequest request) {
+        
+        String result = "report/main-embedded";
+        int permittedRole = 1;
+        if (!authService.isLoggedin(request)) {
+            result = "redirect:/";
+        } else if (!authService.isPermitted(request, permittedRole)) {
+            result = "redirect:nopermissions";
+        }
+        ModelAndView mv = new ModelAndView(result);
+        mv.addObject("userName", (String) request.getSession().getAttribute("userName"));
+        return mv;
+    }
 
     @RequestMapping(value = { "/embeddedUserLogin" }, method = RequestMethod.GET)
     public String embeddedUserLogin(@RequestParam String loginName, @RequestParam String userPassword,
@@ -471,8 +485,6 @@ public class ReportViewController {
 
             response.setContentType("application/octet-stream; charset=UTF-8");
             response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-
-            System.out.println("写到了这里");
 
             document.close();
             os.flush();

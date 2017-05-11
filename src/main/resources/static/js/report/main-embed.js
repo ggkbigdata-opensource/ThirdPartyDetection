@@ -16,7 +16,7 @@ function deleteReportByReportNum(reportNum) {
                 else{
                     layer.msg("删除失败：" + data.message);
                 }
-                setTimeout(function(){self.location = 'main';},500);
+                setTimeout(function(){self.location = 'mainEmbed';},500);
             });
         },
         btn2 : function(index, layero) {

@@ -480,7 +480,6 @@ public class PDFParserServiceImpl implements PDFParserService {
             group.replace("  ", " ");
             String[] value = group.split(" ");
             
-System.out.println(group);            
             if (value.length>3) {
                 Result element = new Result();
                 element.setLabel(value[0]);
@@ -568,7 +567,6 @@ System.out.println(group);
                         if (codeMat.find()) {
                             String[] split = value.split(" ");
                             Result element = new Result();
-System.out.println(value);
                             if (split.length>2) {
                                 if (split.length>4) {
                                     element.setLabel(itemCode);
