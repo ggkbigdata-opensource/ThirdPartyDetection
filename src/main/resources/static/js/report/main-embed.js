@@ -107,6 +107,12 @@ $(function() {
             btn : [ '导入', '关闭' ],
             yes : function(index, layero) {
             	if($('#inputfile1')[0].files.length > 0){
+            		for(var q=0;q<$('#inputfile1')[0].files.length;q++){
+            			if($('#inputfile1')[0].files[q].name.indexOf('.pdf') == -1){
+            				layer.alert('存在不正确的格式文件，请选择PDF文件导入！');
+            				return;
+            			}
+            		}
             		layer.msg("正在导入检测报告，请稍候...",{
             			shade:0.5,
             			shadeClose: false,
