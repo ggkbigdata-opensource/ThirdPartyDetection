@@ -21,7 +21,7 @@ public class ApplicationInitializer implements CommandLineRunner {
     
     @Override
     public void run(String... arg0) throws Exception {
-        // TODO Auto-generated method stub
+        //  Auto-generated method stub
         if(userRepo.findAll().size()==0){
             CrUser initUser = new CrUser();
             initUser.setUserName(defaultUser);
