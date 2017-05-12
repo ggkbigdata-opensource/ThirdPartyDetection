@@ -605,7 +605,7 @@ public class CheckReportServiceImpl implements CheckReportService {
     }
 
     @Override
-    public void uploadRiskLevel(MultipartFile file) throws IOException, InvalidFormatException {
+    public void uploadRiskLevel(MultipartFile file) throws InvalidFormatException, IOException   {
         // TODO Auto-generated method stub
        // InputStream in = file.getInputStream();
         //HSSFWorkbook wb = new HSSFWorkbook(in);

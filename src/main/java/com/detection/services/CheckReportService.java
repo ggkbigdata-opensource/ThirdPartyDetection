@@ -96,7 +96,7 @@ public interface CheckReportService {
 
     public String getOriginalName(String reportNum);
     
-    public void uploadRiskLevel(MultipartFile file) throws IOException, InvalidFormatException;
+    public void uploadRiskLevel(MultipartFile file) throws  Exception;
 
     void deleteReportRecordByReportNum(String reportNum);
 

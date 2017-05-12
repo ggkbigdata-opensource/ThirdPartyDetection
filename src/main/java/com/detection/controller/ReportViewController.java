@@ -28,6 +28,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -342,7 +343,22 @@ public class ReportViewController {
             result.put("result", true);
             result.put("msg", "导入成功");
             return result;
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
+
+            result.put("result", false);
+            result.put("msg", "导入失败，请检查文件内容格式是否正确");e.printStackTrace();
+            return result;
+        }catch (InvalidFormatException e) {
+
+            result.put("result", false);
+            result.put("msg", "导入失败，请检查文件内容格式是否正确");e.printStackTrace();
+            return result;
+        }catch (IOException e) {
+
+            result.put("result", false);
+            result.put("msg", "导入失败，请检查文件内容格式是否正确");e.printStackTrace();
+            return result;
+        }catch (Exception e) {
 
             result.put("result", false);
             result.put("msg", "导入失败，请检查文件内容给格式是否正确");e.printStackTrace();
