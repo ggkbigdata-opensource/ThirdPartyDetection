@@ -170,7 +170,7 @@ public class ReportViewController {
         List<String> uploadReports = new ArrayList<String>();
         for (MultipartFile multipartFile : files) {
             InputStream inputStream = multipartFile.getInputStream();
-
+            String fileName = multipartFile.getOriginalFilename();
             PDDocument pdfDocument = PDDocument.load(inputStream);
             int lastPage = pdfDocument.getNumberOfPages();
             PDFTextStripper stripper = new PDFTextStripper();
@@ -182,7 +182,17 @@ public class ReportViewController {
             int eIndex = 0;
             String end = "建筑消防设施检测报告";
             eIndex = allText.indexOf(end);
-            String paragraph = allText.substring(0, eIndex);
+            String paragraph;
+           
+            try {
+                paragraph = allText.substring(0, eIndex);
+            } catch (Exception e) {
+                result.put("result", false);
+                result.put("status", false);
+                result.put("msg", "文件为："+fileName+"的文件内容格式格式不正确");
+                e.printStackTrace();
+                return result;
+            }
 
             
             String osName = System.getProperty("os.name");
@@ -199,7 +209,7 @@ public class ReportViewController {
             Pattern reportNumP = Pattern.compile("\\d{2}[a-zA-Z]{2}(A|B)(\\d{3})\\s*$");
 
             String reportNum =null;
-            String fileName = multipartFile.getOriginalFilename();
+            
             for (int i = 0; i < lines.length; i++) {
                 String line = lines[i];
                 Matcher m = reportNumP.matcher(line);
@@ -318,9 +328,28 @@ public class ReportViewController {
     }
 
     @RequestMapping(value = "/uploadRiskLevel", method = RequestMethod.POST)
-    public String uploadRiskLevel(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request)
+    @ResponseBody
+    public JSONObject uploadRiskLevel(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request)
             throws Exception {
-        String result = "redirect:main";
+
+        JSONObject result = new JSONObject();
+        
+        
+        try {
+            for (MultipartFile file : files) {
+                checkReportService.uploadRiskLevel(file);
+            }
+            result.put("result", true);
+            result.put("msg", "导入成功");
+            return result;
+        } catch (Exception e) {
+
+            result.put("result", false);
+            result.put("msg", "导入失败，请检查文件内容给格式是否正确");e.printStackTrace();
+            return result;
+        }
+        
+/*        String result = "redirect:main";
         int permittedRole = 1;
         if (!authService.isLoggedin(request)) {
             result = "redirect:/";
@@ -334,7 +363,7 @@ public class ReportViewController {
             }
         }
         return result;
-    }
+*/    }
 
     @RequestMapping(value = { "/fetchReport/{reportNum}" }, method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> fetchReportFile(@PathVariable("reportNum") String reportNum,
