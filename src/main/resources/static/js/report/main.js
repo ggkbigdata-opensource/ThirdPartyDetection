@@ -16,7 +16,7 @@ function deleteReportByReportNum(reportNum) {
                 else{
                     layer.msg("删除失败：" + data.message);
                 }
-                setTimeout(function(){self.location = 'main';},500);
+                setTimeout(function(){self.location = 'mainEmbed';},500);
             });
         },
         btn2 : function(index, layero) {
@@ -107,6 +107,12 @@ $(function() {
             btn : [ '导入', '关闭' ],
             yes : function(index, layero) {
             	if($('#inputfile1')[0].files.length > 0){
+            		for(var q=0;q<$('#inputfile1')[0].files.length;q++){
+            			if($('#inputfile1')[0].files[q].name.indexOf('.pdf') == -1){
+            				layer.alert('存在不正确的格式文件，请选择PDF文件导入！');
+            				return;
+            			}
+            		}
             		layer.msg("正在导入检测报告，请稍候...",{
             			shade:0.5,
             			shadeClose: false,
@@ -167,6 +173,8 @@ $(function() {
             	            						}else{
             	            							layer.alert(resultAgain.msg);
             	            						}
+            	            					}else{
+            	            						layer.alert('网络有误，请刷新页面！');
             	            					}
             	            				}
             	            			},function(){
@@ -204,8 +212,47 @@ $(function() {
             area : '650px',
             btn : [ '导入', '关闭' ],
             yes : function(index, layero) {
-                layer.msg("正在导入评定结果，请稍候...");
-                $("#import-risk-level-dialog").submit();
+            	if($('#inputfile2')[0].files.length > 0){
+            		for(var i=0;i<$('#inputfile2')[0].files.length;i++){
+            			if($('#inputfile2')[0].files[i].name.indexOf('.xls') == -1 && $('#inputfile2')[0].files[i].name.indexOf('.xlsx') == -1) {
+            				layer.alert('存在不正确的格式文件，请选择excel文件导入！');
+            				return;
+            			}
+            		}
+            		layer.msg("正在导入检测报告，请稍候...",{
+            			shade:0.5,
+            			shadeClose: false,
+            			time: 0
+            		});
+                   /* $("#import-risk-level-dialog").submit();*/
+                    var fileObj = document.getElementById("import-risk-level-dialog")[0].files; // 获取文件对象
+    	            var FileController = "/third/uploadRiskLevel";                    // 接收上传文件的后台地址 
+    	            var form = new FormData();                                    // FormData 对象
+    	            for(var i=0;i<fileObj.length;i++){
+    	            	form.append("files", fileObj[i]);                            // 文件对象
+    	            }
+    	            var xhr = new XMLHttpRequest();                              // XMLHttpRequest 对象
+    	            xhr.open("post", FileController, true);
+    	            xhr.send(form);
+    	            xhr.onreadystatechange = function(data){
+    	            	console.log(data);
+    	            	if(xhr.readyState ==4&& xhr.status==200){
+    	            		var result = eval('(' + data.target.response + ')');
+    	            		console.log(result);
+    	            		layer.confirm(result.msg,{
+	            				btn: ['确定'],
+	            				shade:0.5,
+	            				shadeClose: false
+	            			},function(){
+	            				location.reload();
+	            			});
+    	            	}else{
+    	            		layer.alert('网络有误，请刷新页面！');
+    	            	}
+    	            }
+            	}else{
+            		layer.alert('请选择导入文件！');
+            	}
             },
             btn2 : function(index, layero) {
 
