@@ -34,9 +34,7 @@ function dbclick(id,name){
 }
 function getId(id){
 	var na = document.getElementsByName(id)[0];
-	console.log(na.value);
 	$.post('updateStreet',{'reportNum':id,'streetName':na.value},function(result){
-		console.log(result);
 		if(result.result == true){
 			location.reload();
 		}else{
@@ -131,7 +129,6 @@ $(function() {
             	            xhr.onreadystatechange = function(data){
             	            	if(xhr.readyState ==4&& xhr.status==200){
             	            		var result = eval('(' + data.target.response + ')');
-            	            		console.log(result);
             	            		if(!result.result && !result.status){
             	            			layer.alert(result.msg);
             	            			return;
@@ -235,10 +232,8 @@ $(function() {
     	            xhr.open("post", FileController, true);
     	            xhr.send(form);
     	            xhr.onreadystatechange = function(data){
-    	            	console.log(data);
     	            	if(xhr.readyState ==4&& xhr.status==200){
     	            		var result = eval('(' + data.target.response + ')');
-    	            		console.log(result);
     	            		layer.confirm(result.msg,{
 	            				btn: ['确定'],
 	            				shade:0.5,
