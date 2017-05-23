@@ -57,7 +57,7 @@ public class PDFParserServiceImpl implements PDFParserService {
         int sIndex = 0;
         int eIndex = 0;
         {
-            // 
+            //
             String end = "建筑消防设施检测报告";
             eIndex = allText.indexOf(end);
             String paragraph = allText.substring(0, eIndex);
@@ -72,7 +72,7 @@ public class PDFParserServiceImpl implements PDFParserService {
 
         }
         {
-            //  first part single item result
+            // first part single item result
             String start = "单项评定结果";
             String end = "检测结论说明";
             sIndex = allText.indexOf(start) + start.length();
@@ -155,7 +155,7 @@ public class PDFParserServiceImpl implements PDFParserService {
         Pattern projectAddress = Pattern.compile("项目地址(:|：| )\\s*(.*)\\s*$");
         Pattern agentName = Pattern.compile("委托单位\\s*(.*)\\s*$");
         Pattern qaName = Pattern.compile("检测单位(:|：| )\\s*(.*)\\s*$");
-        //Pattern reportNum = Pattern.compile("天消\\s*([a-z0-9A-Z]{8})\\s*$");
+        // Pattern reportNum = Pattern.compile("天消\\s*([a-z0-9A-Z]{8})\\s*$");
         Pattern reportNum = Pattern.compile("\\d{2}[a-zA-Z]{2}(A|B)(\\d{3})\\s*$");
         Pattern qaAddress = Pattern.compile("检测单位地址(:|：| )\\s*(.*)\\s*$");
         Pattern contactTel = Pattern.compile("电\\s+话(:|：| )\\s*(.*)\\s*$");
@@ -197,10 +197,10 @@ public class PDFParserServiceImpl implements PDFParserService {
                 continue;
             }
             m = reportNum.matcher(line);
-            String reportN=null;
+            String reportN = null;
             if (m.find()) {
-            	reportN = line.replace(" ", "").trim();
-	            reportN = reportN.substring(reportN.indexOf("天消"));
+                reportN = line.replace(" ", "").trim();
+                reportN = reportN.substring(reportN.indexOf("天消"));
                 cover.setReportNum(reportN.trim());
                 globalReportNum = cover.getReportNum();
                 continue;
@@ -364,23 +364,30 @@ public class PDFParserServiceImpl implements PDFParserService {
                 String[] lines = tempStr.split(getLineEndByOS());
                 tempStr = "";
                 for (String line : lines) {
-                    if(line.replaceAll(" |"+getLineEndByOS(), "").equalsIgnoreCase(" ")){
+                    if (line.replaceAll(" |" + getLineEndByOS(), "").equalsIgnoreCase(" ")) {
                         System.out.println("blank line");
                     }
-                    if (!line.replaceAll(" |"+getLineEndByOS(), "").equalsIgnoreCase("")&&!line.replaceAll(" |"+getLineEndByOS(), "").contains("广东华健") && !line.replaceAll(" |"+getLineEndByOS(), "").contains("广东建筑消防") && !line.replaceAll(" |"+getLineEndByOS(), "").contains("清大安质")
-                            && !line.replaceAll(" |"+getLineEndByOS(), "").contains("有限公司") && !line.replaceAll(" |"+getLineEndByOS(), "").contains("天河区开展") && !line.replaceAll(" |"+getLineEndByOS(), "").contains("消防设施检测项目技术咨询报告")
-                            && !line.replaceAll(" |"+getLineEndByOS(), "").contains("工程编号：") && !line.replaceAll(" |"+getLineEndByOS(), "").contains("工程编号:") && !line.replaceAll(" |"+getLineEndByOS(), "").contains("GUANGDONGHUAJIAN")) {
+                    if (!line.replaceAll(" |" + getLineEndByOS(), "").equalsIgnoreCase("")
+                            && !line.replaceAll(" |" + getLineEndByOS(), "").contains("广东华健")
+                            && !line.replaceAll(" |" + getLineEndByOS(), "").contains("广东建筑消防")
+                            && !line.replaceAll(" |" + getLineEndByOS(), "").contains("清大安质")
+                            && !line.replaceAll(" |" + getLineEndByOS(), "").contains("有限公司")
+                            && !line.replaceAll(" |" + getLineEndByOS(), "").contains("天河区开展")
+                            && !line.replaceAll(" |" + getLineEndByOS(), "").contains("消防设施检测项目技术咨询报告")
+                            && !line.replaceAll(" |" + getLineEndByOS(), "").contains("工程编号：")
+                            && !line.replaceAll(" |" + getLineEndByOS(), "").contains("工程编号:")
+                            && !line.replaceAll(" |" + getLineEndByOS(), "").contains("GUANGDONGHUAJIAN")) {
                         tempStr = tempStr + line + getLineEndByOS();
                     }
                 }
-                tempStr = tempStr.substring(0,tempStr.lastIndexOf(getLineEndByOS()));
+                tempStr = tempStr.substring(0, tempStr.lastIndexOf(getLineEndByOS()));
                 Matcher importantGradeMatcher = importantGradePattern.matcher(tempStr);
                 Matcher regularMatcher = regularPattern.matcher(tempStr);
                 Matcher unqualifiedItemMatcher = unqualifiedItemPattern.matcher(tempStr);
                 if (importantGradeMatcher.find() && regularMatcher.find() && unqualifiedItemMatcher.find()) {
-                	int index = importantGradeMatcher.start();
-                    String checkItem = tempStr.substring(itemNameStartIdx, index).trim()
-                            .replaceAll(getLineEndByOS(), "");
+                    int index = importantGradeMatcher.start();
+                    String checkItem = tempStr.substring(itemNameStartIdx, index).trim().replaceAll(getLineEndByOS(),
+                            "");
                     String importantGrade = importantGradeMatcher.group(2);
                     String regular = tempStr.substring(regularMatcher.end(), unqualifiedItemMatcher.start()).trim()
                             .replaceAll(getLineEndByOS(), "");
@@ -470,32 +477,27 @@ public class PDFParserServiceImpl implements PDFParserService {
         List<Result> rs = new ArrayList<Result>();
         String regExp = getLineEndByOS2();
         String text = paragraph.replaceAll(regExp, " ");
-        
-        Pattern elementPattern = Pattern.compile("(\\d+\\.\\d+\\.\\d+).*?\\s+?(A|B|C)\\s+?.*?\\s+?(\\d+?|/)\\s+?(\\d+?|/)\\s+?");
-//        Pattern elementPattern = Pattern.compile("(\\d+\\.\\d+\\.\\d+).*");
+
+        Pattern elementPattern = Pattern
+                .compile("(\\d+\\.\\d+\\.\\d+).*?\\s+?(A|B|C)\\s+?.*?\\s+?(\\d+?|/)\\s+?(\\d+?|/)\\s+?");
+        // Pattern elementPattern = Pattern.compile("(\\d+\\.\\d+\\.\\d+).*");
         Matcher elementMatcher = elementPattern.matcher(text);
         while (elementMatcher.find()) {
-            
-    /*        String group = elementMatcher.group();
-            group.replace("  ", " ");
-            String[] value = group.split(" ");
-            
-            if (value.length>3) {
-                Result element = new Result();
-                element.setLabel(value[0]);
-                //element.setLevel(value[value.length-3]);
-                element.setValue1(value[value.length-3]);
-                element.setValue2(value[value.length-1]);
-                if (!element.getValue1().equals("/") && !element.getValue1().equals("0")) {
-                    rs.add(element);
-                }
-            }
-            
-            */
-           
-            
-            
-            
+
+            /*
+             * String group = elementMatcher.group(); group.replace("  ", " ");
+             * String[] value = group.split(" ");
+             * 
+             * if (value.length>3) { Result element = new Result();
+             * element.setLabel(value[0]);
+             * //element.setLevel(value[value.length-3]);
+             * element.setValue1(value[value.length-3]);
+             * element.setValue2(value[value.length-1]); if
+             * (!element.getValue1().equals("/") &&
+             * !element.getValue1().equals("0")) { rs.add(element); } }
+             * 
+             */
+
             Result element = new Result();
             element.setLabel(elementMatcher.group(1));
             element.setLevel(elementMatcher.group(2));
@@ -543,47 +545,47 @@ public class PDFParserServiceImpl implements PDFParserService {
             if ("A".contains(group)) {
                 Pattern pat = Pattern.compile(lineEndByOS + "(A)\\s*?");
                 Matcher mat = pat.matcher(paragraph);
-                List<Integer> indexs = new ArrayList<Integer>();//存储截取的角标
+                List<Integer> indexs = new ArrayList<Integer>();// 存储截取的角标
                 while (mat.find()) {
-                    indexs.add(mat.start()+1);
+                    indexs.add(mat.start() + 1);
                 }
-                //截取数据
-                for (int i = 0; i < indexs.size()-1; i++) {
-                    String all = paragraph.substring(indexs.get(i), indexs.get(i+1));
+                // 截取数据
+                for (int i = 0; i < indexs.size() - 1; i++) {
+                    String all = paragraph.substring(indexs.get(i), indexs.get(i + 1));
                     String[] values = all.split(lineEndByOS);
-                    //获取项目编号
+                    // 获取项目编号
                     Pattern codePattern = Pattern.compile(lineEndByOS + "(\\d+)\\s*");
                     Matcher codeMatcher = codePattern.matcher(all);
-                    
+
                     if (codeMatcher.find()) {
-                        itemCode=codeMatcher.group(1);
+                        itemCode = codeMatcher.group(1);
                     }
-                    
+
                     for (String value : values) {
                         String val = value.replace("\r\n", "").replace("\r", "").replace("\n", "");
-                        Pattern codePat = Pattern.compile("(\\d+|A|B|C)\\s*");//必须数字开头或是字母开头
-                        String substring = val.substring(0,1);
+                        Pattern codePat = Pattern.compile("(\\d+|A|B|C)\\s*");// 必须数字开头或是字母开头
+                        String substring = val.substring(0, 1);
                         Matcher codeMat = codePat.matcher(substring);
                         if (codeMat.find()) {
                             String[] split = value.split(" ");
                             Result element = new Result();
-                            if (split.length>2) {
-                                if (split.length>4) {
+                            if (split.length > 2) {
+                                if (split.length > 4) {
                                     element.setLabel(itemCode);
                                     element.setName(split[1]);
-                                    element.setLevel(split[split.length-3]);
-                                    element.setValue1(split[split.length-2]);
-                                    element.setValue2(split[split.length-1]);
-                                }else if (split.length==4) {
+                                    element.setLevel(split[split.length - 3]);
+                                    element.setValue1(split[split.length - 2]);
+                                    element.setValue2(split[split.length - 1]);
+                                } else if (split.length == 4) {
                                     element.setLabel(itemCode);
-                                    element.setLevel(split[split.length-3]);
-                                    element.setValue1(split[split.length-2]);
-                                    element.setValue2(split[split.length-1]);
-                                }else{
+                                    element.setLevel(split[split.length - 3]);
+                                    element.setValue1(split[split.length - 2]);
+                                    element.setValue2(split[split.length - 1]);
+                                } else {
                                     element.setLabel(itemCode);
-                                    element.setLevel(split[split.length-3]);
-                                    element.setValue1(split[split.length-2]);
-                                    element.setValue2(split[split.length-1]);
+                                    element.setLevel(split[split.length - 3]);
+                                    element.setValue1(split[split.length - 2]);
+                                    element.setValue2(split[split.length - 1]);
                                 }
                                 if (!element.getValue1().equals("/") && !element.getValue1().equals("0")) {
                                     rs.add(element);
@@ -593,7 +595,7 @@ public class PDFParserServiceImpl implements PDFParserService {
                     }
                 }
                 break;
-            }else {
+            } else {
                 itemCode = itemMatcher.group(1);
                 if (itemMatcher.find()) {
                     findFlag = true;
@@ -611,7 +613,7 @@ public class PDFParserServiceImpl implements PDFParserService {
     }
 
     private int getSingleItemResultOfFirstPart(String strToParse, String itemCode, List<Result> rs) {
-        //  Auto-generated method stub
+        // Auto-generated method stub
         Pattern elementPattern = Pattern.compile("(A|B|C)\\s+(\\d+|/)\\s+(\\d+|/)");
         Matcher elementMatcher = elementPattern.matcher(strToParse);
         char itemIndex = 'A' - 1;
@@ -633,7 +635,7 @@ public class PDFParserServiceImpl implements PDFParserService {
         }
         return strToParse.length();
     }
-    
+
     private String getLineEndByOS() {
         String osName = System.getProperty("os.name");
         String result;
@@ -651,7 +653,7 @@ public class PDFParserServiceImpl implements PDFParserService {
         String osName = System.getProperty("os.name");
         String result;
         if (osName.contains("win") || osName.contains("Win")) {
-//            result = "\r\n[^(\\d+\\.\\d+\\.\\d+)]{1}";
+            // result = "\r\n[^(\\d+\\.\\d+\\.\\d+)]{1}";
             result = "\r\n";
         } else if (osName.contains("Linux") || osName.contains("linux")) {
             result = "\n";

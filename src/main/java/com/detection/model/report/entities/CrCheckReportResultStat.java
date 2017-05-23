@@ -22,11 +22,11 @@ import javax.persistence.Id;
 
 @Entity
 public class CrCheckReportResultStat {
-    
+
     @Id
     @GeneratedValue
     private int id;
-    //private String reportNum;
+    // private String reportNum;
     private String itemCode;
     private String itemName;
     private int checkNum;
@@ -34,9 +34,9 @@ public class CrCheckReportResultStat {
     private int unqualifiedNum;
     private Date optTime;
     private String reportNum;
-    
-    public CrCheckReportResultStat(){
-    	
+
+    public CrCheckReportResultStat() {
+
     }
 
     public int getId() {
@@ -102,8 +102,5 @@ public class CrCheckReportResultStat {
     public void setReportNum(String reportNum) {
         this.reportNum = reportNum;
     }
-    
-    
 
 }
-

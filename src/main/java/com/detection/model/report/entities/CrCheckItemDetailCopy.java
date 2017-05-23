@@ -108,5 +108,4 @@ public class CrCheckItemDetailCopy {
         this.reportNum = reportNum;
     }
 
-
 }

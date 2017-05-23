@@ -17,9 +17,9 @@ public class UnqualifiedCheckPoint {
     @GeneratedValue
     private int id;
     private String checkPoint;
-    
-    public UnqualifiedCheckPoint(){
-        
+
+    public UnqualifiedCheckPoint() {
+
     }
 
     public int getId() {
@@ -37,6 +37,5 @@ public class UnqualifiedCheckPoint {
     public void setCheckPoint(String checkPoint) {
         this.checkPoint = checkPoint;
     }
-    
-    
+
 }

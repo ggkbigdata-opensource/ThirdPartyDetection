@@ -13,7 +13,7 @@ import java.util.Date;
  */
 
 public class EncryptionHelper {
-    
+
     public static String encryptStringByMD5(String strToEncrypt) throws Exception {
 
         MessageDigest md = null;
@@ -29,7 +29,7 @@ public class EncryptionHelper {
         }
         return out;
     }
-    
+
     public static String encryptBytesByMD5(String strToEncrypt) throws Exception {
 
         MessageDigest md = null;
@@ -45,17 +45,17 @@ public class EncryptionHelper {
         }
         return out;
     }
-    
-    public static String encryptFileNameByMD5(String fileName) throws Exception{
 
-        return encryptStringByMD5(fileName)+"."+getExtension(fileName);
+    public static String encryptFileNameByMD5(String fileName) throws Exception {
+
+        return encryptStringByMD5(fileName) + "." + getExtension(fileName);
     }
-    
-    public static String getUserToken(String userName, Date updateTime) throws Exception{
+
+    public static String getUserToken(String userName, Date updateTime) throws Exception {
         String concateStr = userName + updateTime.toString();
         return encryptStringByMD5(concateStr);
     }
-    
+
     private static String byte2hex(byte[] b) {
         String hs = "";
         String stmp = "";
@@ -69,14 +69,14 @@ public class EncryptionHelper {
         }
         return hs.toUpperCase();
     }
-    
-    private static String getExtension(String filename) {   
-        if ((filename != null) && (filename.length() > 0)) {   
-            int dot = filename.lastIndexOf('.');   
-            if ((dot >-1) && (dot < (filename.length() - 1))) {   
-                return filename.substring(dot + 1);   
-            }   
-        }   
-        return filename;   
+
+    private static String getExtension(String filename) {
+        if ((filename != null) && (filename.length() > 0)) {
+            int dot = filename.lastIndexOf('.');
+            if ((dot > -1) && (dot < (filename.length() - 1))) {
+                return filename.substring(dot + 1);
+            }
+        }
+        return filename;
     }
 }

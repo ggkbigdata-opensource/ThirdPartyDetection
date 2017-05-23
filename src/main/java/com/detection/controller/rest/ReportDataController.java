@@ -28,81 +28,75 @@ import com.detection.services.CheckReportService;
 @RestController
 @RequestMapping("report")
 public class ReportDataController {
-    
+
     @Autowired
     private CheckReportService checkReportService;
-    
+
     /**
      * @author lcc
      * @version 1.0
-     * @throws Exception 
-     * @function 处理风险评估报告责任提取码验证
-     * 校验reportNum、责任人dutyPerson和责任人电话dutyTel
-     * 返回校验token
+     * @throws Exception
+     * @function 处理风险评估报告责任提取码验证 校验reportNum、责任人dutyPerson和责任人电话dutyTel
+     *           返回校验token
      */
-    @RequestMapping(value = {"submitExtractCode" }, method = RequestMethod.GET)
-    public JSONObject submitExtractCode(@RequestParam String extracteCode, 
-            @RequestParam String ownerName, @RequestParam String dutyTel, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = { "submitExtractCode" }, method = RequestMethod.GET)
+    public JSONObject submitExtractCode(@RequestParam String extracteCode, @RequestParam String ownerName,
+            @RequestParam String dutyTel, HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
         JSONObject result = checkReportService.submitExtractCode(extracteCode, ownerName, dutyTel);
-        JSONObject finalResult  = new JSONObject();
+        JSONObject finalResult = new JSONObject();
         String token = result.getString("verifyToken");
         String dutyPerson = result.getString("dutyPerson");
-        if(dutyPerson!=null && token != null && dutyTel !=null){
+        if (dutyPerson != null && token != null && dutyTel != null) {
             session.setAttribute("ownerToken", token);
-            session.setAttribute("watermark", dutyPerson+dutyTel);
+            session.setAttribute("watermark", dutyPerson + dutyTel);
         }
         finalResult.put("code", result.getString("code"));
         finalResult.put("message", result.getString("message"));
         return finalResult;
     }
-    
-    @RequestMapping(value = {"getDetailReportInfo" }, method = RequestMethod.GET)
+
+    @RequestMapping(value = { "getDetailReportInfo" }, method = RequestMethod.GET)
     public JSONObject getDetailReportInfo(@RequestParam String verifyToken, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        String ownerToken = (String)session.getAttribute("ownerToken");
+        String ownerToken = (String) session.getAttribute("ownerToken");
         JSONObject result = new JSONObject();
-        if(verifyToken.equalsIgnoreCase(ownerToken)){
+        if (verifyToken.equalsIgnoreCase(ownerToken)) {
             result = checkReportService.getDetailReportInfo(verifyToken);
-        }
-        else{
+        } else {
             result.put("code", 201);
             result.put("message", "fail");
         }
         return result;
     }
-    
+
     /**
      * @author lcc
      * @version 1.0
-     * @function 获取评估项目概况表的摘要信息，包括：
-     * reportNum ： 项目号
-     * reportDate : 评估日期
-     * projectName : 被评估单位名称
-     * riskLevel : 极高水平（4）、高水平（3）、中等水平（2）、低水平（1） 
-     * code : 200 success, 201 failure
+     * @function 获取评估项目概况表的摘要信息，包括： reportNum ： 项目号 reportDate : 评估日期
+     *           projectName : 被评估单位名称 riskLevel : 极高水平（4）、高水平（3）、中等水平（2）、低水平（1）
+     *           code : 200 success, 201 failure
      */
-    @RequestMapping(value = {"getAbstractReportInfo" }, method = RequestMethod.POST)
-    public JSONObject getAbstractReportInfo(@RequestParam String reportNum){
+    @RequestMapping(value = { "getAbstractReportInfo" }, method = RequestMethod.POST)
+    public JSONObject getAbstractReportInfo(@RequestParam String reportNum) {
 
         return checkReportService.getAbstractReportInfo(reportNum);
     }
-    
+
     /**
      * @author lcc
      * @version 1.0
      * @function 根据token请求水印数据
-     * @param verifyToken  
+     * @param verifyToken
      */
-    @RequestMapping(value = {"getWatermark"}, method = RequestMethod.GET)
+    @RequestMapping(value = { "getWatermark" }, method = RequestMethod.GET)
     public JSONObject getWatermark(@RequestParam String verifyToken, HttpServletRequest request) {
         JSONObject obj = new JSONObject();
-        
-        obj.put("code", 200);   //false == 201
+
+        obj.put("code", 200); // false == 201
         obj.put("message", "succes");
         String watermark = (String) request.getSession().getAttribute("watermark");
         obj.put("watermark", watermark);
         return obj;
     }
 }
-

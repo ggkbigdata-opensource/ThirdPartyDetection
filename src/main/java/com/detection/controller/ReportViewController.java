@@ -107,9 +107,10 @@ public class ReportViewController {
         mv.addObject("userName", (String) request.getSession().getAttribute("userName"));
         return mv;
     }
+
     @RequestMapping(value = { "/mainEmbed" }, method = RequestMethod.GET)
     public ModelAndView mainEmbed(HttpServletRequest request) {
-        
+
         String result = "report/main-embedded";
         int permittedRole = 1;
         if (!authService.isLoggedin(request)) {
@@ -157,17 +158,18 @@ public class ReportViewController {
 
     @RequestMapping(value = "/uploadReport", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject uploadReport(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request) throws Exception {
-        
+    public JSONObject uploadReport(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request)
+            throws Exception {
+
         JSONObject result = new JSONObject();
-        
+
         List<String> reportNums = checkReportService.findAllReportNum();
-        
-        HashMap<String, String> map = new HashMap<String,String>();
+
+        HashMap<String, String> map = new HashMap<String, String>();
         for (String report : reportNums) {
             map.put(report, "1");
         }
-        
+
         List<String> uploadReports = new ArrayList<String>();
         for (MultipartFile multipartFile : files) {
             InputStream inputStream = multipartFile.getInputStream();
@@ -184,18 +186,17 @@ public class ReportViewController {
             String end = "建筑消防设施检测报告";
             eIndex = allText.indexOf(end);
             String paragraph;
-           
+
             try {
                 paragraph = allText.substring(0, eIndex);
             } catch (Exception e) {
                 result.put("result", false);
                 result.put("status", false);
-                result.put("msg", "文件为："+fileName+"的文件内容格式格式不正确");
+                result.put("msg", "文件为：" + fileName + "的文件内容格式格式不正确");
                 e.printStackTrace();
                 return result;
             }
 
-            
             String osName = System.getProperty("os.name");
             String system;
             if (osName.contains("win") || osName.contains("Win")) {
@@ -205,81 +206,83 @@ public class ReportViewController {
             } else {
                 system = "\r";
             }
-            
+
             String[] lines = paragraph.split(system);
             Pattern reportNumP = Pattern.compile("\\d{2}[a-zA-Z]{2}(A|B)(\\d{3})\\s*$");
 
-            String reportNum =null;
-            
+            String reportNum = null;
+
             for (int i = 0; i < lines.length; i++) {
                 String line = lines[i];
                 Matcher m = reportNumP.matcher(line);
                 if (m.find()) {
-                   reportNum = line.replace(" ", "").trim();
-                   if (!reportNum.contains("天消")||reportNum.length()<10) {
-                       result.put("result", false);
-                       result.put("status", false);
-                       result.put("msg", "文件为："+fileName+"的项目编号格式不正确");
-                       return result;
-                   }
-                  
+                    reportNum = line.replace(" ", "").trim();
+                    if (!reportNum.contains("天消") || reportNum.length() < 10) {
+                        result.put("result", false);
+                        result.put("status", false);
+                        result.put("msg", "文件为：" + fileName + "的项目编号格式不正确");
+                        return result;
+                    }
+
                 }
             }
-            
+
             reportNum = reportNum.substring(reportNum.indexOf("天消"));
-            
+
             uploadReports.add(reportNum);
         }
-        
+
         result.put("status", "success");
         String concent = "";
         for (String report : uploadReports) {
-            if (map.get(report)!=null) {
-                concent=concent+report+",";
+            if (map.get(report) != null) {
+                concent = concent + report + ",";
                 result.put("status", false);
                 result.put("result", true);
-            }else{
+            } else {
                 result.put("status", true);
                 result.put("status", true);
             }
         }
-        
+
         if (result.getBoolean("status")) {
             result = this.uploadReportAgain(files, request);
-        }else{
-            result.put("msg", "存在相同的文件，分别为"+concent+"是否覆盖，并全部导入？");
+        } else {
+            result.put("msg", "存在相同的文件，分别为" + concent + "是否覆盖，并全部导入？");
         }
-        
+
         return result;
 
     }
+
     @RequestMapping(value = "/uploadReport1", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject uploadReportForExcel(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request) throws Exception {
-        
+    public JSONObject uploadReportForExcel(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request)
+            throws Exception {
+
         JSONObject result = new JSONObject();
-        
+
         String fileName = null;
-        
+
         for (MultipartFile file : files) {
-         // 读取数据
+            // 读取数据
             try {
                 fileName = file.getOriginalFilename();
-                
+
                 Workbook workbook = WorkbookFactory.create(file.getInputStream());
 
                 Sheet sheetOne = workbook.getSheetAt(0);
-                
+
                 checkReportService.importExcel(sheetOne);
                 result.put("msg", "导入成功");
             } catch (Exception e) {
                 e.printStackTrace();
-                result.put("msg", fileName+e.getMessage());
+                result.put("msg", fileName + e.getMessage());
                 return result;
             }
         }
         return result;
-        
+
     }
 
     @RequestMapping(value = "/uploadReportAgain", method = RequestMethod.POST)
@@ -288,15 +291,15 @@ public class ReportViewController {
             throws Exception {
 
         JSONObject result = new JSONObject();
-        String fileName=null;
+        String fileName = null;
         try {
-            
-            //String result = "redirect:main";
+
+            // String result = "redirect:main";
             int permittedRole = 1;
             if (!authService.isLoggedin(request)) {
-               // result = "redirect:/";
+                // result = "redirect:/";
             } else if (!authService.isPermitted(request, permittedRole)) {
-               // result = "redirect:nopermissions";
+                // result = "redirect:nopermissions";
             } else if (!files.isEmpty()) {
                 // String ctxPath =
                 // request.getSession().getServletContext().getRealPath("");
@@ -321,7 +324,7 @@ public class ReportViewController {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            result.put("msg", "导入失败，请查看文件"+fileName+"的格式是否正确");
+            result.put("msg", "导入失败，请查看文件" + fileName + "的格式是否正确");
             result.put("result", false);
             result.put("status", false);
             return result;
@@ -334,8 +337,7 @@ public class ReportViewController {
             throws Exception {
 
         JSONObject result = new JSONObject();
-        
-        
+
         try {
             for (MultipartFile file : files) {
                 checkReportService.uploadRiskLevel(file);
@@ -346,47 +348,45 @@ public class ReportViewController {
         } catch (NullPointerException e) {
 
             result.put("result", false);
-            result.put("msg", "导入失败，请检查文件内容格式是否正确");e.printStackTrace();
+            result.put("msg", "导入失败，请检查文件内容格式是否正确");
+            e.printStackTrace();
             return result;
-        }catch (InvalidFormatException e) {
+        } catch (InvalidFormatException e) {
 
             result.put("result", false);
-            result.put("msg", "导入失败，请检查文件内容格式是否正确");e.printStackTrace();
+            result.put("msg", "导入失败，请检查文件内容格式是否正确");
+            e.printStackTrace();
             return result;
-        }catch (IOException e) {
+        } catch (IOException e) {
 
             result.put("result", false);
-            result.put("msg", "导入失败，请检查文件内容格式是否正确");e.printStackTrace();
+            result.put("msg", "导入失败，请检查文件内容格式是否正确");
+            e.printStackTrace();
             return result;
-        }catch (Exception e) {
+        } catch (Exception e) {
 
             result.put("result", false);
-            result.put("msg", "导入失败，请检查文件内容给格式是否正确");e.printStackTrace();
+            result.put("msg", "导入失败，请检查文件内容给格式是否正确");
+            e.printStackTrace();
             return result;
         }
-        
-/*        String result = "redirect:main";
-        int permittedRole = 1;
-        if (!authService.isLoggedin(request)) {
-            result = "redirect:/";
-        } else if (!authService.isPermitted(request, permittedRole)) {
-            result = "redirect:nopermissions";
-        } else if (!files.isEmpty()) {
-            Iterator<MultipartFile> it = files.iterator();
-            while (it.hasNext()) {
-                MultipartFile file = it.next();
-                checkReportService.uploadRiskLevel(file);
-            }
-        }
-        return result;
-*/    }
+
+        /*
+         * String result = "redirect:main"; int permittedRole = 1; if
+         * (!authService.isLoggedin(request)) { result = "redirect:/"; } else if
+         * (!authService.isPermitted(request, permittedRole)) { result =
+         * "redirect:nopermissions"; } else if (!files.isEmpty()) {
+         * Iterator<MultipartFile> it = files.iterator(); while (it.hasNext()) {
+         * MultipartFile file = it.next();
+         * checkReportService.uploadRiskLevel(file); } } return result;
+         */ }
 
     @RequestMapping(value = { "/fetchReport/{reportNum}" }, method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> fetchReportFile(@PathVariable("reportNum") String reportNum,
             HttpServletResponse response, HttpServletRequest request) throws IOException {
 
         HttpHeaders headers = new HttpHeaders();
-        reportNum="天消"+reportNum;
+        reportNum = "天消" + reportNum;
         String filePath = checkReportService.getReportURL(reportNum);
         int permittedRole = 1;
         if (authService.isLoggedin(request) && filePath != null && !filePath.equals("")
@@ -396,9 +396,13 @@ public class ReportViewController {
                 headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
                 headers.add("Content-Disposition", String.format("inline; filename=\"%s\"",
                         URLEncoder.encode(checkReportService.getOriginalName(reportNum), "UTF-8")));
+                // headers.add("Content-Disposition", String.format("inline;
+                // filename=\"%s\"",
+                // checkReportService.getOriginalName(reportNum), "UTF-8"));
                 headers.add("Pragma", "no-cache");
                 headers.add("Expires", "0");
-
+                String originalName = checkReportService.getOriginalName(reportNum);
+                String encode = URLEncoder.encode(checkReportService.getOriginalName(reportNum), "UTF-8");
                 return ResponseEntity.ok().headers(headers).contentLength(file.contentLength())
                         .contentType(MediaType.parseMediaType("application/pdf"))
                         .body(new InputStreamResource(file.getInputStream()));

@@ -15,7 +15,7 @@ import java.util.Date;
 public class DateUtil {
 
     public static String getYearMonthDateByHyphen(Date date) {
-        if(date == null){
+        if (date == null) {
             date = new Date();
         }
         SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd ");
@@ -24,7 +24,7 @@ public class DateUtil {
     }
 
     public static String getYearMonthDateByChinese(Date date) {
-        if(date == null){
+        if (date == null) {
             date = new Date();
         }
         SimpleDateFormat sdf = new SimpleDateFormat(" yyyy年MM月dd日 ");

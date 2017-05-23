@@ -38,18 +38,17 @@ public class BsBuildingInfo {
     private String useTime;
     private String maintenanceCompany;
     private String thirdPartyFireDetection;
-    
+
     private String remark;
     private String creator;
     private String createTime;
-    
+
     private Date importTime;
 
-    public BsBuildingInfo(){
-        
+    public BsBuildingInfo() {
+
     }
 
-    
     public Long getStreetId() {
         return streetId;
     }
@@ -57,8 +56,6 @@ public class BsBuildingInfo {
     public void setStreetId(Long streetId) {
         this.streetId = streetId;
     }
-
-
 
     public Long getId() {
         return id;
@@ -291,11 +288,13 @@ public class BsBuildingInfo {
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
+
     public Date getImportTime() {
         return importTime;
     }
+
     public void setImportTime(Date importTime) {
         this.importTime = importTime;
     }
-    
+
 }

@@ -8,103 +8,101 @@ import javax.persistence.GeneratedValue;
 
 @Entity
 public class EvaluationWeight {
-	
-	@Id
-	@GeneratedValue
-	private int Id;
-	
-	private String LayerName;
-	
-	private float ClassA;
-	
-	private float ClassB;
-	
-	private float ClassC;
-	
+
+    @Id
+    @GeneratedValue
+    private int Id;
+
+    private String LayerName;
+
+    private float ClassA;
+
+    private float ClassB;
+
+    private float ClassC;
+
     private Date createDate;
-    
+
     private Date modifyDate;
-    
+
     private String creatorName;
-    
+
     private String modifierName;
-	
-	public EvaluationWeight(){
-		
-	}
 
-	public int getId() {
-		return Id;
-	}
+    public EvaluationWeight() {
 
-	public void setId(int id) {
-		Id = id;
-	}
+    }
 
-	public String getLayerName() {
-		return LayerName;
-	}
+    public int getId() {
+        return Id;
+    }
 
-	public void setLayerName(String layerName) {
-		LayerName = layerName;
-	}
+    public void setId(int id) {
+        Id = id;
+    }
 
-	public float getClassA() {
-		return ClassA;
-	}
+    public String getLayerName() {
+        return LayerName;
+    }
 
-	public void setClassA(float classA) {
-		ClassA = classA;
-	}
+    public void setLayerName(String layerName) {
+        LayerName = layerName;
+    }
 
-	public float getClassB() {
-		return ClassB;
-	}
+    public float getClassA() {
+        return ClassA;
+    }
 
-	public void setClassB(float classB) {
-		ClassB = classB;
-	}
+    public void setClassA(float classA) {
+        ClassA = classA;
+    }
 
-	public float getClassC() {
-		return ClassC;
-	}
+    public float getClassB() {
+        return ClassB;
+    }
 
-	public void setClassC(float classC) {
-		ClassC = classC;
-	}
+    public void setClassB(float classB) {
+        ClassB = classB;
+    }
 
-	public Date getCreateDate() {
-		return createDate;
-	}
+    public float getClassC() {
+        return ClassC;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    public void setClassC(float classC) {
+        ClassC = classC;
+    }
 
-	public Date getModifyDate() {
-		return modifyDate;
-	}
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-	public void setModifyDate(Date modifyDate) {
-		this.modifyDate = modifyDate;
-	}
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-	public String getCreatorName() {
-		return creatorName;
-	}
+    public Date getModifyDate() {
+        return modifyDate;
+    }
 
-	public void setCreatorName(String creatorName) {
-		this.creatorName = creatorName;
-	}
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate;
+    }
 
-	public String getModifierName() {
-		return modifierName;
-	}
+    public String getCreatorName() {
+        return creatorName;
+    }
 
-	public void setModifierName(String modifierName) {
-		this.modifierName = modifierName;
-	}
-	
-	
-	
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
+
+    public String getModifierName() {
+        return modifierName;
+    }
+
+    public void setModifierName(String modifierName) {
+        this.modifierName = modifierName;
+    }
+
 }

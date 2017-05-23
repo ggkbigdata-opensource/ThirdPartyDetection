@@ -35,8 +35,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         int role = Integer.parseInt((String) session.getAttribute("role"));
         if (userName != null && token != null) {
             CrUser user = userRepo.findByUserName(userName);
-            if (user != null && isTokenValid(user,token)
-                    && role == permittedRole) {
+            if (user != null && isTokenValid(user, token) && role == permittedRole) {
                 result = true;
             }
         }
@@ -47,9 +46,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public boolean isTokenValid(CrUser user, String token) {
         // TODO Auto-generated method stub
         boolean result = false;
-        if(user.getToken().equalsIgnoreCase(token)){
+        if (user.getToken().equalsIgnoreCase(token)) {
             Date currentTime = new Date();
-            if((currentTime.getTime() - user.getTokenUpdateTime().getTime())<=1800000){
+            if ((currentTime.getTime() - user.getTokenUpdateTime().getTime()) <= 1800000) {
                 user.setTokenUpdateTime(currentTime);
                 result = true;
             }
@@ -64,9 +63,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         HttpSession session = request.getSession();
         String userName = (String) session.getAttribute("userName");
         String token = (String) session.getAttribute("token");
-        if (userName != null && token != null ) {
+        if (userName != null && token != null) {
             CrUser user = userRepo.findByUserName(userName);
-            if (user != null && isTokenValid(user,token)) {
+            if (user != null && isTokenValid(user, token)) {
                 result = true;
             }
         }
@@ -77,15 +76,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public String getUserRealName(HttpServletRequest request) {
         // TODO Auto-generated method stub
         String result = null;
-        String userName = (String)request.getSession().getAttribute("userName");
-        if(userName!=null && !userName.equals("")){
+        String userName = (String) request.getSession().getAttribute("userName");
+        if (userName != null && !userName.equals("")) {
             CrUser user = userRepo.findByUserName(userName);
-            if(user!=null){
+            if (user != null) {
                 result = user.getRealName();
             }
         }
         return result;
     }
-    
 
 }

@@ -16,21 +16,24 @@ import org.springframework.data.jpa.repository.Query;
 public interface BsBuildingInfoRepository extends JpaRepository<BsBuildingInfo, Long> {
 
     /**
-     * @createDate 2017年3月31日上午11:36:27 
+     * @createDate 2017年3月31日上午11:36:27
      * @author wangzhiwang
      * @param name
-     * @return 
+     * @return
      * @description
      */
-   /* @Query(value = "SELECT * FROM bs_building_info t where t.street_and_committee like %?1%", nativeQuery = true)
-    List<BsBuildingInfo> findByStreetAndCommittee(String name);
-*/
+    /*
+     * @Query(value =
+     * "SELECT * FROM bs_building_info t where t.street_and_committee like %?1%"
+     * , nativeQuery = true) List<BsBuildingInfo>
+     * findByStreetAndCommittee(String name);
+     */
     /**
-     * @createDate 2017年3月31日下午4:53:57 
+     * @createDate 2017年3月31日下午4:53:57
      * @author wangzhiwang
      * @param id
-     * @param name 
-     * @return 
+     * @param name
+     * @return
      * @description
      */
     @Query(value = "SELECT * FROM bs_building_info t where t.street_id = ?1 and t.property_company_name like %?2% order by t.import_time desc", nativeQuery = true)
@@ -39,26 +42,26 @@ public interface BsBuildingInfoRepository extends JpaRepository<BsBuildingInfo, 
     List<BsBuildingInfo> findByStreetId(Long id);
 
     /**
-     * @createDate 2017年4月18日上午10:29:21 
+     * @createDate 2017年4月18日上午10:29:21
      * @author wangzhiwang
      * @param name
-     * @return 
+     * @return
      * @description
      */
     @Query(value = "SELECT * FROM bs_building_info t where  t.property_company_name like %?1% order by t.import_time desc", nativeQuery = true)
     List<BsBuildingInfo> findByPropertyCompanyName(String name);
 
     /**
-     * @createDate 2017年4月20日上午9:27:01 
+     * @createDate 2017年4月20日上午9:27:01
      * @author wangzhiwang
      * @param arr
-     * @return 
+     * @return
      * @description
      */
     @Query(value = "SELECT * FROM bs_building_info t where  t.id in ?1", nativeQuery = true)
     List<BsBuildingInfo> findByIds(long[] arr);
 
     @Query(value = "SELECT * FROM bs_building_info t where  t.item_number like %?1%  limit 0,1", nativeQuery = true)
-	BsBuildingInfo findByItemNumber(String reportNum);
+    BsBuildingInfo findByItemNumber(String reportNum);
 
 }

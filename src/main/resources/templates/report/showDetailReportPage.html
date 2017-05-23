@@ -22,6 +22,12 @@
         <p class="small">CONSULTATIVE REPORTS</p>
         <section class="content">
             <h2 th:text="${result.riskLevel}"><span>评估结果：</span></h2>
+            
+            <section>
+                <p>等级说明:</p>
+<p>一、100分表示所排查的建筑消防设施项目完全合格;0分表示所排查的建筑消防设施项目均不合格，建筑设施隐患严重。</p>
+<p>二、等级1代表90分以上;等级2代表70-90分;等级3代表50-70分;等级4代表50以下。</p>
+            </section>
             <section>
                 <h3>结论：</h3>
                 <p th:text="${result.reportConclusion}"></p>

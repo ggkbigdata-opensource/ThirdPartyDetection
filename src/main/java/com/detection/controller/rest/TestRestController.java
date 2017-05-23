@@ -23,20 +23,20 @@ public class TestRestController {
 
     @Autowired
     private WeightConfigRepo weightConf;
-    
+
     @RequestMapping("/testWeightInit")
-    public String TestWeightInit(@RequestParam String configName){
+    public String TestWeightInit(@RequestParam String configName) {
         String result;
-        //set a configuration file name start with 'test' to load default values of weight.
-        //采用test开头的配置名，可以初始化一个
+        // set a configuration file name start with 'test' to load default
+        // values of weight.
+        // 采用test开头的配置名，可以初始化一个
         Pattern pattern = Pattern.compile("^test.*");
         WeightConfig conf;
-        if(pattern.matcher(configName).find()){
-            conf = new WeightConfig(configName,true);
+        if (pattern.matcher(configName).find()) {
+            conf = new WeightConfig(configName, true);
             result = "success initialized with default value";
-        }
-        else{
-            conf = new WeightConfig(configName,false);
+        } else {
+            conf = new WeightConfig(configName, false);
             result = "success initialized without default value";
         }
         weightConf.save(conf);

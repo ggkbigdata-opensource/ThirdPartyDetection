@@ -28,23 +28,25 @@ public class LayerOne {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "LayerOneId")
     private List<LayerTwo> layerTwo = new ArrayList<LayerTwo>();
-    
-    public LayerOne(){
-        
+
+    public LayerOne() {
+
     }
-    public LayerOne(String code){
+
+    public LayerOne(String code) {
         this.code = code;
     }
-    
-    public LayerOne(String code, float weight, int maxNum){
+
+    public LayerOne(String code, float weight, int maxNum) {
         this.code = code;
         this.weight = weight;
-        for(int i=1;i<=maxNum;i++){
-            String layerTwoCode = code+"."+i;
+        for (int i = 1; i <= maxNum; i++) {
+            String layerTwoCode = code + "." + i;
             layerTwo.add(new LayerTwo(layerTwoCode, weight));
         }
-        
+
     }
+
     public int getId() {
         return id;
     }

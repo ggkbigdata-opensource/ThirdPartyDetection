@@ -21,7 +21,7 @@ import com.detection.util.FormCheck;
  */
 @Service
 public class OwnerUnitServiceImpl implements OwnerUnitService {
-    
+
     @Autowired
     private OwnerUnitRepository ownerUnitRepo;
     @Value("${reportNumForDemo}")
@@ -32,20 +32,17 @@ public class OwnerUnitServiceImpl implements OwnerUnitService {
         JSONObject result = new JSONObject();
         int code = 201;
         String message = "Fail.";
-        
-        if(!FormCheck.isEmailValid(email)||!FormCheck.isPhoneValid(dutyTel))
-        {
+
+        if (!FormCheck.isEmailValid(email) || !FormCheck.isPhoneValid(dutyTel)) {
             code = 201;
             message = "Invalid phone or email.";
-        }
-        else{
-            if(ownerUnitRepo.findOne(dutyTel) != null){
+        } else {
+            if (ownerUnitRepo.findOne(dutyTel) != null) {
                 message = "This phone has been registered.";
-            }
-            else {
+            } else {
                 Date registTime = new Date();
                 CrOwnerUnit owner = new CrOwnerUnit();
-                
+
                 owner.setDutyTel(dutyTel);
                 owner.setDutyPerson(dutyPerson);
                 owner.setEmail(email);
@@ -55,7 +52,7 @@ public class OwnerUnitServiceImpl implements OwnerUnitService {
                 message = "success";
             }
         }
-        
+
         result.put("code", code);
         result.put("message", message);
 

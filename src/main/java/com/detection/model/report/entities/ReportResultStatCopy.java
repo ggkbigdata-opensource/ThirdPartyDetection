@@ -22,11 +22,11 @@ import javax.persistence.Id;
 
 @Entity
 public class ReportResultStatCopy {
-    
+
     @Id
     @GeneratedValue
     private int id;
-    //private String reportNum;
+    // private String reportNum;
     private String itemCode;
     private String itemName;
     private int checkNum;
@@ -34,9 +34,9 @@ public class ReportResultStatCopy {
     private int unqualifiedNum;
     private Date optTime;
     private String reportNum;
-    
-    public ReportResultStatCopy(){
-    	
+
+    public ReportResultStatCopy() {
+
     }
 
     public int getId() {
@@ -102,8 +102,5 @@ public class ReportResultStatCopy {
     public void setReportNum(String reportNum) {
         this.reportNum = reportNum;
     }
-    
-    
 
 }
-

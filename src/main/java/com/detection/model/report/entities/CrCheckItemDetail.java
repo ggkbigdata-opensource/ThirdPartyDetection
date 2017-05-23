@@ -99,5 +99,4 @@ public class CrCheckItemDetail {
         this.regular = regular;
     }
 
-
 }
