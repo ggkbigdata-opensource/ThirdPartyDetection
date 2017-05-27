@@ -481,18 +481,11 @@ public class CheckReportServiceImpl implements CheckReportService {
         String token = null;
         String dutyPerson = null;
         // CrOwnerUnit ownerUnit = ownerUnitRepo.findOne(dutyTel);
-        CrOwnerUnit ownerUnit = ownerUnitRepo.findByDutyTelAndOwnerNameLike(dutyTel.trim(), ownerName.trim(),extracteCode.trim());
+        CrOwnerUnit ownerUnit = ownerUnitRepo.findByDutyTelAndOwnerNameLike(dutyTel.trim(), ownerName.trim(),
+                extracteCode.trim());
         if (ownerUnit != null) {
             String reportNum = checkReportRepo.findReportNumByFetchCode(extracteCode.trim().toUpperCase());
-            
-            String[] nameAndTel = ownerUnit.getDutyTel().split(",");
-            for (int i = 0; i < nameAndTel.length; i++) {
-                if (nameAndTel[i].contains(dutyTel)) {
-                    dutyPerson = nameAndTel[i].split("-")[0];
-                }
-            }
-            
-            //dutyPerson = ownerUnit.getDutyPerson();
+            dutyPerson = ownerUnit.getDutyPerson();
             if (reportNum != null && !reportNum.equals("")) {
                 // String projectName =
                 // checkReportInfoRepo.findbyOwnerNameLikeProjectName(ownerName.trim());
