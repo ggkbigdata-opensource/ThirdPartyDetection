@@ -92,6 +92,14 @@ public class ReportViewController {
     public String index() {
         return "login";
     }
+    
+    
+    @RequestMapping(value = "/mainEmbeddedAnalyse" , method = RequestMethod.GET)
+    public String mainEmbeddedAnalyse(Long streetId,Long blockId,HttpServletRequest request) {
+        request.setAttribute("streetId", streetId);
+        request.setAttribute("blockId", blockId);
+        return "report/main-embeddedAnalyse";
+    }
 
     @RequestMapping(value = { "/main" }, method = RequestMethod.GET)
     public ModelAndView main(HttpServletRequest request) {
