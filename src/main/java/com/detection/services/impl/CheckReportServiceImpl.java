@@ -45,6 +45,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSONObject;
 import com.detection.config.LevelWeightProperties;
 import com.detection.config.RiskLevelBoundary;
+import com.detection.model.area.Block;
 import com.detection.model.area.Street;
 import com.detection.model.area.StreetRepository;
 import com.detection.model.building.BsBuildingInfo;
@@ -66,6 +67,7 @@ import com.detection.model.report.repositories.CheckItemDetailCopyRepository;
 import com.detection.model.report.repositories.CheckReportInfoRepository;
 import com.detection.model.report.repositories.CheckReportRepository;
 import com.detection.model.report.repositories.ReportResultStatCopyRepository;
+import com.detection.services.BlockService;
 import com.detection.services.CheckReportService;
 import com.detection.services.PDFParserService;
 import com.detection.util.DateUtil;
@@ -80,6 +82,8 @@ public class CheckReportServiceImpl implements CheckReportService {
     private CheckReportRepository checkReportRepo;
     @Autowired
     private OwnerUnitRepository ownerUnitRepo;
+    @Autowired
+    private BlockService blockService;
     @Autowired
     private PDFParserService pdfParser;
     @Autowired
@@ -423,6 +427,16 @@ public class CheckReportServiceImpl implements CheckReportService {
             item.put("detectDate", dectectDateStr);
             item.put("qaName", checkReportInfo.getQaName());
             item.put("contactTel", checkReportInfo.getContactTel());
+            item.put("score", checkReport.getScore());
+            item.put("blockName", checkReport.getBlockId());
+            Block block = blockService.findById(checkReport.getBlockId());
+            item.put("blockName", checkReport.getBlockId());
+            item.put("blockId", block.getId());
+            
+            //建筑
+            item.put("heigthType", checkReport.getHeightType());
+            item.put("buildingTypeBig", checkReport.getBuildingTypeBig());
+            
             dataList.add(item);
         }
         result.put("code", code);
