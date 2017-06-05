@@ -953,7 +953,7 @@ public class CheckReportServiceImpl implements CheckReportService {
         int level2=0;
         int level3=0;
         int level4=0;
-        if (reports!=null) {
+        if (reports!=null&&reports.size()>0) {
             List<String> reportNums = new ArrayList<String>();
             for (int i = 0; i < reports.size(); i++) {
                 reportNums.add(reports.get(i).getReportNum());
