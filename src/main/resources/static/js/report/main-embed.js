@@ -42,17 +42,105 @@ function getId(id){
 		}
 	});
 }
-$(function() {
+var searchDatas = {
+		streetId:'',
+		blockId:'',
+		riskLevel:'',
+		buildingTypeBig:'',
+		heigthType:''
+}
+function doSearch(value,name){
+	searchDatas = {
+		streetId: $("#streetId").combobox('getValue'),
+		blockId:$("#blockId").combobox('getValue'),
+		riskLevel:$("#riskLevel").combobox('getValue'),
+		buildingType:$("#buildingTypeBig").combobox('getValue'),
+		heightType:$("#heigthType").combobox('getValue')
+	}
+	$('#reportListTable').DataTable().destroy();
+    $('#reportListTable tbody').text('');
+    showReportList(searchDatas);
+}
+
+function doReset(){
+	$("#streetId").combobox('select', 0);
+	$("#blockId").combobox('setValue','');
+	$("#riskLevel").combobox('select', 0);
+	$("#buildingTypeBig").combobox('select', 0);
+	$("#heigthType").combobox('select', 0);
+	
+	$('#reportListTable').DataTable().destroy();
+	$('#reportListTable tbody').text('');
+	showReportList();
+	//初始化数据
+	searchDatas = {
+		streetId:'',
+		blockId:'',
+		riskLevel:'',
+		buildingType:'',
+		heightType:''
+	};
+}
+
+
+	var mainSId ='';
+	$.get("street/getAll",function(data){
+    	if(data){
+    		//用于查询
+    		streets = data;
+    		streets.unshift({id:'',name:'全部'})
+    		$('#streetId').combobox({
+    			data: streets,
+    			valueField: 'id',
+    			textField: 'name',
+    			onLoadSuccess: function () {
+    				if(mainSId != ''){
+    		    		for(var i=0;i<streets.length;i++){
+    		    			if(mainSId == streets[i].id){
+    		    				$('#streetId').combobox('select',i);
+    		    				break;
+    		    			}
+    		    		}
+    		    	}else{
+    		    		$('#streetId').combobox('select',0);
+    		    	}
+    			},
+    			onChange: function(){
+    				if($('#streetId').combobox('getValue') != ''){
+    					var strId = $('#streetId').combobox('getValue');
+    					$.get("block/findByStreetId?streetId=" + strId, function(data){
+    						var bData = data;
+    						if(bData.length>=0){
+    							$('#blockId').combobox({
+    								data: bData,
+    								valueField: 'id',
+    								textField:'name',
+    								onLoadSuccess: function(){
+    									$('#blockId').combobox('setValue','');
+    								}
+    							});
+    						}
+    						
+    					});
+    				}else{
+    					$('#blockId').combobox('setValue','');
+    					$('#blockId').combobox('clear');
+    				}
+    			}
+    		});
+    	}
+    });
     // show reportList
-    function showReportList() {
+    function showReportList(data) {
         var proxy = "getReportList";
         /*
          * var params = { 'projectName' : null, 'reportNum' : null,
          * 'projectAddress' : null, 'riskLevel' : null, 'qaName' : null, 'token' :
          * sessionStorage.getItem('token') }
          */
-        $.getJSON(
+        $.post(
             proxy,
+            data,
             function(result) {
                 if (null != result && 200 == result.code) {
                     var data = new Array();
@@ -60,15 +148,16 @@ $(function() {
                     for ( var d in result.data) {
                         var item = new Array()
                         item[0] = result.data[d].reportNum; // 报告编号
-                        item[1] = '<span style="cursor:pointer;" id="' + result.data[d].reportNum + '" ondblclick="dbclick(this.id,\'' + result.data[d].streetName + '\')">' + (result.data[d].streetName == null?'暂无':result.data[d].streetName) + '</span>'; // 街道名称
-                        item[2] = result.data[d].projectName; // 报告名称
-                        item[3] = result.data[d].projectAddress; // 项目地址
-                        item[4] = result.data[d].riskLevel; // 风险等级
-                        item[5] = result.data[d].detectDate;//检测时间
-                        item[6] = result.data[d].qaName; // 检测单位
-                        item[7] = result.data[d].contactTel; // 联系电话
+                        item[1] = '<span style="cursor:pointer;" onclick="toAnalyse(' + result.data[d].streetId + ')">' + result.data[d].streetName + '</span>'; // 街道名称
+                        item[2] = '<span style="cursor:pointer;" onclick="toAnalyse(' + result.data[d].streetId + ',' + result.data[d].blockId + ')">' + result.data[d].blockName + '</span>'; // 社区名称
+                        item[3] = result.data[d].projectName; // 报告名称
+                        item[4] = result.data[d].buildingTypeBig; // 建筑类型
+                        item[5] = result.data[d].heigthType; // 高度类型
+                        item[6] = result.data[d].projectAddress; // 项目地址
+                        item[7] = result.data[d].riskLevel; // 风险等级
+                        item[8] = result.data[d].score;//得分
                         var idNew = result.data[d].reportNum.substr(2,result.data[d].reportNum.length);
-                        item[8] = '<div class="table-toolbar tc">'
+                        item[9] = '<div class="table-toolbar tc">'
                                 + '<a class="evaluateReport" target="_blank" href="showAbstractReportPage?reportNum='
                                 + idNew
                                 + '">分析报告</a>;'
@@ -86,10 +175,20 @@ $(function() {
                             url : "css/datatables/Chinese.json"
                         }
                     });
+                    reportList = result.data;
                 }
             });
     }
 
+//跳转分析
+function toAnalyse(sId,bId){
+	window.location.href='main-embeddedAnalyse?streetId=' + sId + '&blockId=' + bId;
+}
+    
+    
+    
+    
+    
     // 文件上传
     $(":file").filestyle({
         icon : false,
@@ -104,6 +203,7 @@ $(function() {
             area : '650px',
             btn : [ '导入', '关闭' ],
             yes : function(index, layero) {
+            	var percent='0%';
             	if($('#inputfile1')[0].files.length > 0){
             		for(var q=0;q<$('#inputfile1')[0].files.length;q++){
             			if($('#inputfile1')[0].files[q].name.indexOf('.pdf') == -1 && $('#inputfile1')[0].files[q].name.indexOf('.PDF') == -1){
@@ -111,7 +211,7 @@ $(function() {
             				return;
             			}
             		}
-            		layer.msg("正在导入检测报告，请稍候...",{
+            		layer.msg("<span>正在导入检测报告，进度<span id='percent'>0%</span></span>",{
             			shade:0.5,
             			shadeClose: false,
             			time: 0
@@ -123,11 +223,28 @@ $(function() {
             	            for(var i=0;i<fileObj.length;i++){
             	            	form.append("files", fileObj[i]);                            // 文件对象
             	            }
-            	            var xhr = new XMLHttpRequest();                              // XMLHttpRequest 对象
+            	            var xhr = new XMLHttpRequest();
+            	            xhr.upload.addEventListener("progress", uploadProgress, false); 
+            	            // XMLHttpRequest 对象
             	            xhr.open("post", FileController, true);
             	            xhr.send(form);
+            	            function uploadProgress(evt) {  
+            	                if (evt.lengthComputable) {  
+            	                  var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+            	                  if(percentComplete > 5){
+            	                	  percent = (percentComplete-5).toString() + '%';
+            	                  }else{
+            	                	  percent = (percentComplete).toString() + '%';
+            	                  }
+            	                  $('#percent').text(percent);
+            	                }  
+            	                else {  
+            	                }  
+            	              }
             	            xhr.onreadystatechange = function(data){
             	            	if(xhr.readyState ==4&& xhr.status==200){
+            	            		percent = '100%';
+            	            		$('#percent').text(percent);
             	            		var result = eval('(' + data.target.response + ')');
             	            		if(!result.result && !result.status){
             	            			layer.alert(result.msg);
@@ -299,4 +416,3 @@ $(function() {
     $('.deleteReport').click(function() {
         console.info($(this).attr("reportNum"));
     });
-});
