@@ -6,131 +6,42 @@
         <div class="content-wrapper">
             <section class="main-content animated fadeInRight">
                 <div class="content">
+                	<input type="hidden" th:value=${streetId} id="streetSId">
+                	<input type="hidden" th:value=${blockId} id="blockSId">
+                	<input type="hidden" th:value=${report} id="report">
                 	<div class="section">
 						<div class="title">
-							<h1>数据查询</h1>
-						</div>
-						<div class="sectionMain">
-							<div class="filterBox searchBox">
-								<div class="filter-main oh">
+							<h1>建筑主体分析图</h1>
+							<div class="filterBox fr">
+								<div class="right-filter fr ml5">
+									<button class="btn btn-primary" >高级分析</button>
+									<button class="btn btn-primary" onclick="getReturn()">返回</button>
+								</div>
+								<div class="left-filter oh">
 									<div class="row row-sm-margin">
-										<div class="col-xs-fifth">
+										<div class="col-xs-4"></div>
+										<div class="col-xs-4">
 											<div class="filterTit fl">街道：</div>
 											<div class="filterType form-group oh">
-									        	<input id="streetId" class="easyui-combobox inputDiv-input form-control" data-options="editable:false" />
+									        	<input id="streetId" class="easyui-combobox inputDiv-input form-control" data-options="editable:false,width:100">
 											</div>
 										</div>
-										<div class="col-xs-fifth">
-											<div class="filterTit fl">社区名称：</div>
+										<div class="col-xs-4">
+											<div class="filterTit fl">社区：</div>
 											<div class="filterType form-group oh">
-									        	<input id="blockId" class="easyui-combobox form-control" data-options="editable:false" />
-											</div>
-										</div>
-										<div class="col-xs-fifth">
-											<div class="filterTit fl">危险等级：</div>
-											<div class="filterType form-group oh">
-									        	<input id="riskLevel" class="easyui-combobox inputDiv-input form-control" data-options="editable:false,valueField:'value',
-									                textField: 'label',
-									                data: [
-									                	{
-									                        label: '全部',
-									                        value: ''
-									                	},
-									                	{
-									                   		label: '危险等级1',
-									                        value: '1'
-									                    },{
-									                        label: '危险等级2',
-									                        value: '2'
-									                	},{
-									                        label: '危险等级3',
-									                        value: '3'
-									                	},{
-									                        label: '危险等级4',
-									                        value: '4'
-									                	}]" />
-											</div>
-										</div>
-										<div class="col-xs-fifth">
-											<div class="filterTit fl">建筑类型：</div>
-											<div class="filterType form-group oh">
-									        	<input id="buildingTypeBig" class="easyui-combobox inputDiv-input form-control" data-options="editable:false,width:100,valueField: 'value',
-									                textField: 'label',
-									                data: [
-									                	{
-									                        label: '全部',
-									                        value: ''
-									                	},
-									                	{
-									                   		label: '住宅建筑',
-									                        value: '1'
-									                    },
-									                	{
-									                   		label: '党政机关、事业单位等行政办公',
-									                        value: '2'
-									                    },
-									                	{
-									                   		label: '图书、展览等文化设施建筑，学校科研院所等教育科研',
-									                        value: '3'
-									                    },
-									                	{
-									                   		label: '医院、幼儿园、寄宿制学校、养老院等特殊群体居住建筑',
-									                        value: '4'
-									                    },
-									                	{
-									                   		label: '商场、市场、超市、餐饮、宾馆酒店等商业建筑',
-									                        value: '5'
-									                    },
-									                	{
-									                   		label: '金融、保险等综合性办公建筑',
-									                        value: '6'
-									                    },
-									                	{
-									                   		label: '电影院、网吧、歌舞厅等公共娱乐建筑',
-									                        value: '7'
-									                    },
-									                	{
-									                   		label: '物流仓储建筑',
-									                        value: '8'
-									                    },
-									                	{
-									                   		label: '火车站、码头、客运站、机场航站楼等交通枢纽建筑',
-									                        value: '9'
-									                    }]" />
-											</div>
-										</div>
-										<div class="col-xs-fifth">
-											<div class="filterTit fl">高度类型：</div>
-											<div class="filterType form-group oh">
-									        	<input id="heigthType" class="easyui-combobox inputDiv-input form-control" data-options="editable:false,width:100,valueField: 'value',
-									                textField: 'label',
-									                data: [
-									                	{
-									                        label: '全部',
-									                        value: ''
-									                	},
-									                	{
-									                   		label: '多层建筑',
-									                        value: '1'
-									                    },
-									                	{
-									                   		label: '高层建筑',
-									                        value: '2'
-									                    },
-									                	{
-									                   		label: '超高建筑',
-									                        value: '3'
-									                    }]" />
+									        	<input id="blockId" class="easyui-combobox inputDiv-input form-control" data-options="editable:false,width:100">
 											</div>
 										</div>
 									</div>
 								</div>
-								<div class="search-btn tc">
-									<div class="search-btn-tc">
-										<button class="btn btn-danger" onclick="doSearch()">查询</button>
-										<button class="btn btn-primary" onclick="doReset()">重置</button>
-									</div>
+							</div>
+						</div>
+						<div class="sectionMain borderBox">
+							<div class="chartBox" style="height:400px!important;">
+								<div class="chartTit">
+									<h1>天河区<span id="thisStreetBlock"></span>检测报告分析图</h1>
 								</div>
+								<div class="chartMain" style="height:300px;" id="reportAnalyse"></div>
 							</div>
 						</div>
 					</div>
@@ -139,23 +50,6 @@
                     <div class="section">
                         <div class="title">
                             <h1>检测报告</h1>
-                            <div class="toolbar fr">
-                                <!-- <a class="btn btn-default btn-batchdelete" th:href="@{javascript:;}">
-                                    <i class="iconfont icon-trash fl mr5"></i>批量删除
-                                </a> 
-                                <a class="btn btn-default btn-export" th:href="@{javascript:;}">
-                                    <i class="iconfont icon-export fl mr5"></i>导出报告
-                                </a> -->
-                                <a id="btn-import-check-report"
-                                    class="btn btn-default btn-import"
-                                    th:href="@{javascript:;}"> <i
-                                    class="iconfont icon-import fl mr5"></i>导入检测报告
-                                </a> <a id="btn-import-risk-level"
-                                    class="btn btn-default btn-import"
-                                    th:href="@{javascript:;}"> <i
-                                    class="iconfont icon-import fl mr5"></i>导入等级结果
-                                </a>
-                            </div>
                         </div>
                         <div class="sectionMain">
                             <table id="reportListTable"

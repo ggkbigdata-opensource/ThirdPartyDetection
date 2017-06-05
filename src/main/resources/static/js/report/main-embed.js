@@ -182,7 +182,7 @@ function doReset(){
 
 //跳转分析
 function toAnalyse(sId,bId){
-	window.location.href='main-embeddedAnalyse?streetId=' + sId + '&blockId=' + bId;
+	window.location.href='mainEmbeddedAnalyse?streetId=' + sId + '&blockId=' + (bId == undefined?'':bId);
 }
     
     
