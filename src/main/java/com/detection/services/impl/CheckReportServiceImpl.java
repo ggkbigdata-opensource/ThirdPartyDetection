@@ -373,14 +373,14 @@ public class CheckReportServiceImpl implements CheckReportService {
                     list.add(predicate);
                    //list.add(cb.in(root.in(reportNums)));
                 }
-                if (map.get("buildingType")!=null) {
-                    list.add(cb.equal(root.get("buildingType").as(Long.class), (Long)map.get("buildingType")));
+                if (map.get("buildingTypeBig")!=null) {
+                    list.add(cb.equal(root.get("buildingTypeBig").as(String.class), (String)map.get("buildingTypeBig")));
                 }
                 if (map.get("competentDepartment")!=null) {
-                    list.add(cb.equal(root.get("competentDepartment").as(Long.class), (Long)map.get("competentDepartment")));
+                    list.add(cb.equal(root.get("competentDepartment").as(String.class), (String)map.get("competentDepartment")));
                 }
                 if (map.get("heightType")!=null) {
-                    list.add(cb.equal(root.get("heightType").as(Long.class), (Long)map.get("heightType")));
+                    list.add(cb.equal(root.get("heightType").as(String.class), (String)map.get("heightType")));
                 }
                 
                 Predicate[] p = new Predicate[list.size()];

@@ -89,7 +89,7 @@ public class ReportRestController {
         }
 
         if (StringUtils.hasText(buildingType) && !"0".equals(buildingType)&& !"全部".equals(buildingType)) {
-            map.put("buildingType", buildingType);
+            map.put("buildingTypeBig", buildingType);
         }
         if (StringUtils.hasText(competentDepartment) && !"0".equals(competentDepartment)&& !"全部".equals(competentDepartment)) {
             map.put("competentDepartment", competentDepartment);
