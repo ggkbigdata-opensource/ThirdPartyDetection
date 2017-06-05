@@ -58,6 +58,14 @@ public class CrCheckReport {
     private String originalName;
     private String verifyToken;
     private String fetchCode;
+    
+    private Double score;
+    private Long blockId;
+    
+    private String heightType;//
+    private String buildingTypeBig;
+    private String buildingTypeSmall;
+    private String competentDepartment;//主管部门
 
     public CrCheckReport() {
         super();
@@ -184,6 +192,54 @@ public class CrCheckReport {
 		this.streetId = streetId;
 	}
 
+    public Long getBlockId() {
+        return blockId;
+    }
+
+    public void setBlockId(Long blockId) {
+        this.blockId = blockId;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public String getHeightType() {
+        return heightType;
+    }
+
+    public void setHeightType(String heightType) {
+        this.heightType = heightType;
+    }
+
+    public String getBuildingTypeBig() {
+        return buildingTypeBig;
+    }
+
+    public void setBuildingTypeBig(String buildingTypeBig) {
+        this.buildingTypeBig = buildingTypeBig;
+    }
+
+    public String getBuildingTypeSmall() {
+        return buildingTypeSmall;
+    }
+
+    public void setBuildingTypeSmall(String buildingTypeSmall) {
+        this.buildingTypeSmall = buildingTypeSmall;
+    }
+
+    public String getCompetentDepartment() {
+        return competentDepartment;
+    }
+
+    public void setCompetentDepartment(String competentDepartment) {
+        this.competentDepartment = competentDepartment;
+    }
+	
     
     
 }

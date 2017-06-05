@@ -16,8 +16,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -27,8 +35,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.aspectj.weaver.IUnwovenClassFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -86,6 +96,8 @@ public class CheckReportServiceImpl implements CheckReportService {
     private ReportResultStatCopyRepository reportResultStatCopyRepository;
     @Autowired
     private CheckItemDetailCopyRepository checkItemDetailCopyRepository;
+    //@Autowired
+   // private CheckReportAndInfoRepository checkReportAndInfoRepository;
 
     @Value("${uploadPath}")
     private String uploadPath;
@@ -317,12 +329,64 @@ public class CheckReportServiceImpl implements CheckReportService {
     }
 
     @Override
-    public JSONObject getAllReports() {
+    public JSONObject getAllReports(Map<String, Object> map) {
         JSONObject result = new JSONObject();
         int code = 200;
         String message = "success";
 
-        List<CrCheckReport> reportlist = checkReportRepo.findAll();
+        //过滤等级条件
+        List<String> reportNums = new ArrayList<String>();
+        if (StringUtils.isNotEmpty((String)map.get("riskLevel"))) {
+            List<CrCheckReportInfo> infos  = checkReportInfoRepo.findByRiskLevel((String)map.get("riskLevel"));
+            if (infos!=null) {
+                for (int i = 0; i < infos.size(); i++) {
+                    reportNums.add(infos.get(i).getReportNum());
+                }
+            }
+        }
+        
+        List<CrCheckReport> reportlist = checkReportRepo.findAll(new Specification<CrCheckReport>(){
+
+            @Override
+            public Predicate toPredicate(Root<CrCheckReport> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> list = new ArrayList<Predicate>();
+
+                //if (StringUtils.isNoneBlank((String)map.get("")) {
+                //    list.add(cb.like(root.get("name").as(String.class), "%" + model.getName() + "%"));
+               // }
+                
+                if (map.get("streetId")!=null) {
+                    long streetId = Long.parseLong((String)map.get("streetId"));
+                    list.add(cb.equal(root.get("streetId").as(Long.class), streetId));
+                }
+                if (map.get("blockId")!=null) {
+                    long blockId = Long.parseLong((String)map.get("blockId"));
+                    list.add(cb.equal(root.get("blockId").as(Long.class), blockId));
+                }
+                if (reportNums.size()>0) {
+                    Expression<String> exp = root.get("reportNum");
+                    Predicate predicate = exp.in(reportNums);
+                    list.add(predicate);
+                   //list.add(cb.in(root.in(reportNums)));
+                }
+                if (map.get("buildingType")!=null) {
+                    list.add(cb.equal(root.get("buildingType").as(Long.class), (Long)map.get("buildingType")));
+                }
+                if (map.get("competentDepartment")!=null) {
+                    list.add(cb.equal(root.get("competentDepartment").as(Long.class), (Long)map.get("competentDepartment")));
+                }
+                if (map.get("heightType")!=null) {
+                    list.add(cb.equal(root.get("heightType").as(Long.class), (Long)map.get("heightType")));
+                }
+                
+                Predicate[] p = new Predicate[list.size()];
+                return cb.and(list.toArray(p));
+                
+            }
+        });
+        
+        
+        
         List<JSONObject> dataList = new ArrayList<JSONObject>();
         Iterator<CrCheckReport> it = reportlist.iterator();
 
@@ -836,4 +900,64 @@ public class CheckReportServiceImpl implements CheckReportService {
 
     }
 
+    @Override
+    public JSONObject trendChart(Map<String, Object> map) {
+        
+        List<CrCheckReport> reports = checkReportRepo.findAll(new Specification<CrCheckReport>(){
+                
+            @Override
+            public Predicate toPredicate(Root<CrCheckReport> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> list = new ArrayList<Predicate>();
+
+                //if (StringUtils.isNoneBlank((String)map.get("")) {
+                //    list.add(cb.like(root.get("name").as(String.class), "%" + model.getName() + "%"));
+               // }
+                
+                if (map.get("streetId")!=null) {
+                    long streetId = Long.parseLong((String)map.get("streetId"));
+                    list.add(cb.equal(root.get("streetId").as(Long.class), streetId));
+                }
+                if ((Long)map.get("blockId")!=null) {
+                    list.add(cb.equal(root.get("blockId").as(Long.class), (Long)map.get("blockId")));
+                }
+                
+                Predicate[] p = new Predicate[list.size()];
+                return cb.and(list.toArray(p));
+            }
+        });
+        
+        JSONObject obj = new JSONObject();
+        int level1=0;
+        int level2=0;
+        int level3=0;
+        int level4=0;
+        if (reports!=null) {
+            List<String> reportNums = new ArrayList<String>();
+            for (int i = 0; i < reports.size(); i++) {
+                reportNums.add(reports.get(i).getReportNum());
+            }
+            
+            //查询所有info
+            List<CrCheckReportInfo> infs= checkReportInfoRepo.findByReportNums(reportNums);
+          
+            
+            for (CrCheckReportInfo info : infs) {
+                if (info.getRiskLevel()!=null&&info.getRiskLevel().contains("1")) {
+                    level1++;
+                }
+                if (info.getRiskLevel()!=null&&info.getRiskLevel().contains("2")) {
+                    level2++;
+                }
+                if (info.getRiskLevel()!=null&&info.getRiskLevel().contains("3")) {
+                    level3++;
+                }
+                if (info.getRiskLevel()!=null&&info.getRiskLevel().contains("4")) {
+                    level4++;
+                }
+            }
+        }
+        int[] arr = {level1,level2,level3,level4};
+        obj.put("list", arr);
+        return obj;
+    }
 }

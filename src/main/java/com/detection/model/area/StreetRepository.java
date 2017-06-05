@@ -1,6 +1,7 @@
 package com.detection.model.area;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  * @fileName BsMainFunctionRepository.java
@@ -10,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @function
  */
 
-public interface StreetRepository extends JpaRepository<Street, Long> {
+public interface StreetRepository extends JpaRepository<Street, Long>, JpaSpecificationExecutor<Street> {
 
     /**
      * @createDate 2017年3月29日下午4:11:26 

@@ -9,8 +9,8 @@ package com.detection.services;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,10 +55,11 @@ public interface CheckReportService {
     /**
      * @author csk
      * @version 1.0
+     * @param map 
      * @throws IOException
      * @function 查找所有报告
      */
-    public JSONObject getAllReports();
+    public JSONObject getAllReports(Map<String, Object> map);
 
     /**
      * @author csk
@@ -122,5 +123,14 @@ public interface CheckReportService {
      * @description
      */
     public void importExcel(Sheet sheetOne);
+
+    /**
+     * @createDate 2017年6月4日下午2:15:43 
+     * @author wangzhiwang
+     * @param map
+     * @return 
+     * @description
+     */
+    public JSONObject trendChart(Map<String, Object> map);
 
 }
