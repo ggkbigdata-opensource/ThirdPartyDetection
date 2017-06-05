@@ -138,7 +138,6 @@ function doReset(){
          * 'projectAddress' : null, 'riskLevel' : null, 'qaName' : null, 'token' :
          * sessionStorage.getItem('token') }
          */
-        debugger;
         $.post(
             proxy,
             data,
