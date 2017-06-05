@@ -53,7 +53,7 @@ public class ReportRestController {
             @RequestParam(value = "rows", defaultValue = "10") int pageSize, HttpSession session,
             @RequestParam(required = false) String streetId, 
             @RequestParam(required = false) String blockId, 
-            @RequestParam(required = false) String riskLevel, // 危险等级
+            @RequestParam(required = false) Long riskLevel, // 危险等级
             @RequestParam(required = false) String buildingType, //建筑类型 
             @RequestParam(required = false) String competentDepartment, // 
             @RequestParam(required = false) String heightType, // 高层类型
@@ -73,8 +73,19 @@ public class ReportRestController {
         if (StringUtils.hasText(blockId) && !blockId.equals("0")) {
             map.put("blockId", blockId);
         }
-        if (StringUtils.hasText(riskLevel) && !"全部".equals(riskLevel) && !"0".equals(riskLevel)) {
-            map.put("riskLevel", riskLevel.trim());
+        if (riskLevel!=null && !"".equals(riskLevel) ) {
+            if (riskLevel==1) {
+                map.put("riskLevel", "危险等级1");
+            }
+            if (riskLevel==2) {
+                map.put("riskLevel", "危险等级2");
+            }
+            if (riskLevel==3) {
+                map.put("riskLevel", "危险等级3");
+            }
+            if (riskLevel==4) {
+                map.put("riskLevel", "危险等级4");
+            }
         }
 
         if (StringUtils.hasText(buildingType) && !"0".equals(buildingType)&& !"全部".equals(buildingType)) {
