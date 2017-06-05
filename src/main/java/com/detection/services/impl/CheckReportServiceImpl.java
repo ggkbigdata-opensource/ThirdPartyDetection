@@ -405,11 +405,14 @@ public class CheckReportServiceImpl implements CheckReportService {
                 Street street = streetRepository.findOne(checkReport.getStreetId());
                 if (street != null) {
                     item.put("streetName", street.getName());
+                    item.put("streetId", street.getId());
                 } else {
                     item.put("streetName", null);
+                    item.put("streetId", null);
                 }
             } else {
                 item.put("streetName", null);
+                item.put("streetId", null);
             }
 
             item.put("reportNum", checkReport.getReportNum());
