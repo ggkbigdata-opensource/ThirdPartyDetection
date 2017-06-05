@@ -430,8 +430,10 @@ public class CheckReportServiceImpl implements CheckReportService {
             item.put("score", checkReport.getScore());
             item.put("blockName", checkReport.getBlockId());
             Block block = blockService.findById(checkReport.getBlockId());
-            item.put("blockName", checkReport.getBlockId());
-            item.put("blockId", block.getId());
+            if (block!=null&&!"".equals(block)) {
+                item.put("blockName", checkReport.getBlockId());
+                item.put("blockId", block.getId());
+            }
             
             //建筑
             item.put("heigthType", checkReport.getHeightType());

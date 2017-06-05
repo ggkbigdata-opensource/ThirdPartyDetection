@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.detection.model.area.Block;
 import com.detection.model.area.BlockRepository;
-import com.detection.model.area.Street;
 import com.detection.services.BlockService;
 
 /**
