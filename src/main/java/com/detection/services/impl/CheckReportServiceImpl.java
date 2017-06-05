@@ -939,7 +939,8 @@ public class CheckReportServiceImpl implements CheckReportService {
                     list.add(cb.equal(root.get("streetId").as(Long.class), streetId));
                 }
                 if ((Long)map.get("blockId")!=null) {
-                    list.add(cb.equal(root.get("blockId").as(Long.class), (Long)map.get("blockId")));
+                    long blockId = Long.parseLong((String)map.get("blockId"));
+                    list.add(cb.equal(root.get("blockId").as(Long.class), blockId));
                 }
                 
                 Predicate[] p = new Predicate[list.size()];
