@@ -938,7 +938,7 @@ public class CheckReportServiceImpl implements CheckReportService {
                     long streetId = Long.parseLong((String)map.get("streetId"));
                     list.add(cb.equal(root.get("streetId").as(Long.class), streetId));
                 }
-                if ((Long)map.get("blockId")!=null) {
+                if (map.get("blockId")!=null) {
                     long blockId = Long.parseLong((String)map.get("blockId"));
                     list.add(cb.equal(root.get("blockId").as(Long.class), blockId));
                 }
