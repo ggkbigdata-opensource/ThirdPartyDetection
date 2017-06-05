@@ -1,5 +1,7 @@
 package com.detection.model.area;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -17,5 +19,14 @@ public interface BlockRepository extends JpaRepository<Block, Long>, JpaSpecific
     Block findByName(String name);
 
     Block findById(Long id);
+
+    /**
+     * @createDate 2017年6月5日下午11:46:27 
+     * @author wangzhiwang
+     * @param streetId
+     * @return 
+     * @description
+     */
+    List<Block> findByStreetId(Long streetId);
 
 }

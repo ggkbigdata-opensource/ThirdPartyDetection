@@ -1,5 +1,7 @@
 package com.detection.services.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,18 @@ public class BlockServiceImpl implements BlockService {
     public Block findById(Long blockId) {
         Block block = blockRepository.findById(blockId);
         return block;
+    }
+
+    @Override
+    public List<Block> findAll() {
+        List<Block> blocks = blockRepository.findAll();
+        return blocks;
+    }
+
+    @Override
+    public List<Block> findByStreetId(Long streetId) {
+        List<Block> blocks = blockRepository.findByStreetId(streetId);
+        return blocks;
     }
 
 }
