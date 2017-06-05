@@ -102,7 +102,7 @@ function doReset(){
     		    			}
     		    		}
     		    	}else{
-    		    		$('#streetId').combobox('select',0);-
+    		    		$('#streetId').combobox('select',0);
     		    	}
     			},
     			onChange: function(){
@@ -138,6 +138,7 @@ function doReset(){
          * 'projectAddress' : null, 'riskLevel' : null, 'qaName' : null, 'token' :
          * sessionStorage.getItem('token') }
          */
+        debugger;
         $.post(
             proxy,
             data,
