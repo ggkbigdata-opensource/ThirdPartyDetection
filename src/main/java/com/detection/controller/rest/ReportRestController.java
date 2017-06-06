@@ -110,9 +110,10 @@ public class ReportRestController {
         
         
         
-        if(authService.isLoggedin(request) && authService.isPermitted(request, permittedRole)){
+        result = service.getAllReports(map);
+        /*if(authService.isLoggedin(request) && authService.isPermitted(request, permittedRole)){
             result = service.getAllReports(map);
-        }
+        }*/
         return result;
     }
     
