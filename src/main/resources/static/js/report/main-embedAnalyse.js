@@ -61,10 +61,10 @@ function showReportList(data) {
                     item[9] = '<div class="table-toolbar tc">'
                             + '<a class="evaluateReport" target="_blank" href="showAbstractReportPage?reportNum='
                             + idNew
-                            + '">分析报告</a>;'
+                            + '">分析报告</a>'
                             + '<a class="detectionReport" target="_blank" href="fetchReport/'
                             + idNew
-                            + '">检测报告</a>;</div>'; //
+                            + '">检测报告</a></div>'; //
                     data[index++] = item;
                 }
                 $("#reportListTable").dataTable({
@@ -245,6 +245,9 @@ function init(){
 	sId = $('#streetSId').val();
 	bId = $('#blockBId').val();
 	isFromReport = $('#report').val();
+	if(isFromReport !=''){
+		$('#ifReturn').hide();
+	}
 	trendSId = sId;
 	trendBId = (bId == 'undefined'?'':bId);
 	condition = {streetId: trendSId,blockId: trendBId};

@@ -82,8 +82,8 @@ function doReset(){
 	};
 }
 
-
 	var mainSId ='';
+	mainSId = $('#hiddenSId').val();
 	$.get("street/getAll",function(data){
     	if(data){
     		//用于查询
@@ -130,6 +130,14 @@ function doReset(){
     		});
     	}
     });
+	//首次加载datatable
+	if(mainSId != ''){
+		searchDatas.streetId = mainSId;
+		showReportList(searchDatas);
+	}else{
+		showReportList();
+	}
+	
     // show reportList
     function showReportList(data) {
         var proxy = "getReportList";
@@ -160,10 +168,10 @@ function doReset(){
                         item[9] = '<div class="table-toolbar tc">'
                                 + '<a class="evaluateReport" target="_blank" href="showAbstractReportPage?reportNum='
                                 + idNew
-                                + '">分析报告</a>;'
+                                + '">分析报告</a>'
                                 + '<a class="detectionReport" target="_blank" href="fetchReport/'
                                 + idNew
-                                + '">检测报告</a>;'
+                                + '">检测报告</a>'
                                 + '<a class="deleteReport" " href="JavaScript: " onclick="deleteReportByReportNum(\''
                                 + idNew
                                 + '\')">删除</a>' + '</div>'; //
@@ -403,7 +411,7 @@ function toAnalyse(sId,bId){
         });
     });
 
-    showReportList();
+    
 
     $('.evaluateReport').click(function() {
         console.info($(this).attr("reportNum"));
