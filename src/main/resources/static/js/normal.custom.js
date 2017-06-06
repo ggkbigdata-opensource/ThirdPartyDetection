@@ -14,7 +14,6 @@ $(document).ready(function () {
 		$(".wrapper").css("min-height",$(window).height() +"px");
 		$(".menuScrollbar").css("height",($(window).height()-$(".logo").outerHeight())+"px");
 		$(".main-content").css("height",($(window).height()-$(".navbar-static-top").outerHeight()-$(".breadcrumb").outerHeight()-$(".footer").outerHeight())+"px");
-		$(".chartBox").css("height",($(".main-content").height()-$(".title").outerHeight()) - 35 +"px");
 	}).resize();
 	
 	//menu Custom Scrollbar

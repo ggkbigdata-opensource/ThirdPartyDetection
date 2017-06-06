@@ -96,7 +96,6 @@
 /*index chart*/
 .chartBox {
     border: 1px solid #e9e9e9;
-    height: calc(100% - 140px);
     overflow: hidden;
     padding: 20px;
 }
@@ -226,12 +225,14 @@
 .searchBox .filterTit {
 	min-width: 70px;
 }
+.textbox {
+	border: 1px solid #e5e5e5;
+}
 .filterType .textbox {
 	width:100%!important;
 	height: 30px;
 	border-radius: 0;
 	margin-right: 0;
-	border-color: #e5e5e5;
 }
 .filterType .textbox .textbox-icon {
 	height: 28px!important;
