@@ -133,7 +133,7 @@ public class ReportViewController {
     }
 
     @RequestMapping(value = { "/embeddedUserLogin" }, method = RequestMethod.GET)
-    public String embeddedUserLogin(@RequestParam String loginName, @RequestParam String userPassword,
+    public String embeddedUserLogin(@RequestParam String loginName, @RequestParam String userPassword,Long streetId,
             HttpServletRequest request) throws Exception {
         JSONObject result = userControlService.userLogin(loginName, userPassword);
         // JSONObject result = userControlService.userLogin(loginName,
@@ -143,6 +143,7 @@ public class ReportViewController {
             session.setAttribute("userName", loginName);
             session.setAttribute("token", result.getString("token"));
             session.setAttribute("role", result.getString("role"));
+            session.setAttribute("streetId", streetId);
             return "report/main-embedded";
         }
         return "redirect:embedded-nopermissions";
