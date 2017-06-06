@@ -143,7 +143,9 @@ public class ReportViewController {
             session.setAttribute("userName", loginName);
             session.setAttribute("token", result.getString("token"));
             session.setAttribute("role", result.getString("role"));
-            session.setAttribute("streetId", streetId);
+            request.setAttribute("streetId", streetId);
+            request.setAttribute("loginName", loginName);
+            request.setAttribute("password", userPassword);
             return "report/main-embedded";
         }
         return "redirect:embedded-nopermissions";
