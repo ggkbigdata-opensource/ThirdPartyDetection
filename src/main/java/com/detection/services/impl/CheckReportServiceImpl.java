@@ -436,7 +436,7 @@ public class CheckReportServiceImpl implements CheckReportService {
             item.put("blockName", "");
             item.put("blockId", "");
             if (block!=null&&!"".equals(block)) {
-                item.put("blockName", checkReport.getBlockId());
+                item.put("blockName", block.getName());
                 item.put("blockId", block.getId());
             }
             
