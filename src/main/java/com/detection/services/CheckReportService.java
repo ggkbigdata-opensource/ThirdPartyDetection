@@ -169,4 +169,21 @@ public interface CheckReportService {
      */
     public void updateRiskLevelByReoprtNum(CrCheckReport report);
 
+    /**
+     * @createDate 2017年6月7日下午2:53:58 
+     * @author wangzhiwang
+     * @return 
+     * @description
+     */
+    public List<CrCheckReport> findByCompetentDepartmentIsNotNull();
+
+    /**
+     * @createDate 2017年6月7日下午2:54:20 
+     * @author wangzhiwang
+     * @param streetId
+     * @return 
+     * @description
+     */
+    public List<CrCheckReport> findByStreetIdAndCompetentDepartmentIsNotNull(Long streetId);
+
 }

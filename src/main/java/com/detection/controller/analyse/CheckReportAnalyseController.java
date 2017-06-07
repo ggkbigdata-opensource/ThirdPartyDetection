@@ -284,49 +284,67 @@ public class CheckReportAnalyseController {
         return result;
     }
 
+    /**
+     * @createDate 2017年6月7日下午2:16:27 
+     * @author wangzhiwang
+     * @return 
+     * @description 通过街道获取监管部门和个数
+     */
     @RequestMapping(value = "/streetAndDepartment", method = RequestMethod.GET)
     @ResponseBody
-    public List<JSONObject> streetAndCompetentDepartment() {
+    public JSONObject streetAndCompetentDepartment(Long streetId) {
 
-        List<Street> streets = streetService.findAll();
-        List<JSONObject> result = new ArrayList<JSONObject>();
-        for (Street street : streets) {
-            JSONObject obj = new JSONObject();
-            obj.put("streetId", street.getId());
-            obj.put("streetName", street.getName());
-            double allScore = 0.000;
-            List<CrCheckReport> reports = checkReportService.findByStreetId(street.getId());
-            for (CrCheckReport report : reports) {
-                if (report.getScore() != null) {
-                    allScore = allScore + report.getScore();
-                }
-
-            }
+        JSONObject result = new JSONObject();
+        List<CrCheckReport> reports=null;
+        if (streetId==null||"".equals(streetId)) {
+            reports = checkReportService.findByCompetentDepartmentIsNotNull();
+        }else {
+            reports = checkReportService.findByStreetIdAndCompetentDepartmentIsNotNull(streetId);
         }
-
+        
+        for (CrCheckReport report : reports) {
+            JSONObject obj = new JSONObject();
+            double allScore = 0.000;
+        }
         return result;
     }
 
-    @RequestMapping(value = "/streetAndHeight", method = RequestMethod.GET)
+    /**
+     * @createDate 2017年6月7日下午3:04:31 
+     * @author wangzhiwang
+     * @param streetId
+     * @return 
+     * @description 通过街道查询高度和分数
+     */
+    @RequestMapping(value = "/heightAndScore", method = RequestMethod.GET)
     @ResponseBody
-    public List<JSONObject> streetAndHeight() {
+    public JSONObject streetAndHeight(Long streetId) {
 
-        List<Street> streets = streetService.findAll();
-        List<JSONObject> result = new ArrayList<JSONObject>();
-        for (Street street : streets) {
-            JSONObject obj = new JSONObject();
-            obj.put("streetId", street.getId());
-            obj.put("streetName", street.getName());
-            double allScore = 0.000;
-            List<CrCheckReport> reports = checkReportService.findByStreetId(street.getId());
-            for (CrCheckReport report : reports) {
-                if (report.getScore() != null) {
-                    allScore = allScore + report.getScore();
-                }
-
+        List<CrCheckReport> reports=null;
+        if (streetId==null||"".equals(streetId)) {
+            reports = checkReportService.findAll();
+        }else {
+            reports = checkReportService.findByStreetId(streetId);
+        }
+        
+        int one =0;//多层
+        int two =0;//高层
+        int three =0;//超高层
+        for (CrCheckReport report : reports) {
+            if (report.getHeightType()!=null&&report.getHeightType().contains("多层")) {
+                one++;
+            }
+            if (report.getHeightType()!=null&&report.getHeightType().contains("高层")) {
+                two++;
+            }
+            if (report.getHeightType()!=null&&report.getHeightType().contains("超高层")) {
+                three++;
             }
         }
-
+        JSONObject result = new JSONObject();
+        int[] arr={one,two,three}; 
+        result.put("list", arr);
+        
         return result;
     }
 
