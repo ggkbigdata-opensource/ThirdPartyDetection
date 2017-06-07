@@ -994,4 +994,16 @@ public class CheckReportServiceImpl implements CheckReportService {
         List<CrCheckReport> reports = checkReportRepo.findByStreetId(id);
         return reports;
     }
+
+    @Override
+    public CrCheckReport findByReportNum(String reportNum) {
+        CrCheckReport report = checkReportRepo.findByReportNum(reportNum);
+        return report;
+    }
+
+    @Override
+    public void updateRiskLevelByReoprtNum(CrCheckReport report) {
+        checkReportRepo.updateRiskLevelByReoprtNum(report.getReportNum(),report.getRiskLevel());
+    }
+
 }

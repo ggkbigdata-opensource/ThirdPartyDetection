@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.detection.model.report.entities.CrCheckReport;
+import com.detection.model.report.entities.CrCheckReportInfo;
 
 /**
  *
@@ -150,5 +151,22 @@ public interface CheckReportService {
      * @description
      */
     public List<CrCheckReport> findByStreetId(Long id);
+
+    /**
+     * @createDate 2017年6月7日下午1:07:50 
+     * @author wangzhiwang
+     * @param reportNum
+     * @return 
+     * @description
+     */
+    public CrCheckReport findByReportNum(String reportNum);
+
+    /**
+     * @createDate 2017年6月7日下午1:12:21 
+     * @author wangzhiwang
+     * @param report 
+     * @description
+     */
+    public void updateRiskLevelByReoprtNum(CrCheckReport report);
 
 }

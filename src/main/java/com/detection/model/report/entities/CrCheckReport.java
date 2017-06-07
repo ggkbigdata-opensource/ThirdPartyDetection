@@ -66,6 +66,7 @@ public class CrCheckReport {
     private String buildingTypeBig;
     private String buildingTypeSmall;
     private String competentDepartment;//主管部门
+    private String riskLevel;//主管部门
 
     public CrCheckReport() {
         super();
@@ -238,6 +239,14 @@ public class CrCheckReport {
 
     public void setCompetentDepartment(String competentDepartment) {
         this.competentDepartment = competentDepartment;
+    }
+
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
     }
 	
     
