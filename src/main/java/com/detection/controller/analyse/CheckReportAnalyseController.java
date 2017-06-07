@@ -396,7 +396,7 @@ public class CheckReportAnalyseController {
      */
     @RequestMapping(value = "/heightAndScore", method = RequestMethod.GET)
     @ResponseBody
-    public JSONObject streetAndHeight(Long streetId) {
+    public List<JSONObject> streetAndHeight(Long streetId) {
 
         List<CrCheckReport> reports=null;
         if (streetId==null||"".equals(streetId)) {
@@ -408,21 +408,45 @@ public class CheckReportAnalyseController {
         int one =0;//多层
         int two =0;//高层
         int three =0;//超高层
+        
+        double oneScore=0;
+        double twoScore=0;
+        double threeScore=0;
         for (CrCheckReport report : reports) {
             if (report.getHeightType()!=null&&report.getHeightType().contains("多层")) {
                 one++;
+                if (report.getScore()!=null) {
+                    oneScore=oneScore+report.getScore();
+                }
             }
             if (report.getHeightType()!=null&&report.getHeightType().contains("高层")) {
                 two++;
+                if (report.getScore()!=null) {
+                    twoScore=twoScore+report.getScore();
+                }
             }
             if (report.getHeightType()!=null&&report.getHeightType().contains("超高层")) {
                 three++;
+                if (report.getScore()!=null) {
+                    threeScore=threeScore+report.getScore();
+                }
             }
         }
-        JSONObject result = new JSONObject();
-        int[] arr={one,two,three}; 
-        result.put("list", arr);
+        List<JSONObject> result = new ArrayList<JSONObject>();
+        JSONObject obj1 = new JSONObject();
+        obj1.put("count",one); 
+        obj1.put("score", one==0?0:oneScore/one);
+        result.add(obj1);
         
+        JSONObject obj2 = new JSONObject();
+        obj2.put("count", two); 
+        obj2.put("score", two==0?0:twoScore/two); 
+        result.add(obj2);
+        
+        JSONObject obj3 = new JSONObject();
+        obj3.put("count", three); 
+        obj3.put("score", three==0?0:threeScore/three); 
+        result.add(obj3);
         return result;
     }
 
