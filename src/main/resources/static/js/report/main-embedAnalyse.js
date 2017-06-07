@@ -7,6 +7,7 @@ var sId,//传参社区、
 	item,//图项目
 	datas,//图数据
 	unit,//图单位
+	title,//表名
 	legend,//图例
 	condition;//图2条件
 
@@ -23,10 +24,13 @@ function getTrendChart () {
 				legend = ['检测报告'];
 				item = ['危险等级一','危险等级二','危险等级三','危险等级四'];
 				datas = [[]];
-				unit = ''
+				unit = '';
+				var sNames = $('#streetId').combobox('getText');
+				var bNames = $('#blockId').combobox('getText');
+				title = '天河区' + (sNames=='全部'?'':(sNames + '街道')) + (bNames=='全部'?'':bNames) + '检测报告走势图';
 				datas[0] = result.list;
 				//绘制echart图
-				echartBar('reportAnalyse',legend,item,datas,unit);
+				echartBar('reportAnalyse',legend,item,datas,unit,title);
 			}
 		}
 	);
@@ -56,7 +60,7 @@ function showReportList(data) {
                     item[5] = result.data[d].heigthType; // 高度类型
                     item[6] = result.data[d].projectAddress; // 项目地址
                     item[7] = result.data[d].riskLevel; // 风险等级
-                    item[8] = result.data[d].score;//得分
+                    item[8] = parseFloat(result.data[d].score).toFixed(3);//得分
                     var idNew = result.data[d].reportNum.substr(2,result.data[d].reportNum.length);
                     item[9] = '<div class="table-toolbar tc">'
                             + '<a class="evaluateReport" target="_blank" href="showAbstractReportPage?reportNum='
@@ -131,17 +135,6 @@ function getStreetBlock () {
     								    $('#reportListTable tbody').text('');
     								    condition = {streetId: trendSId,blockId: trendBId};
     								    showReportList(condition);
-    									//分析图标题
-    									if(trendBId != ''){
-    										for(var i=0;i<bData.length;i++){
-    											if(trendBId == bData[i].id){
-    												$('#thisStreetBlock').text(streetName + bData[i].name);
-    												break;
-    											}
-    										}
-    									}else{
-    										$('#thisStreetBlock').text(streetName);
-    									}
     								}
     							});
     						}
@@ -157,19 +150,6 @@ function getStreetBlock () {
     			    $('#reportListTable tbody').text('');
     			    condition = {streetId: trendSId,blockId: trendBId};
     			    showReportList(condition);
-    				//分析图标题
-    				var streetName = '';
-    				if(trendSId != ''){
-    					for(var i=0;i<streets.length;i++){
-    						if(trendSId == streets[i].id){
-    							streetName = streets[i].name + '街道';
-    							$('#thisStreetBlock').text(streets[i].name + '街道');
-    							break;
-    						}
-    					}
-    				}else{
-    					$('#thisStreetBlock').text('');
-    				}
     			}
     		});
     	}

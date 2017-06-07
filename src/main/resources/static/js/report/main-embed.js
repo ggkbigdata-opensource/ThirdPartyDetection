@@ -163,7 +163,7 @@ function doReset(){
                         item[5] = result.data[d].heigthType; // 高度类型
                         item[6] = result.data[d].projectAddress; // 项目地址
                         item[7] = result.data[d].riskLevel; // 风险等级
-                        item[8] = result.data[d].score;//得分
+                        item[8] = parseFloat(result.data[d].score).toFixed(3);//得分
                         var idNew = result.data[d].reportNum.substr(2,result.data[d].reportNum.length);
                         item[9] = '<div class="table-toolbar tc">'
                                 + '<a class="evaluateReport" target="_blank" href="showAbstractReportPage?reportNum='

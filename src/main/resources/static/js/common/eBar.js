@@ -1,7 +1,13 @@
-function echartBar (id,legend,item,datas,unit) {
+function echartBar (id,legend,item,datas,unit,title) {
     var option = {
         tooltip : {
             trigger : 'axis'
+        },
+        title : {
+            text: title,
+            subtext: '',
+            x:'center',
+            y:'top'
         },
         legend : {
             data : legend,

@@ -70,7 +70,8 @@ function init(){
 		    		$('#uStreet').combobox('select',0);
 				},
 				onChange: function(){
-					
+					var sId = $('#uStreet').combobox('getValue');
+					getFourthEchart(sId);
 				}
 			});
 			$('#hStreet').combobox({
@@ -81,7 +82,8 @@ function init(){
 		    		$('#hStreet').combobox('select',0);
 				},
 				onChange: function(){
-					
+					var sId = $('#hStreet').combobox('getValue');
+					getFifthEchart(sId);
 				}
 			});
 			
@@ -89,6 +91,8 @@ function init(){
 	});
 	getFirstAndSecondEchart();
 	getThirdEchart();
+	getFourthEchart();
+	getFifthEchart();
 	//首次加载datatable
 	showReportList();
 }
@@ -132,12 +136,12 @@ function getFirstAndSecondEchart(){
 function getThirdEchart(sId){
 	$.get('streetAndType',{streetId:sId},function(result){
 		if(result && result.list.length>0){
-			console.log(result);
 			var items=['中学','交通枢纽建筑','公共娱乐建筑','养老院','医院','商业建筑','大学','小学','幼儿园','教育科研建筑','文化设施建筑','物流仓储建筑','科研院','综合性办公建筑','行政办公建筑','院所等教育科研建筑'];
 			var datas=[];
 			var legend=['报告个数'];
 			var unit='个';
-			var title = '天河区建筑类型消防设施隐患';
+			var sName = $('#tStreet').combobox('getText');
+			var title = (sName=='全部'?'天河区':(sName+'街道')) + '建筑类型消防设施隐患';
 			datas[0]=[];
 			for(var i=0;i<result.list.length;i++){
 				datas[0].push(result.list[i]);
@@ -147,46 +151,41 @@ function getThirdEchart(sId){
 	});
 }
 function getFourthEchart(sId){
-	$.get('',{streetId:sId},function(result){
+	$.get('streetAndDepartment',{streetId:sId},function(result){
 		if(result && result.length>0){
-			console.log(results);
-			var items=[];
+			var items=['医院','幼儿园','小学','中学','大学','养老院'];
 			var datas=[];
-			var legend=['一级','二级','三级','四级'];
+			var legend=['数量','得分'];
 			var unit='个';
-			var title = '天河区街道单位等级';
-			for(var i=0;i<results.length;i++){
-				items.push(results[i].streetName);
+			var sName = $('#uStreet').combobox('getText');
+			var title = (sName=='全部'?'天河区':(sName+'街道')) + '监管单位等级、得分';
+			var ps = '卫生和计划生育局（医院）、教育局（小学，中学，大学）、民政厅（养老院）';
+			datas[0]=[];
+			datas[1]=[];
+			for(var i=0;i<result.length;i++){
+				datas[0].push(result[i].count);
+				datas[1].push(parseFloat(result[i].score).toFixed(3));
 			}
-			for(var j=0;j<results[0].list.length;j++){
-				datas[j]=[];
-				for(var k=0;k<results.length;k++){
-					datas[j].push(results[k].list[j]);
-				}
-			}
-			echartBar('scoreAndLevel',legend,items,datas,unit,title);
+			echartBar('streetAndUnit',legend,items,datas,unit,title,ps);
 		}
 	});
 }
 function getFifthEchart(sId){
-	$.get('',{streetId:sId},function(result){
+	$.get('heightAndScore',{streetId:sId},function(result){
 		if(result && result.length>0){
-			console.log(results);
-			var items=[];
+			var items=['多层建筑','高层建筑','超高层建筑'];
 			var datas=[];
-			var legend=['一级','二级','三级','四级'];
+			var legend=['数量','得分'];
 			var unit='个';
-			var title = '天河区街道单位等级';
-			for(var i=0;i<results.length;i++){
-				items.push(results[i].streetName);
+			var sName = $('#hStreet').combobox('getText');
+			var title = (sName=='全部'?'天河区':(sName+'街道')) + '不同高度类型建筑消防设施等级、得分';
+			datas[0]=[];
+			datas[1]=[];
+			for(var i=0;i<result.length;i++){
+				datas[0].push(result[i].count);
+				datas[1].push(parseFloat(result[i].score).toFixed(3));
 			}
-			for(var j=0;j<results[0].list.length;j++){
-				datas[j]=[];
-				for(var k=0;k<results.length;k++){
-					datas[j].push(results[k].list[j]);
-				}
-			}
-			echartBar('scoreAndLevel',legend,items,datas,unit,title);
+			echartBar('streetAndHeight',legend,items,datas,unit,title);
 		}
 	});
 }
@@ -211,7 +210,7 @@ function showReportList(data) {
                     item[5] = result.data[d].heigthType; // 高度类型
                     item[6] = result.data[d].projectAddress; // 项目地址
                     item[7] = result.data[d].riskLevel; // 风险等级
-                    item[8] = result.data[d].score;//得分
+                    item[8] = parseFloat(result.data[d].score).toFixed(3);//得分
                     var idNew = result.data[d].reportNum.substr(2,result.data[d].reportNum.length);
                     item[9] = '<div class="table-toolbar tc">'
                             + '<a class="evaluateReport" target="_blank" href="showAbstractReportPage?reportNum='
@@ -234,18 +233,6 @@ function showReportList(data) {
                 reportList = result.data;
             }
       });
-}
-//渲染echarts
-function doEchartBar(){
-	console.log(reportList);
-	var items=[];
-	var datas=[];
-	var legend=[];
-	var unit='个';
-	var title = '';
-	for(var i=0;i<reportList.length;i++){
-		
-	}
 }
 
 //跳转分析

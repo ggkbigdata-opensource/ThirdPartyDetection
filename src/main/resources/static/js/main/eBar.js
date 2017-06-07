@@ -1,11 +1,14 @@
-function echartBar (id,legend,item,datas,unit,title) {
+function echartBar (id,legend,item,datas,unit,title,ps) {
     var option = {
         tooltip : {
             trigger : 'axis'
         },
         title : {
             text: title,
-            subtext: '',
+            subtext: ps,
+            subtextStyle : {
+            	fontSize : 14,
+        	},
             x:'center',
             y:'top'
         },
