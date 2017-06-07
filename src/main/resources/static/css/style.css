@@ -244,3 +244,11 @@
 }
 .filterType .textbox .textbox-icon {
 	height: 28px!important;
+}
+.main-content .section .chartItem .title .filterBox {
+	width: 200px;
+	margin-left: 20px
+}
+.chartItem {
+	margin-bottom: 15px;
+}
