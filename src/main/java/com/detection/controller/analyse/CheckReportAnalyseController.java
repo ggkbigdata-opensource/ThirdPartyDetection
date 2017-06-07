@@ -27,6 +27,7 @@ import com.detection.services.UserControlService;
  * 
  */
 @Controller
+@RequestMapping("/analyse")
 public class CheckReportAnalyseController {
     @Autowired
     private CheckReportService checkReportService;
@@ -42,7 +43,7 @@ public class CheckReportAnalyseController {
 
    
     
-    @RequestMapping(value = "/checkreportAnalyse" , method = RequestMethod.GET)
+    @RequestMapping(value = "/checkReport" , method = RequestMethod.GET)
     public String checkreportAnalyse(Long streetId,Long blockId,String report,HttpServletRequest request) {
         request.setAttribute("streetId", streetId);
         request.setAttribute("blockId", blockId);
