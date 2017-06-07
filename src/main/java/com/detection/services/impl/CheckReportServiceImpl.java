@@ -982,4 +982,16 @@ public class CheckReportServiceImpl implements CheckReportService {
         obj.put("list", arr);
         return obj;
     }
+
+    @Override
+    public List<CrCheckReport> findAll() {
+        List<CrCheckReport> result = checkReportRepo.findAll();
+        return result;
+    }
+
+    @Override
+    public List<CrCheckReport> findByStreetId(Long id) {
+        List<CrCheckReport> reports = checkReportRepo.findByStreetId(id);
+        return reports;
+    }
 }

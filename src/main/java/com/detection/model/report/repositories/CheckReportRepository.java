@@ -30,5 +30,7 @@ public interface CheckReportRepository extends JpaRepository<CrCheckReport, Stri
     @Modifying()
     @Query(value = "update cr_check_report t set t.street_id = ?2 where t.report_num = ?1", nativeQuery = true)
     public void updateStreet(String reportNum, Long streetId);
+
+    public List<CrCheckReport> findByStreetId(Long id);
     
 }

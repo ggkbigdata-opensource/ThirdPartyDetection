@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
+import com.detection.model.report.entities.CrCheckReport;
 
 /**
  *
@@ -132,5 +133,22 @@ public interface CheckReportService {
      * @description
      */
     public JSONObject trendChart(Map<String, Object> map);
+
+    /**
+     * @createDate 2017年6月7日上午11:30:43 
+     * @author wangzhiwang
+     * @return 
+     * @description
+     */
+    public List<CrCheckReport> findAll();
+
+    /**
+     * @createDate 2017年6月7日上午11:34:11 
+     * @author wangzhiwang
+     * @param id
+     * @return 
+     * @description
+     */
+    public List<CrCheckReport> findByStreetId(Long id);
 
 }
