@@ -37,7 +37,7 @@ function echartBar (id,legend,item,datas,unit,title) {
             axisLabel : {
                 show : true,
                 formatter : function(params) {
-                    var oneLineLength = 7;
+                    var oneLineLength = 5;
                     var newParamsName = '';
                     var paramsNameNumber = params.length;
                     var provideNumber = oneLineLength;

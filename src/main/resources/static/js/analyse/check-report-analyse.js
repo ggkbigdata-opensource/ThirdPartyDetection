@@ -131,16 +131,16 @@ function getFirstAndSecondEchart(){
 }
 function getThirdEchart(sId){
 	$.get('streetAndType',{streetId:sId},function(result){
-		if(result && result.length>0){
+		if(result && result.list.length>0){
 			console.log(result);
-			var items=[];
+			var items=['中学','交通枢纽建筑','公共娱乐建筑','养老院','医院','商业建筑','大学','小学','幼儿园','教育科研建筑','文化设施建筑','物流仓储建筑','科研院','综合性办公建筑','行政办公建筑','院所等教育科研建筑'];
 			var datas=[];
-			var legend=['中学','交通枢纽建筑','公共娱乐建筑','养老院','医院','商业建筑','大学','小学','幼儿园','教育科研建筑','文化设施建筑','物流仓储建筑','科研院','综合性办公建筑','行政办公建筑','院所等教育科研建筑'];
+			var legend=['报告个数'];
 			var unit='个';
 			var title = '天河区建筑类型消防设施隐患';
 			datas[0]=[];
-			for(var i=0;i<result.length;i++){
-				datas[0].push(result[i]);
+			for(var i=0;i<result.list.length;i++){
+				datas[0].push(result.list[i]);
 			}
 			echartBar('streetAndType',legend,items,datas,unit,title);
 		}
