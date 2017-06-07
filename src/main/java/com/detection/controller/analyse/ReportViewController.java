@@ -5,7 +5,7 @@
  *
  * Create Time: 2017年2月22日 下午2:00:35
  */
-package com.detection.controller;
+package com.detection.controller.analyse;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -102,7 +102,7 @@ public class ReportViewController {
         return "report/main-embeddedAnalyse";
     }
     
-    @RequestMapping(value = "/checkReportAnalyse" , method = RequestMethod.GET)
+    @RequestMapping(value = "/checkreportAnalyse" , method = RequestMethod.GET)
     public String checkreportAnalyse(Long streetId,Long blockId,String report,HttpServletRequest request) {
         request.setAttribute("streetId", streetId);
         request.setAttribute("blockId", blockId);
