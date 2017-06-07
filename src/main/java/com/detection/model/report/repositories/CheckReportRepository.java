@@ -42,7 +42,7 @@ public interface CheckReportRepository extends JpaRepository<CrCheckReport, Stri
 
     public List<CrCheckReport> findByCompetentDepartmentIsNotNull();
 
-    @Query(value = "SELECT cr_check_report t where t.street_id = ?1 and t.competent_department is not null", nativeQuery = true)
+    @Query(value = "select * from cr_check_report t where t.street_id = ?1 and t.competent_department is not null", nativeQuery = true)
     public List<CrCheckReport> findByStreetIdAndCompetentDepartmentIsNotNull(Long streetId);
     
 }

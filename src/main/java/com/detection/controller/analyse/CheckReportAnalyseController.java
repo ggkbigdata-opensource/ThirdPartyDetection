@@ -292,9 +292,8 @@ public class CheckReportAnalyseController {
      */
     @RequestMapping(value = "/streetAndDepartment", method = RequestMethod.GET)
     @ResponseBody
-    public JSONObject streetAndCompetentDepartment(Long streetId) {
+    public List<JSONObject> streetAndCompetentDepartment(Long streetId) {
 
-        JSONObject result = new JSONObject();
         List<CrCheckReport> reports=null;
         if (streetId==null||"".equals(streetId)) {
             reports = checkReportService.findByCompetentDepartmentIsNotNull();
@@ -302,10 +301,89 @@ public class CheckReportAnalyseController {
             reports = checkReportService.findByStreetIdAndCompetentDepartmentIsNotNull(streetId);
         }
         
+        
+        int hospital = 0;//医院
+        int kindergarten = 0;//幼儿园
+        int primarySchool = 0;//小学
+        int highSchool = 0;//中学
+        int university = 0;//大学
+        int nursingHome = 0;//养老院
+        
+        double hospitalScore = 0;//医院
+        double kindergartenScore = 0;//幼儿园
+        double primarySchoolScore = 0;//小学
+        double highSchoolScore = 0;//中学
+        double universityScore = 0;//大学
+        double nursingHomeScore = 0;//养老院
+        
         for (CrCheckReport report : reports) {
-            JSONObject obj = new JSONObject();
-            double allScore = 0.000;
+            if (report.getBuildingTypeSmall()!=null&&report.getBuildingTypeSmall().contains("医院")) {
+                hospital++;
+                if (report.getScore()!=null) {
+                    hospitalScore=hospitalScore+report.getScore();
+                }
+            }
+            if (report.getBuildingTypeSmall()!=null&&report.getBuildingTypeSmall().contains("幼儿园")) {
+                kindergarten++;
+                if (report.getScore()!=null) {
+                    kindergartenScore=kindergartenScore+report.getScore();
+                }
+            }
+            if (report.getBuildingTypeSmall()!=null&&report.getBuildingTypeSmall().contains("小学")) {
+                primarySchool++;
+                if (report.getScore()!=null) {
+                    primarySchoolScore=primarySchoolScore+report.getScore();
+                }
+            }
+            if (report.getBuildingTypeSmall()!=null&&report.getBuildingTypeSmall().contains("中学")) {
+                highSchool++;
+                if (report.getScore()!=null) {
+                    highSchoolScore=highSchoolScore+report.getScore();
+                }
+            }
+            if (report.getBuildingTypeSmall()!=null&&report.getBuildingTypeSmall().contains("大学")) {
+                university++;
+                if (report.getScore()!=null) {
+                    universityScore=universityScore+report.getScore();
+                }
+            }
+            if (report.getBuildingTypeSmall()!=null&&report.getBuildingTypeSmall().contains("养老院")) {
+                nursingHome++;
+                if (report.getScore()!=null) {
+                    nursingHomeScore=nursingHomeScore+report.getScore();
+                }
+            }
         }
+        List<JSONObject> result = new ArrayList<JSONObject>();
+        JSONObject obj1 = new JSONObject();
+        obj1.put("count", hospital); 
+        obj1.put("score", hospital==0?0:hospitalScore/hospital); 
+        result.add(obj1);
+        
+        JSONObject obj2 = new JSONObject();
+        obj2.put("count", kindergarten); 
+        obj2.put("score", kindergarten==0?0:kindergartenScore/kindergarten); 
+        result.add(obj2);
+        
+        JSONObject obj3 = new JSONObject();
+        obj3.put("count", primarySchool+""); 
+        obj3.put("score", primarySchool==0?0:primarySchoolScore/primarySchool); 
+        result.add(obj3);
+        
+        JSONObject obj4 = new JSONObject();
+        obj4.put("count", highSchool+""); 
+        obj4.put("score", highSchool==0?0:highSchoolScore/highSchool); 
+        result.add(obj4);
+        
+        JSONObject obj5 = new JSONObject();
+        obj5.put("count", university+""); 
+        obj5.put("score", university==0?0:universityScore/university); 
+        result.add(obj5);
+        
+        JSONObject obj6 = new JSONObject();
+        obj6.put("count", nursingHome+""); 
+        obj6.put("score", nursingHome==0?0:nursingHomeScore/nursingHome); 
+        result.add(obj6);
         return result;
     }
 
