@@ -89,15 +89,22 @@ public class ReportRestController {
         }
 
         if (buildingType!=null && !"".equals(buildingType)) {
-            if (buildingType==1) { map.put("buildingTypeBig", "住宅建筑");}
-            if (buildingType==2) { map.put("buildingTypeBig", "党政机关、事业单位等行政办公建筑");}
-            if (buildingType==3) { map.put("buildingTypeBig", "图书、展览等文化设施建筑，学校、科研院所等教育科研建筑");}
-            if (buildingType==4) { map.put("buildingTypeBig", "医院、幼儿园、寄宿制学校、养老院等特殊群体居住建筑");}
-            if (buildingType==5) { map.put("buildingTypeBig", "商场、市场、超市、餐饮、宾馆、酒店等商业建筑");}
-            if (buildingType==6) { map.put("buildingTypeBig", "金融、保险等综合性办公建筑");}
-            if (buildingType==7) { map.put("buildingTypeBig", "电影院、网吧、歌舞厅等公共娱乐建筑");}
-            if (buildingType==8) { map.put("buildingTypeBig", "物流仓储建筑");}
-            if (buildingType==9) { map.put("buildingTypeBig", "火车站、码头、客运站、机场航站楼等交通枢纽建筑");}
+            if (buildingType==1) { map.put("buildingTypeSmall", "中学");}
+            if (buildingType==2) { map.put("buildingTypeSmall", "交通枢纽建筑");}
+            if (buildingType==3) { map.put("buildingTypeSmall", "公共娱乐建筑");}
+            if (buildingType==4) { map.put("buildingTypeSmall", "养老院");}
+            if (buildingType==5) { map.put("buildingTypeSmall", "医院");}
+            if (buildingType==6) { map.put("buildingTypeSmall", "商业建筑");}
+            if (buildingType==7) { map.put("buildingTypeSmall", "大学");}
+            if (buildingType==8) { map.put("buildingTypeSmall", "小学");}
+            if (buildingType==9) { map.put("buildingTypeSmall", "幼儿园");}
+            if (buildingType==10) { map.put("buildingTypeSmall", "教育科研建筑");}
+            if (buildingType==11) { map.put("buildingTypeSmall", "文化设施建筑");}
+            if (buildingType==12) { map.put("buildingTypeSmall", "物流仓储建筑");}
+            if (buildingType==13) { map.put("buildingTypeSmall", "科研院");}
+            if (buildingType==14) { map.put("buildingTypeSmall", "综合性办公建筑");}
+            if (buildingType==15) { map.put("buildingTypeSmall", "行政办公建筑");}
+            if (buildingType==16) { map.put("buildingTypeSmall", "院所等教育科研建筑");}
         }
         if (StringUtils.hasText(competentDepartment) && !"0".equals(competentDepartment)&& !"全部".equals(competentDepartment)) {
             map.put("competentDepartment", competentDepartment);

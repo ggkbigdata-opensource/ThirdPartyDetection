@@ -373,8 +373,8 @@ public class CheckReportServiceImpl implements CheckReportService {
                     list.add(predicate);
                    //list.add(cb.in(root.in(reportNums)));
                 }
-                if (map.get("buildingTypeBig")!=null) {
-                    list.add(cb.equal(root.get("buildingTypeBig").as(String.class), (String)map.get("buildingTypeBig")));
+                if (map.get("buildingTypeSmall")!=null) {
+                    list.add(cb.equal(root.get("buildingTypeSmall").as(String.class), (String)map.get("buildingTypeSmall")));
                 }
                 if (map.get("competentDepartment")!=null) {
                     list.add(cb.equal(root.get("competentDepartment").as(String.class), (String)map.get("competentDepartment")));
