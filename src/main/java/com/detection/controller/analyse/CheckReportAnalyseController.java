@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +27,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.detection.model.area.Street;
 import com.detection.model.report.entities.CrCheckReport;
 import com.detection.model.report.entities.CrCheckReportResultStat;
+import com.detection.model.user.CrUser;
 import com.detection.services.AuthenticationService;
 import com.detection.services.CheckReportInfoService;
 import com.detection.services.CheckReportService;
@@ -38,6 +42,7 @@ import com.detection.services.CrCheckReportResultStatService;
 import com.detection.services.PDFParserService;
 import com.detection.services.StreetService;
 import com.detection.services.UserControlService;
+import com.detection.util.EncryptionHelper;
 
 /**
  *
@@ -54,16 +59,28 @@ public class CheckReportAnalyseController {
     @Autowired
     private StreetService streetService;
     @Autowired
+    private UserControlService userControlService;
+    @Autowired
     private CrCheckReportResultStatService checkReportResultStatService;
 
     @Value("${uploadPath}")
     private String uploadPath;
 
     @RequestMapping(value = "/checkReport", method = RequestMethod.GET)
-    public String toPage(Long streetId, Long blockId, String report, HttpServletRequest request) {
+    public String toPage(Long streetId, Long blockId, String report,@RequestParam(required=true)String loginName,@RequestParam(required=true)String userPassword, HttpServletRequest request) throws Exception {
         request.setAttribute("streetId", streetId);
         request.setAttribute("blockId", blockId);
         request.setAttribute("report", report);
+        
+        JSONObject result = userControlService.userLogin(loginName, userPassword);
+        HttpSession session = request.getSession();
+        if(result.getIntValue("code") == 200){
+            session.setAttribute("userName", loginName);
+            session.setAttribute("token", result.getString("token"));
+            session.setAttribute("role", result.getString("role"));
+            session.setMaxInactiveInterval(4*60*60);
+        }
+        
         return "analyse/check-report-analyse";
     }
 
@@ -263,6 +280,8 @@ public class CheckReportAnalyseController {
         int highSchool = 0;// 中学
         int university = 0;// 大学
         int nursingHome = 0;// 养老院
+        int hotel = 0;// 旅馆
+        int grogshop = 0;// 酒店
 
         double hospitalScore = 0;// 医院
         double kindergartenScore = 0;// 幼儿园
@@ -270,6 +289,8 @@ public class CheckReportAnalyseController {
         double highSchoolScore = 0;// 中学
         double universityScore = 0;// 大学
         double nursingHomeScore = 0;// 养老院
+        double hotelScore = 0;// 
+        double grogshopScore = 0;// 
 
         for (CrCheckReport report : reports) {
             if (report.getBuildingTypeSmall() != null && report.getBuildingTypeSmall().contains("医院")) {
@@ -303,6 +324,18 @@ public class CheckReportAnalyseController {
                 }
             }
             if (report.getBuildingTypeSmall() != null && report.getBuildingTypeSmall().contains("养老院")) {
+                nursingHome++;
+                if (report.getScore() != null) {
+                    nursingHomeScore = nursingHomeScore + report.getScore();
+                }
+            }
+            if (report.getBuildingTypeSmall() != null && report.getBuildingTypeSmall().contains("旅馆")) {
+                nursingHome++;
+                if (report.getScore() != null) {
+                    nursingHomeScore = nursingHomeScore + report.getScore();
+                }
+            }
+            if (report.getBuildingTypeSmall() != null && report.getBuildingTypeSmall().contains("酒店")) {
                 nursingHome++;
                 if (report.getScore() != null) {
                     nursingHomeScore = nursingHomeScore + report.getScore();

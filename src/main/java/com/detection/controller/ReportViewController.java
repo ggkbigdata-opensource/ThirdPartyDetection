@@ -95,10 +95,20 @@ public class ReportViewController {
     
     
     @RequestMapping(value = "/mainEmbeddedAnalyse" , method = RequestMethod.GET)
-    public String mainEmbeddedAnalyse(Long streetId,Long blockId,String report,HttpServletRequest request) {
+    public String mainEmbeddedAnalyse(Long streetId,Long blockId,String report,@RequestParam(required=true)String loginName,@RequestParam(required=true)String userPassword,HttpServletRequest request) throws Exception {
         request.setAttribute("streetId", streetId);
         request.setAttribute("blockId", blockId);
         request.setAttribute("report", report);
+        
+        JSONObject result = userControlService.userLogin(loginName, userPassword);
+        HttpSession session = request.getSession();
+        if(result.getIntValue("code") == 200){
+            session.setAttribute("userName", loginName);
+            session.setAttribute("token", result.getString("token"));
+            session.setAttribute("role", result.getString("role"));
+            session.setMaxInactiveInterval(4*60*60);
+        }
+        
         return "report/main-embeddedAnalyse";
     }
     

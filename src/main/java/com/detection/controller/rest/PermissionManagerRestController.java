@@ -48,7 +48,7 @@ public class PermissionManagerRestController {
             session.setAttribute("userName", loginName);
             session.setAttribute("token", result.getString("token"));
             session.setAttribute("role", result.getString("role"));
-            session.setMaxInactiveInterval(2*60*60);
+            session.setMaxInactiveInterval(4*60*60);
         }
         return result;
     }
