@@ -9,6 +9,10 @@ html {
 body, dl, dd, h1, h2, h3, h4, h5, h6, p, form, pre, blockquote, figure {
     margin: 0;
 }
+body {
+	width: 100%;
+	overflow-x: hidden;
+}
 * {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;

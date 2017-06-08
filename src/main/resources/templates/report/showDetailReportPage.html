@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -13,26 +13,26 @@
 </head>
 
 <body>
-    <article class="article">
+    <div class="article">
         <p class="number tr">报告编号:<span th:text="${result.reportNum}"></span>
         </p>
         <h1>
             <span id="company"></span>--天河区开展第三方消防设施检测危险源分析报告
         </h1>
         <p class="small">CONSULTATIVE REPORTS</p>
-        <section class="content">
+        <div class="content">
             <h2 th:text="${result.riskLevel}"><span>评估结果：</span></h2>
             
-            <section>
+            <div>
                 <p>等级说明:</p>
 <p>一、100分表示所排查的建筑消防设施项目完全合格;0分表示所排查的建筑消防设施项目均不合格，建筑设施隐患严重。</p>
 <p>二、等级1代表90分以上;等级2代表70-90分;等级3代表50-70分;等级4代表50以下。</p>
-            </section>
-            <section>
+            </div>
+            <div>
                 <h3>结论：</h3>
                 <p th:text="${result.reportConclusion}"></p>
-            </section>
-            <section>
+            </div>
+            <div>
                 <h3>不合格项：</h3>
                 <div class="unqualified-item">
                     <div class="projectType projectTit">
@@ -60,11 +60,11 @@
                         </div>
                     </div>
                 </div>
-            </section>
-            <section>
+            </div>
+            <div>
                 <h3>整改意见：</h3>
                 <p th:text="${result.rectifyComments}"></p>
-            </section>
+            </div>
             <div class="bottom">
             <div class="signature">
                 <p class="tr">天河区消防安全委员会</p>
@@ -72,7 +72,7 @@
                 <p class="tr" th:text="${result.reportDate}">2017年1月20日</p>
             </div>
         </div>
-    </article>
+    </div>
     <!-- <div class="watermark"></div> -->
     <script th:src="@{/js/report/showDetailReportPage.js}"></script>
 </body>

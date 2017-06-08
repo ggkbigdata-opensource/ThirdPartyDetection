@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -20,13 +20,13 @@
 </head>
 
 <body>
-    <article class="article">
+    <div class="article">
         <p class="number tr">
             报告编号:<span id="reportNum"></span>
         </p>
         <h1>天河区第三方消防设施检测危险源分析报告</h1>
         <p class="small">ANALYSIS REPORT</p>
-        <section class="content">
+        <div class="content">
             <span class="indent0" id="projectName"></span>
             </p>
             <p>
@@ -71,8 +71,8 @@
                     <img th:src="@{/css/imgs/QRcode.jpg}" />
                 </div>
             </div>
-        </section>
-    </article>
+        </div>
+    </div>
     <script th:src="@{/js/report/showAbstractReportPage.js}"></script>
 </body>
 </html>
