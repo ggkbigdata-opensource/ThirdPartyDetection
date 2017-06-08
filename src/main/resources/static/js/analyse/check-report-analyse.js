@@ -230,7 +230,7 @@ function getFifthEchart(sId){
 			for(var i=0;i<result.length;i++){
 				datas[0].push(result[i].count);
 				datas[1].push(parseFloat(result[i].score).toFixed(3));
-				dataRight[0].push((result[i].proportion*100));
+				dataRight[0].push((result[i].proportion*100).toFixed(3));
 			}
 			echartBarBar('streetAndHeight',legend,items,datas,dataRight,unitRight,unitLeft,title,ps);
 		}
@@ -256,7 +256,7 @@ function getSixthEchart(sId){
 				items.push(result[i].itemName);
 				datas[0].push(result[i].qualified);
 				datas[1].push(result[i].unQualified);
-				dataRight[0].push((result[i].passRate*100));
+				dataRight[0].push((result[i].passRate*100).toFixed(3));
 			}
 			echartBarBar('streetAndItem',legend,items,datas,dataRight,unitRight,unitLeft,title,ps);
 		}
