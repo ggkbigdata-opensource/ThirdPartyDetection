@@ -412,16 +412,19 @@ public class CheckReportAnalyseController {
         JSONObject obj1 = new JSONObject();
         obj1.put("count", one);
         obj1.put("score", one == 0 ? 0 : oneScore / one);
+        obj1.put("proportion",  (float)one/(float)reports.size());
         result.add(obj1);
 
         JSONObject obj2 = new JSONObject();
         obj2.put("count", two);
         obj2.put("score", two == 0 ? 0 : twoScore / two);
+        obj2.put("proportion",  (float)two/(float)reports.size());
         result.add(obj2);
 
         JSONObject obj3 = new JSONObject();
         obj3.put("count", three);
         obj3.put("score", three == 0 ? 0 : threeScore / three);
+        obj3.put("proportion",  (float)three/(float)reports.size());
         result.add(obj3);
         return result;
     }
