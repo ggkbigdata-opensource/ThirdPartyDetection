@@ -66,7 +66,7 @@ public class CrCheckReport {
     private String buildingTypeBig;
     private String buildingTypeSmall;
     private String competentDepartment;//主管部门
-    private String riskLevel;//主管部门
+    private String riskLevel;//隐患等级
 
     public CrCheckReport() {
         super();

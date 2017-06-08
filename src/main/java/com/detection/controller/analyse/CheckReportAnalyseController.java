@@ -357,8 +357,8 @@ public class CheckReportAnalyseController {
         result.add(obj6);
         
         JSONObject obj7 = new JSONObject();
-        obj6.put("count", hotel + "");
-        obj6.put("score", hotel == 0 ? 0 : hotelScore / hotel);
+        obj7.put("count", hotel + "");
+        obj7.put("score", hotel == 0 ? 0 : hotelScore / hotel);
         result.add(obj7);
         return result;
     }
