@@ -9,19 +9,14 @@ package com.detection.controller.analyse;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -34,15 +29,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.detection.model.area.Street;
 import com.detection.model.report.entities.CrCheckReport;
 import com.detection.model.report.entities.CrCheckReportResultStat;
-import com.detection.model.user.CrUser;
-import com.detection.services.AuthenticationService;
 import com.detection.services.CheckReportInfoService;
 import com.detection.services.CheckReportService;
 import com.detection.services.CrCheckReportResultStatService;
-import com.detection.services.PDFParserService;
 import com.detection.services.StreetService;
 import com.detection.services.UserControlService;
-import com.detection.util.EncryptionHelper;
 
 /**
  *
@@ -280,8 +271,7 @@ public class CheckReportAnalyseController {
         int highSchool = 0;// 中学
         int university = 0;// 大学
         int nursingHome = 0;// 养老院
-        int hotel = 0;// 旅馆
-        int grogshop = 0;// 酒店
+        int hotel = 0;// 旅馆、酒店
 
         double hospitalScore = 0;// 医院
         double kindergartenScore = 0;// 幼儿园
@@ -290,7 +280,6 @@ public class CheckReportAnalyseController {
         double universityScore = 0;// 大学
         double nursingHomeScore = 0;// 养老院
         double hotelScore = 0;// 
-        double grogshopScore = 0;// 
 
         for (CrCheckReport report : reports) {
             if (report.getBuildingTypeSmall() != null && report.getBuildingTypeSmall().contains("医院")) {
@@ -329,16 +318,10 @@ public class CheckReportAnalyseController {
                     nursingHomeScore = nursingHomeScore + report.getScore();
                 }
             }
-            if (report.getBuildingTypeSmall() != null && report.getBuildingTypeSmall().contains("旅馆")) {
-                nursingHome++;
+            if (report.getBuildingTypeSmall() != null && report.getBuildingTypeSmall().contains("商业建筑")) {
+                hotel++;
                 if (report.getScore() != null) {
-                    nursingHomeScore = nursingHomeScore + report.getScore();
-                }
-            }
-            if (report.getBuildingTypeSmall() != null && report.getBuildingTypeSmall().contains("酒店")) {
-                nursingHome++;
-                if (report.getScore() != null) {
-                    nursingHomeScore = nursingHomeScore + report.getScore();
+                    hotelScore = hotelScore + report.getScore();
                 }
             }
         }
@@ -372,6 +355,11 @@ public class CheckReportAnalyseController {
         obj6.put("count", nursingHome + "");
         obj6.put("score", nursingHome == 0 ? 0 : nursingHomeScore / nursingHome);
         result.add(obj6);
+        
+        JSONObject obj7 = new JSONObject();
+        obj6.put("count", hotel + "");
+        obj6.put("score", hotel == 0 ? 0 : hotelScore / hotel);
+        result.add(obj7);
         return result;
     }
 
@@ -447,7 +435,7 @@ public class CheckReportAnalyseController {
      */
     @RequestMapping(value = "/streetAndItem", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, JSONObject> streetAndItem(Long streetId) {
+    public Map<Integer, JSONObject> streetAndItem(Long streetId) {
         
         List<CrCheckReport> reports=null;
         List<CrCheckReportResultStat> resultStats=null;
@@ -462,20 +450,61 @@ public class CheckReportAnalyseController {
             resultStats = checkReportResultStatService.findByReportNums(reportNums);
         }
         
-        //获取分类
-        List<CrCheckReportResultStat>  allType = checkReportResultStatService.findGroupByItemCode();
         
-        Map<String, JSONObject> result = new HashMap<String,JSONObject>();
-        for (CrCheckReportResultStat type : allType) {
+        Map<Integer, JSONObject> result = new HashMap<Integer,JSONObject>();
+        
+        String[] arr={"消防给水","自动灭火系统","火灾自动报警系统","防烟和排烟系统","防火门、窗和防火卷帘","消防电源及配电","消防应急照明和疏散指示系统","建筑灭火器","消防栓系统"};
+        for (int i = 1; i < arr.length+1; i++) {
             JSONObject obj = new JSONObject();
             obj.put("qualified", 0);
             obj.put("unQualified", 0);
             obj.put("passRate", 0);
-            obj.put("itemName", type.getItemName());
-            result.put(type.getItemCode().trim(), obj);
+            obj.put("itemName", arr[i-1]);
+            result.put(i, obj);
         }
         for (CrCheckReportResultStat reportResultStat : resultStats) {
-            JSONObject obj = result.get(reportResultStat.getItemCode().trim());
+            JSONObject obj=null;
+            int key = 0;
+            
+            if ("6".equals(reportResultStat.getItemCode())) {//1
+                 obj = result.get(1);
+                 key=1;
+            }
+            //2
+            if ("10".equals(reportResultStat.getItemCode())||"11".equals(reportResultStat.getItemCode())||"8".equals(reportResultStat.getItemCode())||"9".equals(reportResultStat.getItemCode())) {
+                 obj = result.get(2);
+                 key=2;
+            }
+            if ("16".equals(reportResultStat.getItemCode())) {//3
+                 obj = result.get(3);
+                 key=3;
+            }
+            if ("17".equals(reportResultStat.getItemCode())) {//4
+                 obj = result.get(4);
+                 key=4;
+            }
+            if ("18".equals(reportResultStat.getItemCode())) {//5
+                 obj = result.get(5);
+                 key=5;
+            }
+            if ("19".equals(reportResultStat.getItemCode())) {//6
+                 obj = result.get(6);
+                 key=6;
+            }
+            if ("20".equals(reportResultStat.getItemCode())) {//7
+                 obj = result.get(7);
+                 key=7;
+            }
+            if ("21".equals(reportResultStat.getItemCode())) {//8
+                 obj = result.get(8);
+                 key=8;
+            }
+            if ("7".equals(reportResultStat.getItemCode())) {//9
+                 obj = result.get(9);
+                 key=9;
+            }
+            
+            
             Integer qualified = (Integer)obj.get("qualified");
             Integer unQualified = (Integer)obj.get("unQualified");
             
@@ -486,10 +515,10 @@ public class CheckReportAnalyseController {
             
             if ((unQualified+qualified)!=0) {
                 BigDecimal bg = new BigDecimal((float)unQualified/(float)(unQualified+qualified)).setScale(2, RoundingMode.UP);
-                obj.put("passRate", bg.doubleValue()*100);
+                obj.put("passRate", bg.doubleValue());
             }
             
-            result.put(reportResultStat.getItemCode(), obj);
+            result.put(key, obj);
         }
         
         return result;
