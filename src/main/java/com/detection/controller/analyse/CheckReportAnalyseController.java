@@ -52,12 +52,6 @@ public class CheckReportAnalyseController {
     @Autowired
     private CheckReportInfoService checkReportInfoService;
     @Autowired
-    private UserControlService userControlService;
-    @Autowired
-    private AuthenticationService authService;
-    @Autowired
-    private PDFParserService pdfParser;
-    @Autowired
     private StreetService streetService;
     @Autowired
     private CrCheckReportResultStatService checkReportResultStatService;
@@ -90,7 +84,9 @@ public class CheckReportAnalyseController {
             obj.put("streetId", street.getId());
             obj.put("streetName", street.getName());
             obj.put("score", "");
+            obj.put("count", 0);
             double allScore = 0.000;
+            int count = 00;
             List<CrCheckReport> reports = checkReportService.findByStreetId(street.getId());
             if (reports != null && reports.size() > 0) {
                 for (CrCheckReport report : reports) {
@@ -98,8 +94,10 @@ public class CheckReportAnalyseController {
                         allScore = allScore + report.getScore();
                     }
                 }
+                count=reports.size();
                 obj.put("score", allScore / reports.size());
             }
+            obj.put("count", count);
             result.add(obj);
         }
 
