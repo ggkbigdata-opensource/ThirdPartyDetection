@@ -7,13 +7,10 @@
  */
 package com.detection.controller.rest;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,10 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.detection.model.user.CrUser;
-import com.detection.model.user.UserRepository;
 import com.detection.services.UserControlService;
-import com.detection.util.EncryptionHelper;
 
 /**
  *
@@ -54,6 +48,7 @@ public class PermissionManagerRestController {
             session.setAttribute("userName", loginName);
             session.setAttribute("token", result.getString("token"));
             session.setAttribute("role", result.getString("role"));
+            session.setMaxInactiveInterval(2*60*60);
         }
         return result;
     }

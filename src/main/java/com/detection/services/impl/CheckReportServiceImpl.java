@@ -64,7 +64,6 @@ import com.detection.model.report.entities.ReportResultStatCopy;
 import com.detection.model.report.repositories.CheckItemDetailCopyRepository;
 import com.detection.model.report.repositories.CheckReportInfoRepository;
 import com.detection.model.report.repositories.CheckReportRepository;
-import com.detection.model.report.repositories.ReportResultStatCopyRepository;
 import com.detection.services.BlockService;
 import com.detection.services.CheckReportService;
 import com.detection.services.PDFParserService;
@@ -94,8 +93,8 @@ public class CheckReportServiceImpl implements CheckReportService {
     private StreetRepository streetRepository;
     @Autowired
     private BsBuildingInfoRepository buildingInfoRepository;
-    @Autowired
-    private ReportResultStatCopyRepository reportResultStatCopyRepository;
+    //@Autowired
+   // private ReportResultStatCopyRepository reportResultStatCopyRepository;
     @Autowired
     private CheckItemDetailCopyRepository checkItemDetailCopyRepository;
     // @Autowired
@@ -860,7 +859,7 @@ public class CheckReportServiceImpl implements CheckReportService {
             stat.setCheckNum(Integer.parseInt(jiancheshumu));
             stat.setUnqualifiedNum(Integer.parseInt(buhegeshu));
 
-            reportResultStatCopyRepository.save(stat);
+            //reportResultStatCopyRepository.save(stat);
         }
         for (int i = jianchexian; i < sheetOne.getLastRowNum() + 1; i++) {
 

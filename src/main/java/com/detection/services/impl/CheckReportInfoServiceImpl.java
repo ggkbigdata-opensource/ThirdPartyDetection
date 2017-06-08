@@ -22,7 +22,6 @@ import com.detection.model.report.entities.CrCheckReportInfo;
 import com.detection.model.report.repositories.CheckItemDetailCopyRepository;
 import com.detection.model.report.repositories.CheckReportInfoRepository;
 import com.detection.model.report.repositories.CheckReportRepository;
-import com.detection.model.report.repositories.ReportResultStatCopyRepository;
 import com.detection.services.BlockService;
 import com.detection.services.CheckReportInfoService;
 import com.detection.services.PDFParserService;
@@ -48,8 +47,6 @@ public class CheckReportInfoServiceImpl implements CheckReportInfoService {
     private StreetRepository streetRepository;
     @Autowired
     private BsBuildingInfoRepository buildingInfoRepository;
-    @Autowired
-    private ReportResultStatCopyRepository reportResultStatCopyRepository;
     @Autowired
     private CheckItemDetailCopyRepository checkItemDetailCopyRepository;
     //@Autowired

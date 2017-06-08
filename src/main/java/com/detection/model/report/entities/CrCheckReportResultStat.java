@@ -26,7 +26,6 @@ public class CrCheckReportResultStat {
     @Id
     @GeneratedValue
     private int id;
-    // private String reportNum;
     private String itemCode;
     private String itemName;
     private int checkNum;
