@@ -208,87 +208,34 @@ public class CheckReportAnalyseController {
      */
     @RequestMapping(value = "/streetAndType", method = RequestMethod.GET)
     @ResponseBody
-    public JSONObject streetAndType(Long streetId) {
+    public  Map<String, JSONObject> streetAndType(Long streetId) {
 
-        JSONObject result = new JSONObject();
         List<CrCheckReport> reports = null;
+        List<CrCheckReport> allReport = checkReportService.findAll();
         if (streetId == null || "".equals(streetId)) {
-            reports = checkReportService.findAll();
+            reports=allReport;
         } else {
             reports = checkReportService.findByStreetId(streetId);
         }
-        int value1 = 0;// "住宅建筑"；
-        int value2 = 0;// "党政机关、事业单位等行政办公"
-        int value3 = 0;//
-        int value4 = 0;//
-        int value5 = 0;//
-        int value6 = 0;//
-        int value7 = 0;//
-        int value8 = 0;// "物流仓储建筑"
-        int value9 = 0;// "火车站、码头、客运站、机场航站楼等交通枢纽建筑"
-        int value10 = 0;//
-        int value11 = 0;//
-        int value12 = 0;//
-        int value13 = 0;//
-        int value14 = 0;//
-        int value15 = 0;//
-        int value16 = 0;//
-        for (CrCheckReport report : reports) {
-            if (StringUtils.isEmpty(report.getBuildingTypeSmall())) {
-                continue;
-            }
-            if ("中学".equals(report.getBuildingTypeSmall().trim())) {
-                value1++;
-            }
-            if ("交通枢纽建筑".equals(report.getBuildingTypeSmall().trim())) {
-                value2++;
-            }
-            if ("公共娱乐建筑".equals(report.getBuildingTypeSmall().trim())) {
-                value3++;
-            }
-            if ("养老院".equals(report.getBuildingTypeSmall().trim())) {
-                value4++;
-            }
-            if ("医院".equals(report.getBuildingTypeSmall().trim())) {
-                value5++;
-            }
-            if ("商业建筑".equals(report.getBuildingTypeSmall().trim())) {
-                value6++;
-            }
-            if ("大学".equals(report.getBuildingTypeSmall().trim())) {
-                value7++;
-            }
-            if ("小学".equals(report.getBuildingTypeSmall().trim())) {
-                value8++;
-            }
-            if ("幼儿园".equals(report.getBuildingTypeSmall().trim())) {
-                value9++;
-            }
-            if ("教育科研建筑".equals(report.getBuildingTypeSmall().trim())) {
-                value10++;
-            }
-            if ("文化设施建筑".equals(report.getBuildingTypeSmall().trim())) {
-                value11++;
-            }
-            if ("物流仓储建筑".equals(report.getBuildingTypeSmall().trim())) {
-                value12++;
-            }
-            if ("科研院".equals(report.getBuildingTypeSmall().trim())) {
-                value13++;
-            }
-            if ("综合性办公建筑".equals(report.getBuildingTypeSmall().trim())) {
-                value14++;
-            }
-            if ("行政办公建筑".equals(report.getBuildingTypeSmall().trim())) {
-                value15++;
-            }
-            if ("院所等教育科研建筑".equals(report.getBuildingTypeSmall().trim())) {
-                value16++;
-            }
+        List<String> types = checkReportService.findGroupByBuildingTypeSmall();
+        Map<String, JSONObject> result = new HashMap<String,JSONObject>();
+        for (String type : types) {
+            JSONObject obj = new JSONObject();
+            obj.put("count", 0);
+            obj.put("proportion", 0);
+            obj.put("typeName", type);
+            result.put(type, obj);
         }
-        int[] arr = { value1, value2, value3, value4, value5, value6, value7, value8, value9, value10, value11, value12,
-                value13, value14, value15, value16 };
-        result.put("list", arr);
+        for (CrCheckReport report : reports) {
+            System.out.println(report.getReportNum());
+            JSONObject obj = result.get(report.getBuildingTypeSmall().trim());
+            Integer count = (Integer)obj.get("count");
+            
+            count++;
+            
+            obj.put("count", count);
+            obj.put("proportion", (float)count/(float)reports.size());
+        }
 
         return result;
     }
@@ -427,7 +374,7 @@ public class CheckReportAnalyseController {
                     oneScore = oneScore + report.getScore();
                 }
             }
-            if (report.getHeightType() != null && report.getHeightType().contains("高层")) {
+            if ("高层建筑".equals(report.getHeightType())) {
                 two++;
                 if (report.getScore() != null) {
                     twoScore = twoScore + report.getScore();
@@ -506,7 +453,7 @@ public class CheckReportAnalyseController {
             
             if ((unQualified+qualified)!=0) {
                 BigDecimal bg = new BigDecimal((float)unQualified/(float)(unQualified+qualified)).setScale(2, RoundingMode.UP);
-                obj.put("passRate", bg.doubleValue()*100+"%");
+                obj.put("passRate", bg.doubleValue()*100);
             }
             
             result.put(reportResultStat.getItemCode(), obj);

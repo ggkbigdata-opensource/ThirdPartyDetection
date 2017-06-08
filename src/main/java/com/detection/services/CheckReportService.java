@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.detection.model.report.entities.CrCheckReport;
-import com.detection.model.report.entities.CrCheckReportInfo;
 
 /**
  *
@@ -185,5 +184,13 @@ public interface CheckReportService {
      * @description
      */
     public List<CrCheckReport> findByStreetIdAndCompetentDepartmentIsNotNull(Long streetId);
+
+    /**
+     * @createDate 2017年6月8日下午3:45:02 
+     * @author wangzhiwang
+     * @return 
+     * @description
+     */
+    public List<String> findGroupByBuildingTypeSmall();
 
 }

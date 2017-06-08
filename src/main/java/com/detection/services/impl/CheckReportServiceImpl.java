@@ -1017,4 +1017,10 @@ public class CheckReportServiceImpl implements CheckReportService {
         return reports;
     }
 
+    @Override
+    public List<String> findGroupByBuildingTypeSmall() {
+        List<String> types = checkReportRepo.findGroupByBuildingTypeSmall();
+        return types;
+    }
+
 }
