@@ -86,13 +86,25 @@ function init(){
 					getFifthEchart(sId);
 				}
 			});
-			
+			$('#iStreet').combobox({
+				data: streets,
+				valueField: 'id',
+				textField: 'name',
+				onLoadSuccess: function () {
+		    		$('#iStreet').combobox('select',0);
+				},
+				onChange: function(){
+					var sId = $('#iStreet').combobox('getValue');
+					getSixthEchart(sId);
+				}
+			});
 		}
 	});
 	getFirstAndSecondEchart();
 	getThirdEchart();
 	getFourthEchart();
 	getFifthEchart();
+	getSixthEchart();
 	//首次加载datatable
 	showReportList();
 }
@@ -101,16 +113,20 @@ function getFirstAndSecondEchart(){
 	$.get('streetAndScore',function(result){
 		if(result && result.length>0){
 			var items=[];
-			var datas=[];
-			var legend=['各街道得分'];
-			var unit='';
+			var dataLeft=[];
+			var dataRight=[];	 
+			var legend=['得分','数量'];
+			var unitLeft = '数量';
+			var unitRight = '得分';
 			var title = '天河区综合得分';
-			datas[0] = [];
+			dataLeft[0] = [];
+			dataRight[0] = [];
 			for(var i=0;i<result.length;i++){
 				items.push(result[i].streetName);
-				datas[0].push(parseFloat(result[i].score).toFixed(3));
+				dataLeft[0].push(parseFloat(result[i].score).toFixed(3));
+				dataRight[0].push(result[i].count);
 			}
-			echartBar('streetAndScore',legend,items,datas,unit,title);
+			echartBarBar('streetAndScore',legend,items,dataLeft,dataRight,unitRight,unitLeft,title);
 		}
 	});
 	$.get('levelAndScore',function(results){
@@ -120,8 +136,19 @@ function getFirstAndSecondEchart(){
 			var legend=['一级','二级','三级','四级'];
 			var unit='个';
 			var title = '天河区街道单位等级';
+			var totals = [0,0,0,0];
+			var all = 0;
+			totals[i] = 0;
 			for(var i=0;i<results.length;i++){
 				items.push(results[i].streetName);
+				for(var l=0;l<results[i].list.length;l++){
+					totals[l] += results[i].list[l];
+					all += results[i].list[l];
+				}
+			}
+			for(var m=0;m<totals.length;m++){
+				var str = '<tr><td>等级' + (m+1) + '</td><td>' + totals[m] + '</td><td>' + (all==0?0:((totals[m]/all*100).toFixed(3))) + '%</td></tr>';
+				$('#tbody').append(str);
 			}
 			for(var j=0;j<results[0].list.length;j++){
 				datas[j]=[];
@@ -129,44 +156,59 @@ function getFirstAndSecondEchart(){
 					datas[j].push(results[k].list[j]);
 				}
 			}
+			//饼图参数
+			var pieItems = ['一级','二级','三级','四级'];
+			var pieLegend = ['一级','二级','三级','四级'];
+			var pieDatas = [];
+			var pieTitle = '天河区等级饼图';
+			pieDatas = totals;
 			echartBar('scoreAndLevel',legend,items,datas,unit,title);
+			echartPie('scoreAndLevelPie',pieLegend,pieItems,pieDatas,pieTitle);
 		}
 	});
 }
 function getThirdEchart(sId){
 	$.get('streetAndType',{streetId:sId},function(result){
-		if(result && result.list.length>0){
-			var items=['中学','交通枢纽建筑','公共娱乐建筑','养老院','医院','商业建筑','大学','小学','幼儿园','教育科研建筑','文化设施建筑','物流仓储建筑','科研院','综合性办公建筑','行政办公建筑','院所等教育科研建筑'];
-			var datas=[];
-			var legend=['报告个数'];
-			var unit='个';
+		if(result){
+			var items=[];
+			var dataLeft=[];
+			var dataRight=[];
+			var legend=['数量','占比%'];
+			var unitLeft='数量';
+			var unitRight='占比%';
 			var sName = $('#tStreet').combobox('getText');
 			var title = (sName=='全部'?'天河区':(sName+'街道')) + '建筑类型消防设施隐患';
-			datas[0]=[];
-			for(var i=0;i<result.list.length;i++){
-				datas[0].push(result.list[i]);
+			dataLeft[0]=[];
+			dataRight[0]=[];
+			for(var key in result){
+				items.push(result[key].typeName);
+				dataLeft[0].push(result[key].count);
+				dataRight[0].push((result[key].proportion*100).toFixed(3));
 			}
-			echartBar('streetAndType',legend,items,datas,unit,title);
+			
+			echartBarBar('streetAndType',legend,items,dataLeft,dataRight,unitLeft,unitRight,title);
 		}
 	});
 }
 function getFourthEchart(sId){
 	$.get('streetAndDepartment',{streetId:sId},function(result){
 		if(result && result.length>0){
-			var items=['医院','幼儿园','小学','中学','大学','养老院'];
-			var datas=[];
-			var legend=['数量','得分'];
-			var unit='个';
+			var items=['医院','幼儿园','小学','中学','大学','养老院','宾馆/酒店'];
+			var dataLeft=[];
+			var dataRight=[];
+			var legend=['得分','数量'];
+			var unitLeft='数量';
+			var unitRight='得分'
 			var sName = $('#uStreet').combobox('getText');
-			var title = (sName=='全部'?'天河区':(sName+'街道')) + '监管单位等级、得分';
+			var title = (sName=='全部'?'天河区':(sName+'街道')) + '行业社会单位等级、得分';
 			var ps = '卫生和计划生育局（医院）、教育局（小学，中学，大学）、民政厅（养老院）';
-			datas[0]=[];
-			datas[1]=[];
+			dataLeft[0]=[];
+			dataRight[0]=[];
 			for(var i=0;i<result.length;i++){
-				datas[0].push(result[i].count);
-				datas[1].push(parseFloat(result[i].score).toFixed(3));
+				dataRight[0].push(result[i].count);
+				dataLeft[0].push(parseFloat(result[i].score).toFixed(3));
 			}
-			echartBar('streetAndUnit',legend,items,datas,unit,title,ps);
+			echartBarBar('streetAndUnit',legend,items,dataLeft,dataRight,unitRight,unitLeft,title,ps);
 		}
 	});
 }
@@ -175,17 +217,48 @@ function getFifthEchart(sId){
 		if(result && result.length>0){
 			var items=['多层建筑','高层建筑','超高层建筑'];
 			var datas=[];
-			var legend=['数量','得分'];
-			var unit='个';
+			var dataRight=[];
+			var legend=['数量','得分','占比%'];
+			var unitRight='数量、得分';
+			var unitLeft='占比%';
+			var ps='';
 			var sName = $('#hStreet').combobox('getText');
 			var title = (sName=='全部'?'天河区':(sName+'街道')) + '不同高度类型建筑消防设施等级、得分';
 			datas[0]=[];
 			datas[1]=[];
+			dataRight[0]=[];
 			for(var i=0;i<result.length;i++){
 				datas[0].push(result[i].count);
 				datas[1].push(parseFloat(result[i].score).toFixed(3));
+				dataRight[0].push((result[i].proportion*100));
 			}
-			echartBar('streetAndHeight',legend,items,datas,unit,title);
+			echartBarBar('streetAndHeight',legend,items,datas,dataRight,unitRight,unitLeft,title,ps);
+		}
+	});
+}
+function getSixthEchart(sId){
+	$.get('streetAndItem',{streetId:sId},function(result){
+		console.log(result);
+		if(result){
+			var items=[];
+			var datas=[];
+			var dataRight=[];
+			var legend=['合格项','不合格项','合格率%'];
+			var unitRight='合格项、不合格项';
+			var unitLeft='合格率%';
+			var ps='';
+			var sName = $('#iStreet').combobox('getText');
+			var title = (sName=='全部'?'天河区':(sName+'街道')) + '检测项';
+			datas[0]=[];
+			datas[1]=[];
+			dataRight[0]=[];
+			for(var i in result){
+				items.push(result[i].itemName);
+				datas[0].push(result[i].qualified);
+				datas[1].push(result[i].unQualified);
+				dataRight[0].push((result[i].passRate*100));
+			}
+			echartBarBar('streetAndItem',legend,items,datas,dataRight,unitRight,unitLeft,title,ps);
 		}
 	});
 }

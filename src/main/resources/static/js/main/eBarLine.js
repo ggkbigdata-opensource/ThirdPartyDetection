@@ -1,4 +1,4 @@
-function echartBar (id,legend,item,datas,unit,title) {
+function echartBarLine (id,legend,item,dataLeft,dataRight,unitLeft,unitRight,title) {
     var option = {
         tooltip : {
             trigger : 'axis'
@@ -37,7 +37,7 @@ function echartBar (id,legend,item,datas,unit,title) {
             axisLabel : {
                 show : true,
                 formatter : function(params) {
-                    var oneLineLength = 7;
+                    var oneLineLength = 3;
                     var newParamsName = '';
                     var paramsNameNumber = params.length;
                     var provideNumber = oneLineLength;
@@ -65,21 +65,61 @@ function echartBar (id,legend,item,datas,unit,title) {
                 }
             }
         } ],
-        yAxis : [ {
-            type : 'value',
-            name : unit ? ('单位：' + unit) : '',
-            splitNumber : 4
-        } ],
+        yAxis : [
+        	{
+	            type : 'value',
+	            name : unitLeft,
+	            splitNumber : 4,
+	            axisLabel : {
+	                formatter: '{value}'
+	            }
+        	},
+        	{
+        		type : 'value',
+        		name : unitRight,
+        		splitNumber : 4,
+        		position:'right',
+        		axisLabel : {
+                    formatter: '{value} %'
+                }
+        	},
+        	
+        ],
         series : (function() {
             var series = [];
-            for (var l = 0; l < datas.length; l++) {
+            for (var l = 0; l < dataLeft.length; l++) {
                 var d = {};
                 d.name = '';
                 d.data = [];
                 d.name = legend[l];
                 d.type = 'bar';
                 d.smooth = false;
-                d.data = datas[l];
+                d.data = dataLeft[l];
+                d.itemStyle = {};
+                d.itemStyle = {
+            		normal: {  
+                        label: {  
+                            show: true,//是否展示  
+                            position: 'outside',
+                            textStyle: {  
+                                fontWeight:'bolder',  
+                                fontSize : '12',  
+                                fontFamily : '微软雅黑',  
+                            }  
+                        }  
+                    }  
+                };
+                series.unshift(d);
+            }
+            for (var j = 0; j < dataRight.length; j++) {
+            	var d = {};
+                d.name = '';
+                d.data = [];
+                d.name = legend[l];
+                d.type = 'line';
+                d.smooth = false;
+                d.yAxisIndex = 1;
+                d.data = dataRight[j];
                 d.itemStyle = {};
                 d.itemStyle = {
             		normal: {  
