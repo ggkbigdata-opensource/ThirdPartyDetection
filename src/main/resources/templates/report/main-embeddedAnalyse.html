@@ -4,7 +4,7 @@
 <body class="fixed-sidebar">
     <div id="wrapper">
         <div class="content-wrapper">
-            <section class="main-content animated fadeInRight">
+            <div class="main-content animated fadeInRight">
                 <div class="content">
                 	<input type="hidden" th:value=${streetId} id="streetSId">
                 	<input type="hidden" th:value=${blockId} id="blockSId">
@@ -75,7 +75,7 @@
                     <!--/section -->
                     <!-- Content End -->
                 </div>
-            </section>
+            </div>
             <form id="import-dialog" enctype="multipart/form-data"
                 th:action="@{/uploadReport}" method="post"
                 class="dialog">
