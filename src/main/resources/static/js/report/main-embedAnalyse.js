@@ -4,6 +4,7 @@ var sId,//传参社区、
 	bData,//社区数据
 	trendSId,//趋势分析街道id
 	trendBId,//趋势分析社区id
+	isStreetChange,//判断是否点击街道
 	item,//图项目
 	datas,//图数据
 	unit,//图单位
@@ -128,7 +129,11 @@ function getStreetBlock () {
     									}
     								},
     								onChange: function(){
+    									if(bId != 'first'){
+    										return;
+    									}
     									//图表渲染
+    									
     									trendBId = $('#blockId').combobox('getValue');
     									getTrendChart();
     									$('#reportListTable').DataTable().destroy();
@@ -143,6 +148,7 @@ function getStreetBlock () {
     					$('#blockId').combobox('setValue','');
     					trendBId = $('#blockId').combobox('getValue');
     				}
+    				isStreetChange = true;
     				//图表渲染
     				trendBId = '';
     				getTrendChart();

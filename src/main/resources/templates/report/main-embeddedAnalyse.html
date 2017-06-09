@@ -7,11 +7,11 @@
             <div class="main-content">
                 <div class="content">
                 	<input type="hidden" th:value=${streetId} id="streetSId">
-                	<input type="hidden" th:value=${blockId} id="blockSId">
+                	<input type="hidden" th:value=${blockId} id="blockBId">
                 	<input type="hidden" th:value=${report} id="report">
                 	<div class="section">
 						<div class="title">
-							<h1>建筑主体分析图</h1>
+							<h1>建筑主体分析</h1>
 							<div class="filterBox fr">
 								<div class="right-filter fr ml5">
 									<button class="btn btn-primary" >高级分析</button>
@@ -132,7 +132,7 @@
     <script th:src="@{/js/template/template.js}"></script>
     <script th:src="@{/js/main/echarts.min.js}"></script>
     <script th:src="@{/js/main/macarons.js}"></script>
-    <script th:src="@{/js/common/eBar.js}"></script>
+    <script th:src="@{/js/main/eBar.js}"></script>
     <script th:src="@{/js/report/main-embedAnalyse.js}"></script>
 </body>
 </html>
