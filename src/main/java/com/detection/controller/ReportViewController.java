@@ -95,7 +95,7 @@ public class ReportViewController {
     
     
     @RequestMapping(value = "/mainEmbeddedAnalyse" , method = RequestMethod.GET)
-    public String mainEmbeddedAnalyse(Long streetId,Long blockId,String report,@RequestParam(required=true)String loginName,@RequestParam(required=true)String userPassword,HttpServletRequest request) throws Exception {
+    public String mainEmbeddedAnalyse(Long streetId,Long blockId,String report,String loginName,String userPassword,HttpServletRequest request) throws Exception {
         request.setAttribute("streetId", streetId);
         request.setAttribute("blockId", blockId);
         request.setAttribute("report", report);
