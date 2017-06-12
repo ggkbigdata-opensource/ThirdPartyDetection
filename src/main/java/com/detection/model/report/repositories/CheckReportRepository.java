@@ -47,5 +47,10 @@ public interface CheckReportRepository extends JpaRepository<CrCheckReport, Stri
 
     @Query(value = "select t.building_type_small from cr_check_report t group by t.building_type_small", nativeQuery = true)
     public List<String> findGroupByBuildingTypeSmall();
+
+    @Transactional
+    @Modifying()
+    @Query(value = "update cr_check_report t set t.street_id = ?1,t.block_id=?2 where t.report_num = ?3", nativeQuery = true)
+    public void updateStreetAndBlock(Long streetId, Long blockId, String reportNum);
     
 }

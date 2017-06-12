@@ -14,6 +14,7 @@ public class BsBuildingInfo {
     private Long id;
     private String itemNumber;
     private Long streetId;
+    private Long blockId;
     private String propertyCompanyName;
     private String buildingAddress;
     private String designCompany;
@@ -44,6 +45,15 @@ public class BsBuildingInfo {
     private String createTime;
 
     private Date importTime;
+    
+    private Double score;
+
+    private String heightType;//
+    private String buildingTypeBig;
+    private String buildingTypeSmall;
+    
+    
+    private String riskLevel;//危险等级，用于存储数据
 
     public BsBuildingInfo() {
 
@@ -295,6 +305,54 @@ public class BsBuildingInfo {
 
     public void setImportTime(Date importTime) {
         this.importTime = importTime;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public String getHeightType() {
+        return heightType;
+    }
+
+    public void setHeightType(String heightType) {
+        this.heightType = heightType;
+    }
+
+    public String getBuildingTypeBig() {
+        return buildingTypeBig;
+    }
+
+    public void setBuildingTypeBig(String buildingTypeBig) {
+        this.buildingTypeBig = buildingTypeBig;
+    }
+
+    public String getBuildingTypeSmall() {
+        return buildingTypeSmall;
+    }
+
+    public void setBuildingTypeSmall(String buildingTypeSmall) {
+        this.buildingTypeSmall = buildingTypeSmall;
+    }
+
+    public Long getBlockId() {
+        return blockId;
+    }
+
+    public void setBlockId(Long blockId) {
+        this.blockId = blockId;
+    }
+
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
     }
 
 }

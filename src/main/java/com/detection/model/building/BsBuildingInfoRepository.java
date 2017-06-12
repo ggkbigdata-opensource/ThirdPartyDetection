@@ -3,7 +3,9 @@ package com.detection.model.building;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @fileName BsBuildingInfoRepository.java
@@ -62,6 +64,13 @@ public interface BsBuildingInfoRepository extends JpaRepository<BsBuildingInfo, 
     List<BsBuildingInfo> findByIds(long[] arr);
 
     @Query(value = "SELECT * FROM bs_building_info t where  t.item_number like %?1%  limit 0,1", nativeQuery = true)
-    BsBuildingInfo findByItemNumber(String reportNum);
+    BsBuildingInfo findByLikeItemNumber(String reportNum);
+
+    @Transactional
+    @Modifying()
+    @Query(value = "update bs_building_info t set t.building_type_big = ?1,t.building_type_small = ?2,t.score = ?3,t.height_type = ?4,t.risk_level = ?5 where t.item_number = ?6", nativeQuery = true)
+    void update(String buildingTypeBig, String buildingTypeSmall, Double score, String heightType, String riskLevel,
+            String reportNum);
+
 
 }

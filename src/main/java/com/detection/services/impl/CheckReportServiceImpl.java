@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -179,18 +180,27 @@ public class CheckReportServiceImpl implements CheckReportService {
         checkReport.setReportNum(reportNum);
 
         // 获取街道信息
-        BsBuildingInfo buildingInfo = buildingInfoRepository.findByItemNumber(reportNum.replace("天消", ""));
+        //同步建筑概况表的数据数据
+        BsBuildingInfo buildingInfo = buildingInfoRepository.findByLikeItemNumber(reportNum.replace("天消", ""));
         if (buildingInfo != null && !"".equals(buildingInfo)) {
             checkReport.setStreetId(buildingInfo.getStreetId());
-        } else {
-            checkReport.setStreetId(null);
-        }
+            checkReport.setBuildingTypeBig(buildingInfo.getBuildingTypeBig());
+            checkReport.setBuildingTypeSmall(buildingInfo.getBuildingTypeSmall());
+            checkReport.setBlockId(buildingInfo.getBlockId());
+            checkReport.setHeightType(buildingInfo.getHeightType());
+            checkReport.setScore(buildingInfo.getScore());
+            if (StringUtils.isNotEmpty(buildingInfo.getRiskLevel())) {
+                checkReport.setRiskLevel(buildingInfo.getRiskLevel());
+            }
+        } 
 
         checkReport.setFilePath(upFilePath);
         checkReport.setFileName(encryptedFileName);
         checkReport.setOriginalName(fileName);
         checkReport.setCreateDate(reportCover.getReportDate());
         checkReport.setModifyDate(new Date());
+        
+        
         if (reportNum != null) {
             int codeLength = reportNum.length();
             String tempCodeFirstPart = reportNum.substring(codeLength - 4);
@@ -1023,4 +1033,36 @@ public class CheckReportServiceImpl implements CheckReportService {
         return types;
     }
 
+    @Override
+    public void checkReportAndBuildingInfo() {
+
+        System.out.println("Job---checkReportToBuildingInfo------开始执行");
+        List<CrCheckReport> reports = checkReportRepo.findAll();
+        Map<String, CrCheckReport> reportMap = new HashMap<String,CrCheckReport>();
+        for (CrCheckReport crCheckReport : reports) {
+            reportMap.put(crCheckReport.getReportNum(), crCheckReport);
+        }
+        
+        List<BsBuildingInfo> infos = buildingInfoRepository.findAll();
+        Map<String, BsBuildingInfo> InfoMap = new HashMap<String,BsBuildingInfo>();
+        
+        //保存数据
+        System.out.println("Job---checkReportToBuildingInfo------开始更新BsBuildingInfo数据");
+        for (BsBuildingInfo info : infos) {
+            InfoMap.put(info.getItemNumber(), info);
+            CrCheckReport report = reportMap.get(info.getItemNumber());
+            if (report!=null&&!"".equals(report)) {
+                buildingInfoRepository.update(report.getBuildingTypeBig(),report.getBuildingTypeSmall(),report.getScore(),report.getHeightType(),report.getRiskLevel(),info.getItemNumber());
+            }
+        }
+        
+        System.out.println("Job---checkReportToBuildingInfo------开始更新CrCheckReport数据");
+        for (CrCheckReport report : reports) {
+            BsBuildingInfo info = InfoMap.get(report.getReportNum());
+            if (info!=null&&!"".equals(info)) {
+                checkReportRepo.updateStreetAndBlock(info.getStreetId(),info.getBlockId(),report.getReportNum());
+            }
+        }
+        System.out.println("Job---checkReportToBuildingInfo------执行完毕");
+    }  
 }

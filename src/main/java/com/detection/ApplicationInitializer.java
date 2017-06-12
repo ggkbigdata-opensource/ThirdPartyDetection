@@ -1,14 +1,11 @@
 package com.detection;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.detection.model.report.entities.CrCheckReport;
-import com.detection.model.report.entities.CrCheckReportInfo;
+import com.detection.job.UpdateDataJob;
 import com.detection.model.user.CrUser;
 import com.detection.model.user.UserRepository;
 import com.detection.services.CheckReportInfoService;
@@ -51,6 +48,10 @@ public class ApplicationInitializer implements CommandLineRunner {
             a++;
         }*/
 
+        UpdateDataJob job = new UpdateDataJob();
+        job.checkReportToBuildingInfo();
+        
+        
         System.out.println(">>>>>>>>>>>>>>>>初始化完成...>>>>>>>>>>>>>");
     }
 

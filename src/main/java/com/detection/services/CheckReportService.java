@@ -193,4 +193,11 @@ public interface CheckReportService {
      */
     public List<String> findGroupByBuildingTypeSmall();
 
+    /**
+     * @createDate 2017年6月12日下午2:33:23 
+     * @author wangzhiwang 
+     * @description
+     */
+    public void checkReportAndBuildingInfo();
+
 }
