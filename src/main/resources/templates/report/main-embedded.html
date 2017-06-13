@@ -64,40 +64,68 @@
 									                        value: ''
 									                	},
 									                	{
-									                   		label: '住宅建筑',
+									                   		label: '中学',
 									                        value: '1'
 									                    },
 									                	{
-									                   		label: '党政机关、事业单位等行政办公',
+									                   		label: '交通枢纽建筑',
 									                        value: '2'
 									                    },
 									                	{
-									                   		label: '图书、展览等文化设施建筑，学校科研院所等教育科研',
+									                   		label: '公共娱乐建筑',
 									                        value: '3'
 									                    },
 									                	{
-									                   		label: '医院、幼儿园、寄宿制学校、养老院等特殊群体居住建筑',
+									                   		label: '养老院',
 									                        value: '4'
 									                    },
 									                	{
-									                   		label: '商场、市场、超市、餐饮、宾馆酒店等商业建筑',
+									                   		label: '医院',
 									                        value: '5'
 									                    },
 									                	{
-									                   		label: '金融、保险等综合性办公建筑',
+									                   		label: '商业建筑',
 									                        value: '6'
 									                    },
 									                	{
-									                   		label: '电影院、网吧、歌舞厅等公共娱乐建筑',
+									                   		label: '大学',
 									                        value: '7'
 									                    },
 									                	{
-									                   		label: '物流仓储建筑',
+									                   		label: '小学',
 									                        value: '8'
 									                    },
 									                	{
-									                   		label: '火车站、码头、客运站、机场航站楼等交通枢纽建筑',
+									                   		label: '幼儿园',
 									                        value: '9'
+									                    },
+									                	{
+									                   		label: '教育科研建筑',
+									                        value: '10'
+									                    },
+									                	{
+									                   		label: '文化设施建筑',
+									                        value: '11'
+									                    },
+									                	{
+									                   		label: '物流仓储建筑',
+									                        value: '12'
+									                    },
+									                	{
+									                   		label: '科研院',
+									                        value: '13'
+									                    },
+									                	{
+									                   		label: '综合性办公建筑',
+									                        value: '14'
+									                    },
+									                	{
+									                   		label: '行政办公建筑',
+									                        value: '15'
+									                    },
+									                	{
+									                   		label: '院所等教育科研建筑',
+									                        value: '16'
 									                    }]" />
 											</div>
 										</div>
@@ -129,8 +157,8 @@
 								</div>
 								<div class="search-btn tc">
 									<div class="search-btn-tc">
-										<button class="btn btn-danger" onclick="doSearch()">查询</button>
-										<button class="btn btn-primary" onclick="doReset()">重置</button>
+										<button class="btn btn-danger" onclick="doSearch()" name="loadingDatas">查询</button>
+										<button class="btn btn-primary" onclick="doReset()" name="loadingDatas">重置</button>
 									</div>
 								</div>
 							</div>
@@ -164,7 +192,19 @@
                                 class="cell-border table table-hover table-striped table-bordered"
                                 cellspacing="0" width="100%">
                                 <thead>
-                                    <tr>
+                                	<tr>
+                                        <th style="width:90px;">报告编号</th>
+                                        <th style="width:50px;">街道</th>
+                                        <th style="width:50px;">社区</th>
+                                        <th>报告名称</th>
+                                        <th>建筑类型</th>
+                                        <th style="width:60px;">高度类型</th>
+                                        <th>项目地址</th>
+                                        <th style="width:60px;">风险等级</th>
+                                        <th style="width:50px;">得分</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    <!-- <tr>
                                         <th>报告编号</th>
                                         <th>街道</th>
                                         <th>社区</th>
@@ -175,7 +215,7 @@
                                         <th>风险等级</th>
                                         <th>得分</th>
                                         <th>操作</th>
-                                    </tr>
+                                    </tr> -->
                                 </thead>
                             </table>
                         </div>

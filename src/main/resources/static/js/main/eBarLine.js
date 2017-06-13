@@ -20,14 +20,18 @@ function echartBarLine (id,legend,item,dataLeft,dataRight,unitLeft,unitRight,tit
             y2 : 80
         },
         toolbox: {
-            show : true,
+        	show : true,
             feature : {
-/*                mark : {show: true},
+            	/*mark : {show: true},
                 dataView : {show: true, readOnly: false},
                 magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
                 restore : {show: true},*/
-                saveAsImage : {show: true}
-            }
+                saveAsImage : {
+                	show: true,
+                	title: '保存图片'
+            	},
+            },
+            padding: 25
         },
         calculable : true,
         xAxis : [ {

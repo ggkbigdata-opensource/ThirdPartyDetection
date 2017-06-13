@@ -14,7 +14,7 @@
 							<h1>建筑主体分析</h1>
 							<div class="filterBox fr">
 								<div class="right-filter fr ml5">
-									<button class="btn btn-primary" >高级分析</button>
+									<!-- <button class="btn btn-primary" >高级分析</button> -->
 									<button class="btn btn-primary" onclick="getReturn()" id="ifReturn">返回</button>
 								</div>
 								<div class="left-filter oh">
@@ -38,9 +38,6 @@
 						</div>
 						<div class="sectionMain borderBox">
 							<div class="chartBox">
-								<div class="chartTit">
-									<h1></h1>
-								</div>
 								<div class="chartMain" style="height:300px;" id="reportAnalyse"></div>
 							</div>
 						</div>
@@ -56,7 +53,19 @@
                                 class="cell-border table table-hover table-striped table-bordered"
                                 cellspacing="0" width="100%">
                                 <thead>
-                                    <tr>
+                                	<tr>
+                                        <th style="width:90px;">报告编号</th>
+                                        <th style="width:50px;">街道</th>
+                                        <th style="width:50px;">社区</th>
+                                        <th>报告名称</th>
+                                        <th>建筑类型</th>
+                                        <th style="width:60px;">高度类型</th>
+                                        <th>项目地址</th>
+                                        <th style="width:60px;">风险等级</th>
+                                        <th style="width:50px;">得分</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    <!-- <tr>
                                         <th>报告编号</th>
                                         <th>街道</th>
                                         <th>社区</th>
@@ -67,7 +76,7 @@
                                         <th>风险等级</th>
                                         <th>得分</th>
                                         <th>操作</th>
-                                    </tr>
+                                    </tr> -->
                                 </thead>
                             </table>
                         </div>

@@ -16,18 +16,22 @@ function echartBarBar (id,legend,item,dataLeft,dataRight,unitLeft,unitRight,titl
         grid : {
             x : 80,
             y : 50,
-            x2 : 90,
+            x2 : 80,
             y2 : 80
         },
         toolbox: {
             show : true,
             feature : {
-/*                mark : {show: true},
+            	/*mark : {show: true},
                 dataView : {show: true, readOnly: false},
                 magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
                 restore : {show: true},*/
-                saveAsImage : {show: true}
-            }
+                saveAsImage : {
+                	show: true,
+                	title: '保存图片'
+            	},
+            },
+            padding: 25
         },
         calculable : true,
         xAxis : [ {

@@ -18,18 +18,22 @@ function echartPie (id,legend,item,datas,title) {
         grid : {
             x : 30,
             y : 50,
-            x2 : 90,
+            x2 : 80,
             y2 : 80
         },
         toolbox: {
-            show : true,
+        	show : true,
             feature : {
-/*                mark : {show: true},
+            	/*mark : {show: true},
                 dataView : {show: true, readOnly: false},
                 magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
                 restore : {show: true},*/
-                saveAsImage : {show: true}
-            }
+                saveAsImage : {
+                	show: true,
+                	title: '保存图片'
+            	},
+            },
+            padding: 25
         },
         calculable : true,
         series : (function() {

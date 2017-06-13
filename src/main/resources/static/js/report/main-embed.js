@@ -50,6 +50,9 @@ var searchDatas = {
 		heigthType:''
 }
 function doSearch(value,name){
+	$('button[name="loadingDatas"]').attr('disabled','disabled');
+	$('#reportListTable').DataTable().destroy();
+    $('#reportListTable tbody').text('');
 	searchDatas = {
 		streetId: $("#streetId").combobox('getValue'),
 		blockId:$("#blockId").combobox('getValue'),
@@ -57,21 +60,18 @@ function doSearch(value,name){
 		buildingType:$("#buildingTypeBig").combobox('getValue'),
 		heightType:$("#heigthType").combobox('getValue')
 	}
-	$('#reportListTable').DataTable().destroy();
-    $('#reportListTable tbody').text('');
     showReportList(searchDatas);
 }
 
 function doReset(){
+	$('button[name="loadingDatas"]').attr('disabled','disabled');
+	$('#reportListTable').DataTable().destroy();
+	$('#reportListTable tbody').text('');
 	$("#streetId").combobox('select', 0);
 	$("#blockId").combobox('setValue','');
 	$("#riskLevel").combobox('select', 0);
 	$("#buildingTypeBig").combobox('select', 0);
 	$("#heigthType").combobox('select', 0);
-	
-	$('#reportListTable').DataTable().destroy();
-	$('#reportListTable tbody').text('');
-	showReportList();
 	//初始化数据
 	searchDatas = {
 		streetId:'',
@@ -80,6 +80,7 @@ function doReset(){
 		buildingType:'',
 		heightType:''
 	};
+	showReportList();
 }
 
 	var mainSId ='';
@@ -102,7 +103,7 @@ function doReset(){
     		    			}
     		    		}
     		    	}else{
-    		    		$('#streetId').combobox('select',0);
+    		    		$('#streetId').combobox('select','');
     		    	}
     			},
     			onChange: function(){
@@ -156,8 +157,8 @@ function doReset(){
                     for ( var d in result.data) {
                         var item = new Array()
                         item[0] = result.data[d].reportNum; // 报告编号
-                        item[1] = '<span style="cursor:pointer;" onclick="toAnalyse(' + result.data[d].streetId + ')">' + result.data[d].streetName + '</span>'; // 街道名称
-                        item[2] = '<span style="cursor:pointer;" onclick="toAnalyse(' + result.data[d].streetId + ',' + result.data[d].blockId + ')">' + result.data[d].blockName + '</span>'; // 社区名称
+                        item[1] = '<span style="cursor:pointer;text-decoration:underline;" onclick="toAnalyse(' + result.data[d].streetId + ')">' + result.data[d].streetName + '</span>'; // 街道名称
+                        item[2] = '<span style="cursor:pointer;text-decoration:underline;" onclick="toAnalyse(' + result.data[d].streetId + ',' + result.data[d].blockId + ')">' + result.data[d].blockName + '</span>'; // 社区名称
                         item[3] = result.data[d].projectName; // 报告名称
                         item[4] = result.data[d].buildingTypeBig; // 建筑类型
                         item[5] = result.data[d].heigthType; // 高度类型
@@ -185,6 +186,7 @@ function doReset(){
                     });
                     reportList = result.data;
                 }
+                $('button[name="loadingDatas"]').removeAttr('disabled');
             });
     }
 
@@ -192,10 +194,6 @@ function doReset(){
 function toAnalyse(sId,bId){
 	window.location.href='mainEmbeddedAnalyse?streetId=' + sId + '&blockId=' + (bId == undefined?'':bId);
 }
-    
-    
-    
-    
     
     // 文件上传
     $(":file").filestyle({

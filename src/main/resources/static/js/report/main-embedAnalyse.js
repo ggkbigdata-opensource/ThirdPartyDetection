@@ -4,7 +4,6 @@ var sId,//传参社区、
 	bData,//社区数据
 	trendSId,//趋势分析街道id
 	trendBId,//趋势分析社区id
-	isStreetChange,//判断是否点击街道
 	item,//图项目
 	datas,//图数据
 	unit,//图单位
@@ -72,12 +71,25 @@ function showReportList(data) {
                             + '">检测报告</a></div>'; //
                     data[index++] = item;
                 }
-                $("#reportListTable").dataTable({
-                    "data" : data,
-                    language : {
-                        url : "css/datatables/Chinese.json"
-                    }
-                });
+                if($('#reportListTable tbody').text() == ''){
+                	$("#reportListTable").dataTable({
+                        "data" : data,
+                        language : {
+                            url : "css/datatables/Chinese.json"
+                        }
+                    });
+                }else{
+                	var timer;
+                	clearTimeout(timer);
+                	timer = setTimeout(function(){
+                		$("#reportListTable").dataTable({
+                            "data" : data,
+                            language : {
+                                url : "css/datatables/Chinese.json"
+                            }
+                        });
+                	},50);
+                }
                 reportList = result.data;
             }
         });
@@ -103,6 +115,8 @@ function getStreetBlock () {
     				}
     			},
     			onChange: function(){
+    				$('#reportListTable').DataTable().destroy();
+    			    $('#reportListTable tbody').text('');
     				trendSId = $('#streetId').combobox('getValue');
     				if($('#streetId').combobox('getValue') != ''){
     					var strId = $('#streetId').combobox('getValue');
@@ -115,31 +129,31 @@ function getStreetBlock () {
     								valueField: 'id',
     								textField:'name',
     								onLoadSuccess: function(){
-    									if(bId !=0 || bId != ''){//首次跳转进来有指定社区
+    									if(trendBId !=0 || trendBId != ''){//首次跳转进来有指定社区
     										for(var i=0;i<bData.length;i++){
-    											if(bId == bData[i].id){
+    											if(trendBId == bData[i].id){
     												trendBId = bData[i].id;
     												$('#blockId').combobox('setValue',bData[i].id);
     												break;
     											}
     										}
-    										bId = 'first';
     									}else{
-    										$('#blockId').combobox('select',0);
+    										$('#blockId').combobox('select','');
+    										trendBId = $('#blockId').combobox('getValue');
     									}
     								},
     								onChange: function(){
-    									if(bId != 'first'){
-    										return;
+    									if($('#streetId').combobox('getValue') != ''){
+    										$('#reportListTable').DataTable().destroy();
+        								    $('#reportListTable tbody').text('');
+        									//图表渲染
+        									trendBId = $('#blockId').combobox('getValue');
+        									getTrendChart();
+        								    condition = {streetId: trendSId,blockId: trendBId};
+        								    showReportList(condition);
+    									}else{
+    										$('#blockId').combobox({data:''});
     									}
-    									//图表渲染
-    									
-    									trendBId = $('#blockId').combobox('getValue');
-    									getTrendChart();
-    									$('#reportListTable').DataTable().destroy();
-    								    $('#reportListTable tbody').text('');
-    								    condition = {streetId: trendSId,blockId: trendBId};
-    								    showReportList(condition);
     								}
     							});
     						}
@@ -148,14 +162,20 @@ function getStreetBlock () {
     					$('#blockId').combobox('setValue','');
     					trendBId = $('#blockId').combobox('getValue');
     				}
-    				isStreetChange = true;
-    				//图表渲染
-    				trendBId = '';
-    				getTrendChart();
-    				$('#reportListTable').DataTable().destroy();
-    			    $('#reportListTable tbody').text('');
-    			    condition = {streetId: trendSId,blockId: trendBId};
-    			    showReportList(condition);
+    				if(bId == '' || bId == 'null'){
+    					trendBId = '';
+    					getTrendChart();
+        			    condition = {streetId: trendSId,blockId: trendBId};
+        			    showReportList(condition);
+    				}
+    				if(bId != 'first'){
+    					bId = 'first';
+    				}else{
+    					trendBId = '';
+    					getTrendChart();
+        			    condition = {streetId: trendSId,blockId: trendBId};
+        			    showReportList(condition);
+    				}
     			}
     		});
     	}

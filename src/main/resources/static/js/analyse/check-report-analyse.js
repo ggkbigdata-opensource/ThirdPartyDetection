@@ -49,13 +49,16 @@ function init(){
 		if(data){
 			//用于查询
 			streets = data;
-			streets.unshift({id:'',name:'全部'})
+			streets.unshift({id:'',name:'全部'});
+			uStreets = streets;
+			hStreets = streets;
+			iStreets = streets;
 			$('#tStreet').combobox({
 				data: streets,
 				valueField: 'id',
 				textField: 'name',
 				onLoadSuccess: function () {
-		    		$('#tStreet').combobox('select',0);
+		    		$('#tStreet').combobox('select','');
 				},
 				onChange: function(){
 					var sId = $('#tStreet').combobox('getValue');
@@ -63,11 +66,11 @@ function init(){
 				}
 			});
 			$('#uStreet').combobox({
-				data: streets,
+				data: uStreets,
 				valueField: 'id',
 				textField: 'name',
 				onLoadSuccess: function () {
-		    		$('#uStreet').combobox('select',0);
+		    		$('#uStreet').combobox('select','');
 				},
 				onChange: function(){
 					var sId = $('#uStreet').combobox('getValue');
@@ -75,11 +78,11 @@ function init(){
 				}
 			});
 			$('#hStreet').combobox({
-				data: streets,
+				data: hStreets,
 				valueField: 'id',
 				textField: 'name',
 				onLoadSuccess: function () {
-		    		$('#hStreet').combobox('select',0);
+		    		$('#hStreet').combobox('select','');
 				},
 				onChange: function(){
 					var sId = $('#hStreet').combobox('getValue');
@@ -87,11 +90,11 @@ function init(){
 				}
 			});
 			$('#iStreet').combobox({
-				data: streets,
+				data: iStreets,
 				valueField: 'id',
 				textField: 'name',
 				onLoadSuccess: function () {
-		    		$('#iStreet').combobox('select',0);
+		    		$('#iStreet').combobox('select','');
 				},
 				onChange: function(){
 					var sId = $('#iStreet').combobox('getValue');
@@ -291,10 +294,7 @@ function showReportList(data) {
                             + '">分析报告</a>'
                             + '<a class="detectionReport" target="_blank" href="fetchReport/'
                             + idNew
-                            + '">检测报告</a>'
-                            + '<a class="deleteReport" " href="JavaScript: " onclick="deleteReportByReportNum(\''
-                            + idNew
-                            + '\')">删除</a>' + '</div>'; //
+                            + '">检测报告</a></div>'; //' + '<a class="deleteReport" " href="JavaScript: " onclick="deleteReportByReportNum(\'' + idNew + '\')">删除</a>' + ' ;
                     data[index++] = item;
                 }
                 $("#reportListTable").dataTable({
