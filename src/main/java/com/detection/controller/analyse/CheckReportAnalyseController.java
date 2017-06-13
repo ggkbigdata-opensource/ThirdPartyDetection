@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -228,21 +229,24 @@ public class CheckReportAnalyseController {
         List<String> types = checkReportService.findGroupByBuildingTypeSmall();
         Map<String, JSONObject> result = new HashMap<String,JSONObject>();
         for (String type : types) {
-            JSONObject obj = new JSONObject();
-            obj.put("count", 0);
-            obj.put("proportion", 0);
-            obj.put("typeName", type);
-            result.put(type, obj);
+            if (StringUtils.isNotEmpty(type)) {
+                JSONObject obj = new JSONObject();
+                obj.put("count", 0);
+                obj.put("proportion", 0);
+                obj.put("typeName", type);
+                result.put(type, obj);
+            }
         }
         for (CrCheckReport report : reports) {
-            System.out.println(report.getReportNum());
-            JSONObject obj = result.get(report.getBuildingTypeSmall().trim());
-            Integer count = (Integer)obj.get("count");
-            
-            count++;
-            
-            obj.put("count", count);
-            obj.put("proportion", (float)count/(float)reports.size());
+            if (StringUtils.isNotEmpty(report.getBuildingTypeSmall())) {
+                JSONObject obj = result.get(report.getBuildingTypeSmall().trim());
+                Integer count = (Integer)obj.get("count");
+                
+                count++;
+                
+                obj.put("count", count);
+                obj.put("proportion", (float)count/(float)reports.size());
+            }
         }
 
         return result;
