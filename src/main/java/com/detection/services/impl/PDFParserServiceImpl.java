@@ -386,8 +386,7 @@ public class PDFParserServiceImpl implements PDFParserService {
                 Matcher unqualifiedItemMatcher = unqualifiedItemPattern.matcher(tempStr);
                 if (importantGradeMatcher.find() && regularMatcher.find() && unqualifiedItemMatcher.find()) {
                     int index = importantGradeMatcher.start();
-                    String checkItem = tempStr.substring(itemNameStartIdx, index).trim().replaceAll(getLineEndByOS(),
-                            "");
+                    String checkItem = tempStr.substring(itemNameStartIdx, index).trim().replaceAll(getLineEndByOS(),"");
                     String importantGrade = importantGradeMatcher.group(2);
                     String regular = tempStr.substring(regularMatcher.end(), unqualifiedItemMatcher.start()).trim()
                             .replaceAll(getLineEndByOS(), "");

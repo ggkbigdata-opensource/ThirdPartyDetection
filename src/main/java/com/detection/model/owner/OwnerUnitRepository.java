@@ -17,4 +17,7 @@ public interface OwnerUnitRepository extends JpaRepository<CrOwnerUnit, String> 
     @Query(value = "SELECT * FROM cr_owner_unit t WHERE t.duty_tel = ?1 and t.fetch_code = ?3 and t.owner_name like %?2%  ", nativeQuery = true)
     public CrOwnerUnit findByDutyTelAndOwnerNameLike(String dutyTel, String ownerName, String fetchCode);
 
+    public List<CrOwnerUnit> findByDutyTel(String trim);
+
+
 }

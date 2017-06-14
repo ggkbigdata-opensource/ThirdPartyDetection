@@ -574,8 +574,36 @@ public class CheckReportServiceImpl implements CheckReportService {
         String token = null;
         String dutyPerson = null;
         // CrOwnerUnit ownerUnit = ownerUnitRepo.findOne(dutyTel);
-        CrOwnerUnit ownerUnit = ownerUnitRepo.findByDutyTelAndOwnerNameLike(dutyTel.trim(), ownerName.trim(),
-                extracteCode.trim());
+        //CrOwnerUnit ownerUnit = ownerUnitRepo.findByDutyTelAndOwnerNameLike(dutyTel.trim(), ownerName.trim(), extracteCode.trim());
+        CrOwnerUnit ownerUnit = null;
+        
+        List<CrOwnerUnit> units = ownerUnitRepo.findByDutyTel(dutyTel.trim());
+        if (units==null||units.size()<1) {//电话输入错误
+            code = 1;
+        }
+        //判断提取码
+        boolean flag = false;//默认为错误
+        ArrayList<CrOwnerUnit> arrayList = new ArrayList<CrOwnerUnit>();//电话和提取码正确的数据
+        for (CrOwnerUnit unit : units) {
+            if (extracteCode.trim().equals(unit.getFetchCode())) {
+                flag=true;
+            }
+        }
+        if (!flag) {//提取码错误
+            code = 2;
+        }
+        //判断输入公司是否正确
+        boolean flag2 = false;
+        for (CrOwnerUnit unit : arrayList) {
+            if (unit.getOwnerName().contains(ownerName.trim())) {
+                ownerUnit=unit;
+                flag2=true;
+            }
+        }
+        if (!flag2) {//公司错误
+            code = 3;
+        }
+        
         if (ownerUnit != null) {
             String reportNum = checkReportRepo.findReportNumByFetchCode(extracteCode.trim().toUpperCase());
             dutyPerson = ownerUnit.getDutyPerson();
