@@ -582,26 +582,30 @@ public class CheckReportServiceImpl implements CheckReportService {
             code = 1;
         }
         //判断提取码
-        boolean flag = false;//默认为错误
         ArrayList<CrOwnerUnit> arrayList = new ArrayList<CrOwnerUnit>();//电话和提取码正确的数据
-        for (CrOwnerUnit unit : units) {
-            if (extracteCode.trim().equals(unit.getFetchCode())) {
-                flag=true;
+        if (code!=1) {
+            boolean flag = false;//默认为错误
+            for (CrOwnerUnit unit : units) {
+                if (extracteCode.trim().equals(unit.getFetchCode())) {
+                    flag=true;
+                }
             }
-        }
-        if (!flag) {//提取码错误
-            code = 2;
+            if (!flag) {//提取码错误
+                code = 2;
+            }
         }
         //判断输入公司是否正确
-        boolean flag2 = false;
-        for (CrOwnerUnit unit : arrayList) {
-            if (unit.getOwnerName().contains(ownerName.trim())) {
-                ownerUnit=unit;
-                flag2=true;
+        if (code!=2&&code!=1) {
+            boolean flag2 = false;
+            for (CrOwnerUnit unit : arrayList) {
+                if (unit.getOwnerName().contains(ownerName.trim())) {
+                    ownerUnit=unit;
+                    flag2=true;
+                }
             }
-        }
-        if (!flag2) {//公司错误
-            code = 3;
+            if (!flag2) {//公司错误
+                code = 3;
+            }
         }
         
         if (ownerUnit != null) {
@@ -631,6 +635,8 @@ public class CheckReportServiceImpl implements CheckReportService {
             result.put("message", message);
             result.put("verifyToken", token);
             result.put("dutyPerson", dutyPerson);
+        }else {
+            result.put("code", code);
         }
         return result;
     }
