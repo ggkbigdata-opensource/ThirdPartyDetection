@@ -17,23 +17,23 @@ function submitInfoData() {
          'dutyTel' : dutyTel
     }
     if(ownerName == ''){
-    	alert('公司名称不能为空！');
+    	alert('查询单位名不能为空！');
     	return;
     }else if(dutyTel == ''){
-    	alert('电话不能为空！');
+    	alert('责任人手机不能为空！');
     	return;
     }else if(extracteCode == ''){
-    	alert('提取码不能为空！');
+    	alert('报告提取码不能为空！');
     	return;
     }
     $.getJSON(proxy, params, function(result){
-        if(result == null || 3 == result.code) {
+        if(result.code == 3) {
             alert("公司名称有误！");
             //self.location = 'getReportPage';
-        }else if(result == null && result.code ==2){
+        }else if(result.code == 2){
         	alert("提取码有误！");
         	//self.location = 'getReportPage';
-        }else if(result == null && result.code ==1){
+        }else if(result.code == 1){
         	alert("电话有误！");
         	//self.location = 'getReportPage';
         }else {
