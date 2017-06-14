@@ -98,11 +98,11 @@ function echartBar (id,legend,item,datas,unit,title) {
                         }  
                     }  
                 };
-                series.unshift(d);
+                series.push(d);
             }
             return series;
         }()),
-        color : ['#4ab46c','#824597','#388ecb','#f1c621','#b6382b','#dd82b2']
+        color : ['#19772f','#50b0ae','#f1a330','#d14d58','#b6382b','#dd82b2']
     };
     var line = echarts.init(document.getElementById(id), 'macarons');
     line.setOption(option);
