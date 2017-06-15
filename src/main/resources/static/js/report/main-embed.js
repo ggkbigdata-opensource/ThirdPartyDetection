@@ -160,7 +160,7 @@ function doReset(){
                         item[1] = '<span style="cursor:pointer;text-decoration:underline;" onclick="toAnalyse(' + result.data[d].streetId + ')">' + result.data[d].streetName + '</span>'; // 街道名称
                         item[2] = '<span style="cursor:pointer;text-decoration:underline;" onclick="toAnalyse(' + result.data[d].streetId + ',' + result.data[d].blockId + ')">' + result.data[d].blockName + '</span>'; // 社区名称
                         item[3] = result.data[d].projectName; // 报告名称
-                        item[4] = result.data[d].buildingTypeBig; // 建筑类型
+                        item[4] = result.data[d].buildingTypeSmall; // 建筑类型
                         item[5] = result.data[d].heigthType; // 高度类型
                         item[6] = result.data[d].projectAddress; // 项目地址
                         item[7] = result.data[d].riskLevel; // 风险等级
