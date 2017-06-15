@@ -451,6 +451,7 @@ public class CheckReportServiceImpl implements CheckReportService {
             // 建筑
             item.put("heigthType", checkReport.getHeightType());
             item.put("buildingTypeBig", checkReport.getBuildingTypeBig());
+            item.put("buildingTypeSmall", checkReport.getBuildingTypeSmall());
 
             dataList.add(item);
         }
@@ -587,6 +588,7 @@ public class CheckReportServiceImpl implements CheckReportService {
             boolean flag = false;//默认为错误
             for (CrOwnerUnit unit : units) {
                 if (extracteCode.trim().equals(unit.getFetchCode())) {
+                    arrayList.add(unit);
                     flag=true;
                 }
             }
@@ -1080,6 +1082,14 @@ public class CheckReportServiceImpl implements CheckReportService {
         List<BsBuildingInfo> infos = buildingInfoRepository.findAll();
         Map<String, BsBuildingInfo> InfoMap = new HashMap<String,BsBuildingInfo>();
         
+        List<CrCheckReportInfo> reportInfos = checkReportInfoRepo.findAll();
+        Map<String, CrCheckReportInfo> reportInfoMap = new HashMap<String,CrCheckReportInfo>();
+        for (CrCheckReportInfo reportInfo : reportInfos) {
+            reportInfoMap.put(reportInfo.getReportNum(), reportInfo);
+        }
+        
+        int i=0;
+        
         //保存数据
         System.out.println("Job---checkReportToBuildingInfo------开始更新BsBuildingInfo数据");
         for (BsBuildingInfo info : infos) {
@@ -1088,14 +1098,30 @@ public class CheckReportServiceImpl implements CheckReportService {
             if (report!=null&&!"".equals(report)) {
                 buildingInfoRepository.update(report.getBuildingTypeBig(),report.getBuildingTypeSmall(),report.getScore(),report.getHeightType(),report.getRiskLevel(),info.getItemNumber());
             }
+            System.out.println(i++);
         }
-        
+        i=0;
         System.out.println("Job---checkReportToBuildingInfo------开始更新CrCheckReport数据");
         for (CrCheckReport report : reports) {
+            Long streetId=null;
+            Long blockId=null;
+            String riskLevel=null;
+            
+            
             BsBuildingInfo info = InfoMap.get(report.getReportNum());
+            
+            CrCheckReportInfo checkReportInfo = reportInfoMap.get(report.getReportNum());
+            
             if (info!=null&&!"".equals(info)) {
-                checkReportRepo.updateStreetAndBlock(info.getStreetId(),info.getBlockId(),report.getReportNum());
+                streetId=info.getStreetId();
+                blockId=info.getBlockId();
             }
+            if (checkReportInfo!=null&&!"".equals(checkReportInfo)) {
+                riskLevel=checkReportInfo.getRiskLevel();
+            }
+            checkReportRepo.updateStreetAndBlock(streetId,blockId,riskLevel,report.getReportNum());
+            
+            System.out.println(i++);
         }
         System.out.println("Job---checkReportToBuildingInfo------执行完毕");
     }  

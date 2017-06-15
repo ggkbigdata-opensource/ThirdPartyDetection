@@ -387,6 +387,26 @@ public class PDFParserServiceImpl implements PDFParserService {
                 if (importantGradeMatcher.find() && regularMatcher.find() && unqualifiedItemMatcher.find()) {
                     int index = importantGradeMatcher.start();
                     String checkItem = tempStr.substring(itemNameStartIdx, index).trim().replaceAll(getLineEndByOS(),"");
+
+                    Pattern p = Pattern.compile("\\d+\\.\\d+\\.\\d+");
+                    Matcher matcher = p.matcher(checkItem);
+                    //if (!matcher.find()) {
+                        String[] split = tempStr.split(getLineEndByOS());
+                        String str=null;
+                        if (split[0].contains(":")) {//英文
+                            str = split[0].split(":")[1].trim();
+                            
+                        }else if (split[0].contains("：")) {//中文
+                            str = split[0].split("：")[1].trim();
+                            
+                        }
+                        Matcher m= p.matcher(str);
+                        if (m.find()) {
+                            checkItem = str;
+                        }
+                   // }
+                    
+                    
                     String importantGrade = importantGradeMatcher.group(2);
                     String regular = tempStr.substring(regularMatcher.end(), unqualifiedItemMatcher.start()).trim()
                             .replaceAll(getLineEndByOS(), "");

@@ -48,8 +48,8 @@ public class ApplicationInitializer implements CommandLineRunner {
             a++;
         }*/
 
-        UpdateDataJob job = new UpdateDataJob();
-        job.checkReportToBuildingInfo();
+       // UpdateDataJob job = new UpdateDataJob();
+       // job.checkReportToBuildingInfo();
         
         
         System.out.println(">>>>>>>>>>>>>>>>初始化完成...>>>>>>>>>>>>>");
