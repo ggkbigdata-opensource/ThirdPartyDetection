@@ -160,12 +160,13 @@ function getFirstAndSecondEchart(){
 				}
 			}
 			//饼图参数
-			var pieItems = ['一级','二级','三级','四级'];
+			var pieItems = [];
 			var pieLegend = ['一级','二级','三级','四级'];
 			var pieDatas = [];
 			var pieTitle = '天河区等级饼图';
 			pieDatas = totals;
 			echartBar('scoreAndLevel',legend,items,datas,unit,title);
+			
 			echartPie('scoreAndLevelPie',pieLegend,pieItems,pieDatas,pieTitle);
 		}
 	});

@@ -107,12 +107,13 @@ function getStreetBlock () {
     			valueField: 'id',
     			textField: 'name',
     			onLoadSuccess: function () {
-    				for(var i=0;i<streets.length;i++){
+    				$('#streetId').combobox('select',sId);
+    				/*for(var i=0;i<streets.length;i++){
     					if(sId == streets[i].id){
     						$('#streetId').combobox('select',i);
     						break;
     					}
-    				}
+    				}*/
     			},
     			onChange: function(){
     				$('#reportListTable').DataTable().destroy();
@@ -130,13 +131,14 @@ function getStreetBlock () {
     								textField:'name',
     								onLoadSuccess: function(){
     									if(trendBId !=0 || trendBId != ''){//首次跳转进来有指定社区
-    										for(var i=0;i<bData.length;i++){
+    										$('#blockId').combobox('setValue',trendBId);
+    										/*for(var i=0;i<bData.length;i++){
     											if(trendBId == bData[i].id){
     												trendBId = bData[i].id;
     												$('#blockId').combobox('setValue',bData[i].id);
     												break;
     											}
-    										}
+    										}*/
     									}else{
     										$('#blockId').combobox('select','');
     										trendBId = $('#blockId').combobox('getValue');

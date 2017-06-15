@@ -65,7 +65,7 @@ function echartPie (id,legend,item,datas,title) {
                 normal:{ 
                   label:{ 
                     show: true, 
-                    formatter: '{b}：{d}%' 
+                    formatter: '{b}：{c}（{d}%）' 
                   }, 
                   labelLine :{show:true} 
                 } 
