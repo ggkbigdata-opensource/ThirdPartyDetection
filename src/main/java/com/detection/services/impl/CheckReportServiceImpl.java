@@ -408,7 +408,15 @@ public class CheckReportServiceImpl implements CheckReportService {
             // CrCheckReportInfo checkReportInfo =
             // checkReportInfoRepo.findbyReportNum(checkReport.getReportNum());
             JSONObject item = new JSONObject();
-
+            if (checkReportInfo!=null&&!"".equals(checkReportInfo)) {
+                
+                item.put("projectName", checkReportInfo.getProjectName());
+                item.put("projectAddress", checkReportInfo.getProjectAddress());
+                item.put("riskLevel", checkReportInfo.getRiskLevel());
+                item.put("qaName", checkReportInfo.getQaName());
+                item.put("contactTel", checkReportInfo.getContactTel());
+            }
+            
             if (checkReport.getStreetId() != null) {
                 Street street = streetRepository.findOne(checkReport.getStreetId());
                 if (street != null) {
@@ -422,11 +430,8 @@ public class CheckReportServiceImpl implements CheckReportService {
                 item.put("streetName", null);
                 item.put("streetId", null);
             }
-
+            
             item.put("reportNum", checkReport.getReportNum());
-            item.put("projectName", checkReportInfo.getProjectName());
-            item.put("projectAddress", checkReportInfo.getProjectAddress());
-            item.put("riskLevel", checkReportInfo.getRiskLevel());
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
             Date dectectDate = checkReport.getCreateDate();
             String dectectDateStr = "";
@@ -436,10 +441,6 @@ public class CheckReportServiceImpl implements CheckReportService {
                 dectectDateStr = sdf.format(dectectDate);
             }
             item.put("detectDate", dectectDateStr);
-            item.put("qaName", checkReportInfo.getQaName());
-            item.put("contactTel", checkReportInfo.getContactTel());
-            item.put("score", checkReport.getScore());
-            item.put("blockName", checkReport.getBlockId());
             Block block = blockService.findById(checkReport.getBlockId());
             item.put("blockName", "");
             item.put("blockId", "");
@@ -447,12 +448,13 @@ public class CheckReportServiceImpl implements CheckReportService {
                 item.put("blockName", block.getName());
                 item.put("blockId", block.getId());
             }
-
+            
+            item.put("score", checkReport.getScore());
             // 建筑
             item.put("heigthType", checkReport.getHeightType());
             item.put("buildingTypeBig", checkReport.getBuildingTypeBig());
             item.put("buildingTypeSmall", checkReport.getBuildingTypeSmall());
-
+            
             dataList.add(item);
         }
         result.put("code", code);

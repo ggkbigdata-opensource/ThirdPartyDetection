@@ -72,5 +72,10 @@ public interface BsBuildingInfoRepository extends JpaRepository<BsBuildingInfo, 
     void update(String buildingTypeBig, String buildingTypeSmall, Double score, String heightType, String riskLevel,
             String reportNum);
 
+    @Transactional
+    @Modifying()
+    @Query(value = "update bs_building_info t set t.block_id = ?1 where t.id = ?2", nativeQuery = true)
+    void updateBlockId(Long id, Long id2);
+
 
 }

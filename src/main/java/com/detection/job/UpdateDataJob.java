@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.detection.model.area.Block;
+import com.detection.model.area.BlockRepository;
 import com.detection.model.building.BsBuildingInfo;
 import com.detection.model.building.BsBuildingInfoRepository;
 import com.detection.model.report.entities.CrCheckReport;
@@ -31,6 +34,8 @@ public class UpdateDataJob {
     CheckReportRepository checkReportRepository;
     @Autowired
     CheckReportInfoRepository checkReportInfoRepository;
+    @Autowired
+    BlockRepository blockRepository;
 
     @Autowired
     BsBuildingInfoRepository buildingInfoRepository;
@@ -47,6 +52,9 @@ public class UpdateDataJob {
         };
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(runnable, 10, 24*60*60, TimeUnit.SECONDS);*/
+        
+        
+        
         System.out.println("Job---checkReportToBuildingInfo------开始执行");
         List<CrCheckReport> reports = checkReportRepository.findAll();
         Map<String, CrCheckReport> reportMap = new HashMap<String,CrCheckReport>();
@@ -98,7 +106,35 @@ public class UpdateDataJob {
             
             System.out.println(i++);
         }
+        
+        /*System.out.println("Job---checkReportToBuildingInfo------开始更新BuildingInfo的社区数据");
+        List<BsBuildingInfo> infos = buildingInfoRepository.findAll();
+        for (BsBuildingInfo info : infos) {
+            if (StringUtils.isEmpty(info.getStreetAndCommittee())||!info.getStreetAndCommittee().contains("/")) {
+                continue;
+            }
+            if (info.getBlockId()==null||info.getBlockId()==0||"".equals(info.getBlockId())) {
+                String blockName = info.getStreetAndCommittee().split("/")[1];
+               
+                Block block=null;
+                if (blockName.contains("社区")) {
+                    block = blockRepository.findByName(blockName.replace("居委会", ""));
+                    
+                }else {
+                    block = blockRepository.findByName(blockName.replace("居委会", "")+"社区");
+                    
+                }
+                
+                if (block!=null) {
+                    buildingInfoRepository.updateBlockId(block.getId(),info.getId());
+                }
+            }
+            
+        }*/
+        
+        
         System.out.println("Job---checkReportToBuildingInfo------执行完毕");
 
+        
     }
 }
