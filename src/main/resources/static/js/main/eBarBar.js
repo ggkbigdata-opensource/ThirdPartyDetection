@@ -114,7 +114,7 @@ function echartBarBar (id,legend,item,dataLeft,dataRight,unitLeft,unitRight,titl
                         }  
                     }  
                 };
-                series.unshift(d);
+                series.push(d);
             }
             for (var j = 0; j < dataRight.length; j++) {
             	var d = {};
