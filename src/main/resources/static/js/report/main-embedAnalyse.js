@@ -71,6 +71,8 @@ function showReportList(data) {
                             + '">检测报告</a></div>'; //
                     data[index++] = item;
                 }
+                $('#reportListTable').DataTable().destroy();
+			    $('#reportListTable tbody').text('');
                 if($('#reportListTable tbody').text() == ''){
                 	$("#reportListTable").dataTable({
                         "data" : data,

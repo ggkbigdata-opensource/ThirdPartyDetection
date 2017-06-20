@@ -298,6 +298,8 @@ function showReportList(data) {
                             + '">检测报告</a></div>'; //' + '<a class="deleteReport" " href="JavaScript: " onclick="deleteReportByReportNum(\'' + idNew + '\')">删除</a>' + ' ;
                     data[index++] = item;
                 }
+                $('#reportListTable').DataTable().destroy();
+			    $('#reportListTable tbody').text('');
                 $("#reportListTable").dataTable({
                     "data" : data,
                     language : {

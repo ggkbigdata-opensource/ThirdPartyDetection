@@ -178,6 +178,8 @@ function doReset(){
                                 + '\')">删除</a>' + '</div>'; //
                         data[index++] = item;
                     }
+                    $('#reportListTable').DataTable().destroy();
+                    $('#reportListTable tbody').text('');
                     $("#reportListTable").dataTable({
                         "data" : data,
                         language : {
