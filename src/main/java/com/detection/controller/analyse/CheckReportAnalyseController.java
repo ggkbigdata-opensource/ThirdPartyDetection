@@ -454,7 +454,9 @@ public class CheckReportAnalyseController {
             for (CrCheckReport report : reports) {
                 reportNums.add(report.getReportNum());
             }
-            resultStats = checkReportResultStatService.findByReportNums(reportNums);
+            if (reportNums.size()>0) {
+                resultStats = checkReportResultStatService.findByReportNums(reportNums);
+            }
         }
         
         
@@ -468,6 +470,9 @@ public class CheckReportAnalyseController {
             obj.put("passRate", 0);
             obj.put("itemName", arr[i-1]);
             result.put(i, obj);
+        }
+        if (resultStats==null) {
+            return result;
         }
         for (CrCheckReportResultStat reportResultStat : resultStats) {
             JSONObject obj=null;

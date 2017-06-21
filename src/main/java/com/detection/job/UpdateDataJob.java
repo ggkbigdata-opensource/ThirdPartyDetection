@@ -86,9 +86,9 @@ public class UpdateDataJob {
         i=0;
         System.out.println("Job---checkReportToBuildingInfo------开始更新CrCheckReport数据");
         for (CrCheckReport report : reports) {
-            Long streetId=null;
-            Long blockId=null;
-            String riskLevel=null;
+            Long streetId=report.getStreetId();
+            Long blockId=report.getBlockId();
+            String riskLevel=report.getRiskLevel();
             
             
             BsBuildingInfo info = InfoMap.get(report.getReportNum());
@@ -96,11 +96,17 @@ public class UpdateDataJob {
             CrCheckReportInfo checkReportInfo = reportInfoMap.get(report.getReportNum());
             
             if (info!=null&&!"".equals(info)) {
-                streetId=info.getStreetId();
-                blockId=info.getBlockId();
+                if (info.getStreetId()!=null) {
+                    streetId=info.getStreetId();
+                }
+                if (info.getBlockId()!=null) {
+                    blockId=info.getBlockId();
+                }
             }
             if (checkReportInfo!=null&&!"".equals(checkReportInfo)) {
-                riskLevel=checkReportInfo.getRiskLevel();
+                if (StringUtils.isNotEmpty(checkReportInfo.getRiskLevel())) {
+                    riskLevel=checkReportInfo.getRiskLevel();
+                }
             }
             checkReportRepository.updateStreetAndBlock(streetId,blockId,riskLevel,report.getReportNum());
             
