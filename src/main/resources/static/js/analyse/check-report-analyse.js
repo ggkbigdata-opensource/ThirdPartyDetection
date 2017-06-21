@@ -248,8 +248,8 @@ function getSixthEchart(sId){
 			var datas=[];
 			var dataRight=[];
 			var legend=['合格项','不合格项','合格率%'];
-			var unitRight='合格项、不合格项';
-			var unitLeft='合格率%';
+			var unitLeft='合格项、不合格项';
+			var unitRight='合格率%';
 			var ps='';
 			var sName = $('#iStreet').combobox('getText');
 			var title = (sName=='全部'?'天河区':(sName+'街道')) + '检测项';
@@ -262,7 +262,7 @@ function getSixthEchart(sId){
 				datas[1].push(result[i].unQualified);
 				dataRight[0].push((result[i].passRate*100).toFixed(3));
 			}
-			echartBarBar('streetAndItem',legend,items,datas,dataRight,unitRight,unitLeft,title,ps);
+			echartBarBar('streetAndItem',legend,items,datas,dataRight,unitLeft,unitRight,title,ps);
 		}
 	});
 }
