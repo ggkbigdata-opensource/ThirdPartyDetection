@@ -42,6 +42,9 @@
     height: 12px;
     border-left: 1px solid #d5d5d5;
 }
+.login-main .form-group + .form-group {
+	margin-top: 20px;
+}
 .login-main .form-control {
     height: 42px;
     padding-left: 50px;
