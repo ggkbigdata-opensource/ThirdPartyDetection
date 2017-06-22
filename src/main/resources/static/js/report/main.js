@@ -71,10 +71,10 @@ $(function() {
                         item[8] = '<div class="table-toolbar tc">'
                                 + '<a class="evaluateReport" target="_blank" href="showAbstractReportPage?reportNum='
                                 + idNew
-                                + '">分析报告</a>;'
+                                + '">分析报告</a>'
                                 + '<a class="detectionReport" target="_blank" href="fetchReport/'
                                 + idNew
-                                + '">检测报告</a>;'
+                                + '">检测报告</a>'
                                 + '<a class="deleteReport" " href="JavaScript: " onclick="deleteReportByReportNum(\''
                                 + idNew
                                 + '\')">删除</a>' + '</div>'; //
