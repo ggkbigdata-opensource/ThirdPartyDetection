@@ -218,6 +218,7 @@ public class CheckReportServiceImpl implements CheckReportService {
         checkReportInfo.setProjectName(reportCover.getProjectName());
         checkReportInfo.setQaAddress(reportCover.getQaAddress());
         checkReportInfo.setQaName(reportCover.getQaName());
+        checkReportInfo.setRiskLevel(checkReport.getRiskLevel());
         checkReportInfo.setReportConclusion(reportCover.getReportConclusion());
 
         // process on first part

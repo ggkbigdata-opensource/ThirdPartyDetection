@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.beans.factory.annotation.Value;
@@ -384,6 +385,9 @@ public class PDFParserServiceImpl implements PDFParserService {
                 Matcher importantGradeMatcher = importantGradePattern.matcher(tempStr);
                 Matcher regularMatcher = regularPattern.matcher(tempStr);
                 Matcher unqualifiedItemMatcher = unqualifiedItemPattern.matcher(tempStr);
+                //boolean find = unqualifiedItemMatcher.find();
+                //boolean find2 = regularMatcher.find();
+                //boolean find3 = importantGradeMatcher.find(); 
                 if (importantGradeMatcher.find() && regularMatcher.find() && unqualifiedItemMatcher.find()) {
                     int index = importantGradeMatcher.start();
                     String checkItem = tempStr.substring(itemNameStartIdx, index).trim().replaceAll(getLineEndByOS(),"");
@@ -420,9 +424,10 @@ public class PDFParserServiceImpl implements PDFParserService {
                     }
                     List<String> checkPointList = new ArrayList<String>();
                     for (String point : unqualifiedCheckPoint) {
-                        if (!point.equals("") && null != point) {
+                        if (StringUtils.isNotEmpty(point.replace(" ", ""))) {
                             checkPointList.add(point);
                         }
+                        
                     }
                     rs.add(new ListResult(globalReportNum, checkItem, importantGrade, regular, checkPointList));
                 }
