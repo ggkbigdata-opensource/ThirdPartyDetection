@@ -242,7 +242,6 @@ function getFifthEchart(sId){
 }
 function getSixthEchart(sId){
 	$.get('streetAndItem',{streetId:sId},function(result){
-		console.log(result);
 		if(result){
 			var items=[];
 			var datas=[];
